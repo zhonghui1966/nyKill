@@ -121,7 +121,7 @@ export async function precontent(config, originalPack) {
 				<br>新增武将：界曹节
 				<br>修复一些已知问题
 				<br>增加武将传说皮肤机制（在扩展选项处调整，重启后生效）
-				<br><b style="color: red">1.0版本更新内容：</b>
+				<br><li><b style="color: red">1.0版本更新内容：</b>
 				<br>符石机制重做，增加怒气，强化牌等机制
 				<br>还原所有怒焰三国杀的符石和战法
 				<br>增加神孙坚，重做所有武将
@@ -579,7 +579,7 @@ export async function precontent(config, originalPack) {
 			}
 			//怒气符石id9 振奋
 			if (player.storage._ny_fushiId && player.storage._ny_fushiId[3] == 9 && player.storage._ny_nuqi <= 1 && player.storage._ny_fushiTime[3] > 0) {
-				await player.storage._ny_fushiTime[2] --;
+				player.storage._ny_fushiTime[2] --;
 				await lib.skill._ny_getNuqi.addNuQi(player,2);
 			}
 		},
@@ -1678,8 +1678,13 @@ export async function precontent(config, originalPack) {
 		viewAsFilter: function (player) {
 			return player.countCards("hes", { type: "equip" }) > 0;
 		},
-		viewAs: {
-			name: "wuxie",
+		viewAs: function(player) {
+			let obj = {};
+			if (!player.storage._ny_fushiId) return obj;
+			if (player.storage._ny_fushiId[1] !== 2 || player.storage._ny_fushiTime[1] <= 0) return obj;
+			if (player.countMark("_ny_noneFangYuFushi")) return obj;
+			obj["name"] = "wuxie";
+			return obj;
 		},
 		prompt: "将一张装备牌当无懈可击使用",
 		precontent: function() {
@@ -1755,9 +1760,16 @@ export async function precontent(config, originalPack) {
 		viewAsFilter: function (player) {
 			return player.countCards("hes", { type: "equip" }) > 0;
 		},
-		viewAs: {
-			name: "shan",
-			storage:{_useCardQianghua:true},
+		viewAs: function(player) {
+			let obj = {};
+			if (!player.storage._ny_fushiId) return obj;
+			if (player.storage._ny_fushiId[1] !== 4 || player.storage._ny_fushiTime[1] <= 0) return obj;
+			if (player.countMark("_ny_noneFangYuFushi")) return obj;
+			obj = {
+				name: "shan",
+				storage:{_useCardQianghua:true},
+			};
+			return obj;
 		},
 		prompt: "将一张装备牌当强化【闪】使用或打出",
 		precontent: function() {
@@ -1807,9 +1819,16 @@ export async function precontent(config, originalPack) {
 		viewAsFilter: function (player) {
 			return player.countCards("hes", { type: "equip" }) > 0;
 		},
-		viewAs: {
-			name: "shan",
-			storage:{_ny_fangYu_Firstlingjian:true},
+		viewAs: function(player) {
+			let obj = {};
+			if (!player.storage._ny_fushiId) return obj;
+			if (player.storage._ny_fushiId[1] !== 5 || player.storage._ny_fushiTime[1] <= 0) return obj;
+			if (player.countMark("_ny_noneFangYuFushi")) return obj;
+			obj = {
+				name: "shan",
+				storage:{_ny_fangYu_Firstlingjian:true},
+			};
+			return obj;
 		},
 		prompt: "将一张装备牌当【闪】使用或打出",
 		precontent: function() {
@@ -1879,8 +1898,14 @@ export async function precontent(config, originalPack) {
 		viewAsFilter: function (player) {
 			return player.countCards("hes", { type: "equip" }) > 0;
 		},
-		viewAs: {
-			name: "jiu",
+		viewAs: function(player) {
+			let obj = {};
+			if (!player.storage._ny_fushiId) return obj;
+			if (!player.isDying()) return obj;
+			if (player.storage._ny_fushiId[1] !== 6 || player.storage._ny_fushiTime[1] <= 0) return obj;
+			if (player.countMark("_ny_noneFangYuFushi")) return obj;
+			obj["name"] = "jiu";
+			return obj;
 		},
 		prompt: "将一张装备牌当【酒】使用或打出",
 		precontent: function() {
