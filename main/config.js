@@ -26,12 +26,11 @@ const configInfo = {
 			if (this.hth_more == undefined) {
 				var more = ui.create.div('.hth_more',
 				`<div style="border: 0px solid white;text-align:left"><div style="font-size:10px; line-height:11px;">
-				<br><li>当前版本：魔改版1.0版本
+				<br><li>当前版本：魔改版1.0.1版本
 				<br><b style="color: red">更新内容：</b>
-				<br>符石机制重做，增加怒气，强化牌等机制
-				<br>还原所有怒焰三国杀的符石和战法
-				<br>增加神孙坚，重做所有武将
-				<br>增加怒焰牌堆，目前仅包含两个版本的【水淹七军】，【怒发冲冠】和【釜底抽薪】
+				<br>新增武将：界曹节
+				<br>修复一些已知问题
+				<br>增加武将传说皮肤机制（在扩展选项处调整，重启后生效）
 				`
 				);
 				this.hth_more = more;
@@ -115,6 +114,34 @@ const fushiSet = {
 			6: "六星",
 		},
 	},
+	InfinityFuShi: {
+		init: "false",
+		name: "取消符石使用次数限制",
+		intro: "开启后，使用任何符石将没有任何次数限制，联机模式仅自己可用=关闭",
+		item: {
+			"false": "关闭",
+			"onlyMe": "仅限自己",
+			"global": "全局",
+		},
+	},
+}
+const characterSet = {
+	nuyan_jie_caojie: {
+		init: "First",
+		name: "界曹节版本",
+		intro: "怒焰界曹节版本设置",
+		item: {
+			"First": "初版",
+			"Second": "二版",
+		},
+		changeSkills: ["nuyan_nvzhongjinguo"],
+	},
+	legendSkin_nuyan_jie_caojie: {
+		init: false,
+		name: "曹节传说皮肤",
+		intro: "怒焰界曹节传说皮肤设置",
+	},
 }
 for (let i in fushiSet) configInfo[i] = fushiSet[i];
+for (let i in characterSet) configInfo[i] = characterSet[i];
 export let config = configInfo;

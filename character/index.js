@@ -1,5 +1,5 @@
 import { lib, game, ui, get, ai, _status } from '../../../../noname.js'
-//import { config } from "../main/config.js";
+import { config } from "../main/config.js";
 import nyKill from "./nyKill.js";
 
 const packList = [nyKill];
@@ -49,20 +49,33 @@ if (lib.config?.extension_怒焰武将_nuyan_star < 3) {
 	}
 }
 for (let char in nyKill.character) {
+	//为不同版本技能提供描述
+	if (lib.config["extension_怒焰武将_" + char]) {
+		for (let i of config[char].changeSkills) {
+			if (nyKill.dynamicTranslate[i]) nyKill.translate[i + "_info"] = nyKill.dynamicTranslate[i]();
+		}
+	}
+	//清除传说皮肤技能
+	if (!lib.config["extension_怒焰武将_legendSkin_" + char]) {
+		for (let sk of nyKill.character[char][3]) {
+			if (sk.includes("Legend")) nyKill.character[char][3].remove(sk);
+		}
+	}
 	for (let sk of skList) {
 		nyKill.character[char][3].remove(sk);
 	}
 }
 
 if (lib.device || lib.node) {
-	//1
 	for (let pack of packList) {
-		const prefixList = ["界", "谋", "幻", "神", "起"];
+		//防止吴姓角色错误被认为是prefix，吴势力角色的prefix和ab需在nyKill中自己定义
+		const prefixList = ["界", "谋", "幻", "神", "起", "魏"];
 		for (let name in pack.character) {
 			//初始化第五格
 			if (!pack.character[name][4]) pack.character[name][4] = [];
 			//原画
-			pack.character[name][4].push(`${lib.device || lib.node ? "ext:" : "db:extension-"}怒焰武将/image/character/${name}.jpg`);
+			if (lib.config["extension_怒焰武将_legendSkin_" + name]) pack.character[name][4].push(`${lib.device || lib.node ? "ext:" : "db:extension-"}怒焰武将/image/character/legendSkin_${name}.jpg`);
+			else pack.character[name][4].push(`${lib.device || lib.node ? "ext:" : "db:extension-"}怒焰武将/image/character/${name}.jpg`);
 			//阵亡语音
 			if (!pack.character[name][4].some(j => j.startsWith("die:"))) {
 				pack.character[name][4].add("die:ext:怒焰武将/audio/die:true");
@@ -71,15 +84,17 @@ if (lib.device || lib.node) {
 			if (name in pack.translate) {
 				let translate = pack.translate[name];
 				if (!(name + "_ab" in pack.translate)) {
-					if (name.includes("First")) pack.translate[name + "_ab"] = "怒焰初版" + translate;
+					if (name.includes("First") || lib.config["extension_怒焰武将_" + name] == "First") pack.translate[name + "_ab"] = "怒焰初版" + translate;
+					else if (lib.config["extension_怒焰武将_" + name] == "Second") pack.translate[name + "_ab"] = "怒焰二版" + translate;
 					else pack.translate[name + "_ab"] = "怒焰" + translate;
 				}
 				if (!(name + "_prefix" in pack.translate)) {
 					let prefix = prefixList.find(prefix => translate.includes(prefix));
 					pack.translate[name + "_prefix"] = "怒焰";
-					if (name.includes("First")) {
+					if (name.includes("First") || lib.config["extension_怒焰武将_" + name] == "First") {
 						pack.translate[name + "_prefix"] += "初版";
 					}
+					else if (lib.config["extension_怒焰武将_" + name] == "Second") pack.translate[name + "_prefix"] += "二版";
 					if (prefix) {
 						pack.translate[name + "_prefix"] += prefix;
 					}

@@ -83,7 +83,6 @@ export async function precontent(config, originalPack) {
 			return copyPile;
 		},
 		helpStr: function(html) {
-			//后续制作符石技能显示的缩放
 			if (html.hth_more == undefined) {
 				let str = "",
 					listStr = "";
@@ -117,8 +116,12 @@ export async function precontent(config, originalPack) {
 				<br>github仓库：<a href="https://github.com/zhonghui1966/nyKill">点击此处进入</a>
 				`;
 				var more = ui.create.div('.hth_more',
-				`<li>当前版本：魔改版1.0版本
+				`<li>当前版本：魔改版1.01版本
 				<br><b style="color: red">更新内容：</b>
+				<br>新增武将：界曹节
+				<br>修复一些已知问题
+				<br>增加武将传说皮肤机制（在扩展选项处调整，重启后生效）
+				<br><b style="color: red">1.0版本更新内容：</b>
 				<br>符石机制重做，增加怒气，强化牌等机制
 				<br>还原所有怒焰三国杀的符石和战法
 				<br>增加神孙坚，重做所有武将
@@ -210,51 +213,6 @@ export async function precontent(config, originalPack) {
 			return `<span style="color:#faecd1;display:inline-block;transform:translateY(-1px);text-shadow:0 0 2px #faecd1;padding:0 2px;border-radius:2px;background:rgba(10, 143, 70, 0.1);">天刃</span>`;
 		},
 	});
-	lib.namePrefix.set("怒焰界", {
-		getSpan(prefix, name) {
-			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("界", name)}`;
-		},
-	});
-	lib.namePrefix.set("怒焰谋", {
-		getSpan(prefix, name) {
-			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("谋", name)}`;
-		},
-	});
-	lib.namePrefix.set("怒焰幻", {
-		getSpan(prefix, name) {
-			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("幻", name)}`;
-		},
-	});
-	lib.namePrefix.set("怒焰起", {
-		getSpan(prefix, name) {
-			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("起", name)}`;
-		},
-	});
-	lib.namePrefix.set("怒焰神", {
-		getSpan(prefix, name) {
-			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("神", name)}`;
-		},
-	});
-	lib.namePrefix.set("怒焰魏", {
-		getSpan(prefix, name) {
-			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("魏", name)}`;
-		},
-	});
-	lib.namePrefix.set("怒焰吴", {
-		getSpan(prefix, name) {
-			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("吴", name)}`;
-		},
-	});
-	lib.namePrefix.set("怒焰初版", {
-		getSpan(prefix, name) {
-			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("旧", name)}`;
-		},
-	});
-	lib.namePrefix.set("怒焰初版神", {
-		getSpan(prefix, name) {
-			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("旧", name)}${get.prefixSpan("神", name)}`;
-		},
-	});
 	lib.namePrefix.set("怒焰神射", {
 		getSpan(prefix, name) {
 			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("神射", name)}`;
@@ -265,6 +223,29 @@ export async function precontent(config, originalPack) {
 			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("天刃", name)}`;
 		},
 	});
+	let old = ["初版", "二版"];
+	let prefix = ["界", "谋", "幻", "神", "起", "魏", "吴"];
+	for (let i of prefix) {
+		lib.namePrefix.set("怒焰" + i, {
+			getSpan(prefix, name) {
+				return `${get.prefixSpan("怒焰", name)}${get.prefixSpan(i, name)}`;
+			},
+		});
+	}
+	for (let i of old) {
+		lib.namePrefix.set("怒焰" + i, {
+			getSpan(prefix, name) {
+				return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("旧", name)}`;
+			},
+		});
+		for (let j of prefix) {
+			lib.namePrefix.set("怒焰" + i + j, {
+				getSpan(prefix, name) {
+					return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("旧", name)}${get.prefixSpan(j, name)}`;
+				},
+			});
+		}
+	}
 	
 	//单向联机❌ 加入武将包√
 	for (let packName in characters) {
@@ -305,16 +286,6 @@ export async function precontent(config, originalPack) {
 	if (!_status.postReconnect.nyKill_namePrefix) {
 		_status.postReconnect.nyKill_namePrefix = [
 			function () {
-				lib.namePrefix.set("神射", {
-					getSpan(prefix, name) {
-						return `<span style="color:#faecd1;display:inline-block;transform:translateY(-1px);text-shadow:0 0 2px #faecd1;padding:0 2px;border-radius:2px;background:rgba(10, 143, 70, 0.1);">神射</span>`;
-					},
-				});
-				lib.namePrefix.set("天刃", {
-					getSpan(prefix, name) {
-						return `<span style="color:#faecd1;display:inline-block;transform:translateY(-1px);text-shadow:0 0 2px #faecd1;padding:0 2px;border-radius:2px;background:rgba(10, 143, 70, 0.1);">天刃</span>`;
-					},
-				});
 				lib.namePrefix.set("魏", {
 				    getSpan: () => {
 						//AI跑的
@@ -333,49 +304,14 @@ export async function precontent(config, originalPack) {
 				        return `<span style="color:#f00;display:inline-block;transform:translateY(-1px);text-shadow:0 0 2px rgba(255,0,0,0.5);">怒</span>`;
 				    },
 				});
-				lib.namePrefix.set("怒焰界", {
+				lib.namePrefix.set("神射", {
 					getSpan(prefix, name) {
-						return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("界", name)}`;
+						return `<span style="color:#faecd1;display:inline-block;transform:translateY(-1px);text-shadow:0 0 2px #faecd1;padding:0 2px;border-radius:2px;background:rgba(10, 143, 70, 0.1);">神射</span>`;
 					},
 				});
-				lib.namePrefix.set("怒焰谋", {
+				lib.namePrefix.set("天刃", {
 					getSpan(prefix, name) {
-						return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("谋", name)}`;
-					},
-				});
-				lib.namePrefix.set("怒焰幻", {
-					getSpan(prefix, name) {
-						return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("幻", name)}`;
-					},
-				});
-				lib.namePrefix.set("怒焰起", {
-					getSpan(prefix, name) {
-						return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("起", name)}`;
-					},
-				});
-				lib.namePrefix.set("怒焰神", {
-					getSpan(prefix, name) {
-						return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("神", name)}`;
-					},
-				});
-				lib.namePrefix.set("怒焰魏", {
-					getSpan(prefix, name) {
-						return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("魏", name)}`;
-					},
-				});
-				lib.namePrefix.set("怒焰吴", {
-					getSpan(prefix, name) {
-						return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("吴", name)}`;
-					},
-				});
-				lib.namePrefix.set("怒焰初版", {
-					getSpan(prefix, name) {
-						return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("旧", name)}`;
-					},
-				});
-				lib.namePrefix.set("怒焰初版神", {
-					getSpan(prefix, name) {
-						return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("旧", name)}${get.prefixSpan("神", name)}`;
+						return `<span style="color:#faecd1;display:inline-block;transform:translateY(-1px);text-shadow:0 0 2px #faecd1;padding:0 2px;border-radius:2px;background:rgba(10, 143, 70, 0.1);">天刃</span>`;
 					},
 				});
 				lib.namePrefix.set("怒焰神射", {
@@ -388,6 +324,29 @@ export async function precontent(config, originalPack) {
 						return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("天刃", name)}`;
 					},
 				});
+				let old = ["初版", "二版"];
+				let prefix = ["界", "谋", "幻", "神", "起", "魏", "吴"];
+				for (let i of prefix) {
+					lib.namePrefix.set("怒焰" + i, {
+						getSpan(prefix, name) {
+							return `${get.prefixSpan("怒焰", name)}${get.prefixSpan(i, name)}`;
+						},
+					});
+				}
+				for (let i of old) {
+					lib.namePrefix.set("怒焰" + i, {
+						getSpan(prefix, name) {
+							return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("旧", name)}`;
+						},
+					});
+					for (let j of prefix) {
+						lib.namePrefix.set("怒焰" + i + j, {
+							getSpan(prefix, name) {
+								return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("旧", name)}${get.prefixSpan(j, name)}`;
+							},
+						});
+					}
+				}
 			},
 			[],
 		];
@@ -468,9 +427,12 @@ export async function precontent(config, originalPack) {
 					//逻辑混乱（
 					let link = button.link,
 						star = lib.config.extension_怒焰武将_nuyan_star - 1;
-					console.log(star)
 					if (link.startsWith("clear")) return -1;
 					if (link.startsWith("tianyan")) return 9 + link.slice(-1);
+					if (get.nameList(player)?.some(n => n == "nuyan_jie_caojie")) {
+						if (link.startsWith("tiannu")) return link.slice(-1);
+						return -1;
+					}
 					star = Math.floor(star / 2);
 					if (link == "tianchen" + star) return 8;
 					else if (link == "tainnu" + (star + 1)) return 6;
@@ -481,8 +443,8 @@ export async function precontent(config, originalPack) {
 			if (result.links?.length) {
 				for (let i of result.links) {
 					let num = Number(i.slice(-1));
-					if (i.startsWith("tiannu") && !player.storage._noInitNuQi) lib.skill._ny_getNuqi.addNuQi(player, num);
-					if (i.startsWith("tianchen")) lib.skill._ny_getNuqi.gainNuQiMax(player, num);
+					if (i.startsWith("tiannu") && !player.storage._noInitNuQi) await lib.skill._ny_getNuqi.addNuQi(player, num);
+					if (i.startsWith("tianchen")) await lib.skill._ny_getNuqi.gainNuQiMax(player, num);
 					if (i.startsWith("tianyan")) {
 						player.maxHp += num;
 						player.hp += num;
@@ -540,93 +502,89 @@ export async function precontent(config, originalPack) {
 	    },
 	    mark: true,
 	    marktext: "🔥",
-		initNuQi: function(player) {
+		initNuQi: async function(player) {
 			player.storage._ny_nuqi ??= 0;
 			player.storage._ny_nuqiMax ??= 2;
 			lib.skill._ny_getNuqi.localMark(player,"_ny_getNuqi");
 			game.addVideo("markSkill", player, ["_ny_getNuqi"]);
 		},
-		addNuQi : function(player,num) {
+		addNuQi : async function(player,num) {
 			if (num <= 0) return;
 			if ((!player.storage._ny_nuqi) && player.storage._ny_nuqi !== 0) return;
 			if ((!player.storage._ny_nuqiMax) && player.storage._ny_nuqiMax !== 0) return;
-			let x = player.storage._ny_nuqiMax - player.storage._ny_nuqi;
-			if (num > x) {
-				//摸牌符石id9 爆能
-				if (player.storage._ny_fushiId && player.storage._ny_fushiId[2] == 9 && player.storage._ny_fushiTime[2] > 0) {
-					let num2 = num - x;
+			player.storage._ny_nuqi += num;
+			if (player.storage._ny_nuqi >= player.storage._ny_nuqiMax) {
+				let filterSkill = "nuyan_shouxi";
+				const ownedSkills = player.getSkills(null, false, true).filter(skill => {
+					return skill == filterSkill;
+				});
+				let b = ownedSkills.length !== 0 && !player.isTempBanned(filterSkill) && !(player.shixiaoedSkills && player.shixiaoedSkills.includes(filterSkill));
+				while (b && player.storage._ny_nuqi >= player.storage._ny_nuqiMax) {
+					await lib.skill.nuyan_shouxi.skillEffect(player);
+				}
+				if (player.storage._ny_fushiId && player.storage._ny_fushiId[2] == 9 && player.storage._ny_fushiTime[2] > 0 && player.storage._ny_nuqi > player.storage._ny_nuqiMax) {
+					let num = player.storage._ny_nuqi - player.storage._ny_nuqiMax;
 					if (player.storage._ny_fushiTime[2] >= num2) {
-						player.draw(2 * num2);
 						player.storage._ny_fushiTime[2] -= num2;
+						await player.draw(2 * num2);
 					} else {
-						player.draw(2 * player.storage._ny_fushiTime[2]);
 						player.storage._ny_fushiTime[2] = 0;
+						await player.draw(2 * player.storage._ny_fushiTime[2]);
 					}
 				}
-				num = x;
+				if (!b) player.storage._ny_nuqi = player.storage._ny_nuqiMax;
 			}
-			player.storage._ny_nuqi += num;
 			//摸牌符石id8 袭扰
-			var list = [];
-			for (let i of game.players) {
-			  if (i != player && i.storage._ny_fushiId && i.storage._ny_fushiId[2] == 8 && i.storage._ny_fushiTime[2] > 0) {
-			    list.push(i);
-			  }
-			}
+			let list = game.players.filter(i => i != player && i.storage._ny_fushiId && i.storage._ny_fushiId[2] == 8 && i.storage._ny_fushiTime[2] > 0);
 			if (list.length) {
 				for (let i of list) {
 					i.storage._ny_fushiTime[2] --;
-					i.draw(num);
+					await i.draw(num);
 				}
 			}
 			//摸牌符石id5 诱敌
 			if (player.storage._ny_fushiId && player.storage._ny_fushiId[2] == 5 && player.storage._ny_fushiTime[2] > 0) {
 				if (player.storage._ny_fushiTime[2] >= num) {
-					player.draw(2 * num);
 					player.storage._ny_fushiTime[2] -= num;
+					await player.draw(2 * num);
 				} else {
-					player.draw(2 * player.storage._ny_fushiTime[2]);
 					player.storage._ny_fushiTime[2] = 0;
+					await player.draw(2 * player.storage._ny_fushiTime[2]);
 				}
 			}
 		},
-		loseNuQi : function(player,num) {
+		loseNuQi : async function(player,num) {
 			if (num <= 0) return;
 			if ((!player.storage._ny_nuqi) && player.storage._ny_nuqi !== 0) return;
 			if ((!player.storage._ny_nuqiMax) && player.storage._ny_nuqiMax !== 0) return;
 			if (player.storage._ny_nuqi < num) num = player.storage._ny_nuqi;
 			player.storage._ny_nuqi -= num;
 			//摸牌符石id10 虎啸
-			var list = [];
-			for (let i of game.players) {
-			  if (i != player && i.storage._ny_fushiId && i.storage._ny_fushiId[2] == 10 && i.storage._ny_fushiTime[2] > 0) {
-			    list.push(i);
-			  }
-			}
+			let list = game.players.filter(i => i != player && i.storage._ny_fushiId && i.storage._ny_fushiId[2] == 10 && i.storage._ny_fushiTime[2] > 0);
 			if (list.length) {
 				for (let i of list) {
 					i.storage._ny_fushiTime[2] --;
-					i.draw(num);
+					await i.draw(num);
 				}
 			}
 			//摸牌符石id5 诱敌
 			if (player.storage._ny_fushiId && player.storage._ny_fushiId[2] == 5 && player.storage._ny_fushiTime[2] > 0) {
 				if (player.storage._ny_fushiTime[2] >= num) {
-					player.draw(2 * num);
 					player.storage._ny_fushiTime[2] -= num;
+					await player.draw(2 * num);
 				} else {
-					player.draw(2 * player.storage._ny_fushiTime[2]);
 					player.storage._ny_fushiTime[2] = 0;
+					await player.draw(2 * player.storage._ny_fushiTime[2]);
 				}
 			}
 			//怒气符石id9 振奋
 			if (player.storage._ny_fushiId && player.storage._ny_fushiId[3] == 9 && player.storage._ny_nuqi <= 1 && player.storage._ny_fushiTime[3] > 0) {
-				player.storage._ny_fushiTime[2] --;
-				lib.skill._ny_getNuqi.addNuQi(player,2);
+				await player.storage._ny_fushiTime[2] --;
+				await lib.skill._ny_getNuqi.addNuQi(player,2);
 			}
 		},
 		//怒气上限至多为6
-		gainNuQiMax: function(player, num) {
+		gainNuQiMax: async function(player, num) {
 			if (!player.storage._ny_nuqiMax) {
 				player.storage._nu_nuqi = 0;
 				player.storage._ny_nuqiMax = num;
@@ -635,7 +593,7 @@ export async function precontent(config, originalPack) {
 			} else player.storage._ny_nuqiMax += num;
 			player.storage._ny_nuqiMax = Math.min(player.storage._ny_nuqiMax, 6);
 		},
-		loseNuQiMax: function(player, num) {
+		loseNuQiMax: async function(player, num) {
 			if ((!player.storage._ny_nuqi) && player.storage._ny_nuqi !== 0) return;
 			if ((!player.storage._ny_nuqiMax) && player.storage._ny_nuqiMax !== 0) return;
 			if (num >= player.storage._ny_nuqiMax) {
@@ -647,7 +605,7 @@ export async function precontent(config, originalPack) {
 				player.storage._ny_nuqiMax -= num;
 				if (player.storage._ny_nuqi > player.storage._ny_nuqiMax) {
 					num = player.storage._ny_nuqi - player.storage._ny_nuqiMax;
-					lib.skill._ny_getNuqi.loseNuQi(player, num);
+					await lib.skill._ny_getNuqi.loseNuQi(player, num);
 				}
 			}
 		},
@@ -674,13 +632,13 @@ export async function precontent(config, originalPack) {
 	    },
 	    async content(event,trigger,player) {
 			if (trigger.name == 'game') {
-				lib.skill._ny_getNuqi.initNuQi(player);
+				await lib.skill._ny_getNuqi.initNuQi(player);
 			}
 	        else {
 				//受伤不获得怒气的标记写在此处
 				if (player.hasMark('_ny_jinGong_tianfa')) return;
 				if (player.hasMark("_ny_zhanFa_longzhenghudou")) return;
-				lib.skill._ny_getNuqi.addNuQi(player, trigger.num);
+				await lib.skill._ny_getNuqi.addNuQi(player, trigger.num);
 			}
 	    },
 	    priority: 1145141919810,
@@ -711,7 +669,8 @@ export async function precontent(config, originalPack) {
 					height: "20px" ,
 					color: "red" ,
 				};
-				let str = [];
+				let str = [],
+					timeStr = "";
 				if (player.storage._ny_fushiId[4] && player.storage._ny_fushiId[4] > 0) {
 					str = [
 						{ item: "战法名称", ratio: .6, headerCss },
@@ -728,9 +687,11 @@ export async function precontent(config, originalPack) {
 				let keys = Object.keys(lib.skill._ny_getFuShi.obj);
 		    	for (let i = 0; i < 4; i++) {
 					if (player.storage._ny_fushiId[i] && player.storage._ny_fushiId[i] > 0) {
+						timeStr = String(player.storage._ny_fushiTime[i]);
+						if (timeStr == "Infinity") timeStr = "无限";
 						str = [
 							{ item: get.translation(lib.skill._ny_getFuShi.obj[keys[i]][(player.storage._ny_fushiId[i]-1)]), ratio: .6, itemContainerCss },
-							{ item: String(player.storage._ny_fushiTime[i]), ratio: .8, itemContainerCss },
+							{ item: timeStr, ratio: .8, itemContainerCss },
 						];
 						addNewRow(...str);
 						hasData = true;
@@ -738,9 +699,11 @@ export async function precontent(config, originalPack) {
 				}
 				if (player.storage._ny_zhuanShuFuShiId) {
 					for (let i in player.storage._ny_zhuanShuFuShiId) {
+						timeStr = String(player.storage._ny_fushiTime[Number(i)+4]);
+						if (timeStr == "Infinity") timeStr = "无限";
 						str = [
 							{ item: get.translation(player.storage._ny_zhuanShuFuShiId[i]), ratio: .6, itemContainerCss },
-							{ item: String(player.storage._ny_fushiTime[Number(i)+4]), ratio: .8, itemContainerCss },
+							{ item: timeStr, ratio: .8, itemContainerCss },
 						];
 						addNewRow(...str);
 					}
@@ -774,7 +737,8 @@ export async function precontent(config, originalPack) {
 		},
 		async content(event,trigger,player) {
 			player.storage._ny_fushiId ??= [];
-			player.storage._ny_fushiTime ??= [6,6,6,6];
+			if (lib.config.extension_怒焰武将_InfinityFuShi == "global" || (lib.config.extension_怒焰武将_InfinityFuShi == "onlyMe" && game.me == player)) player.storage._ny_fushiTime ??= [Infinity, Infinity, Infinity, Infinity];
+			else player.storage._ny_fushiTime ??= [6,6,6,6];
 			for (let k in lib.skill._ny_getFuShi.obj) {
 				let list = lib.skill._ny_getFuShi.obj[k],
 					lists = [];
@@ -868,7 +832,8 @@ export async function precontent(config, originalPack) {
 				player.storage._ny_zhuanShuFuShiId = [];
 				for (let i in next.sort()) {
 					player.storage._ny_zhuanShuFuShiId.push(lib.skill._ny_getZhuanShuFuShi.obj[player.name][i]);
-					player.storage._ny_fushiTime.push(6);
+					if (lib.config.extension_怒焰武将_InfinityFuShi == "global" || (lib.config.extension_怒焰武将_InfinityFuShi == "onlyMe" && game.me == player)) player.storage._ny_fushiTime.push(Infinity);
+					else player.storage._ny_fushiTime.push(6);
 				}
 				//如果仅有专属符石，刷新出符石标记界面
 				if (!player.storage._ny_fushiId.some(num => num > 0)) {
@@ -1123,12 +1088,12 @@ export async function precontent(config, originalPack) {
 			if (card.storage._useCardBaseChange && card.storage._useCardBaseChange > 0) num += card.storage._useCardBaseChange;
 			target.draw(num);
 		},
-		taoyuanContent: function () {
+		taoyuanContent: async function (event, trigger, player) {
 			let num = 1;
 			if (card.storage._useCardBaseChange && card.storage._useCardBaseChange > 0) num += card.storage._useCardBaseChange;
 			if (card.storage._useCardQianghua && card.storage._useCardQianghua == true) {
 				target.recover(num);
-				lib.skill._ny_getNuqi.addNuQi(target,num);
+				await lib.skill._ny_getNuqi.addNuQi(target,num);
 			} else target.recover(num);
 			
 		},
@@ -1184,7 +1149,7 @@ export async function precontent(config, originalPack) {
 	        return false;
 	    },
 	    async content(event,trigger,player) {
-	        lib.skill._ny_getNuqi.loseNuQi(player,1);
+	        await lib.skill._ny_getNuqi.loseNuQi(player,1);
 	        trigger.card.storage._useCardQianghua = true;
 	    },
 		check(event, player) {
@@ -1431,9 +1396,9 @@ export async function precontent(config, originalPack) {
 		    if (event.targets.length !== 1) return false;
 		    return get.tag(event.card, "damage") >= 0.5;
 		},
-		content: function() {
+		async content(event, trigger, player) {
 			player.storage._ny_fushiTime[0] --;
-			lib.skill._ny_getNuqi.loseNuQi(trigger.target,3);
+			await lib.skill._ny_getNuqi.loseNuQi(trigger.target,3);
 		},
 		priority: 114,
 	}
@@ -1591,9 +1556,9 @@ export async function precontent(config, originalPack) {
 			if ((!event.target.storage._ny_nuqi) && event.target.storage._ny_nuqi !== 0) return false;
 			return true;
 		},
-		content:function () {
+		async content (event, trigger, player) {
 			player.storage._ny_fushiTime[0] --;
-			lib.skill._ny_getNuqi.loseNuQi(trigger.target,2);
+			await lib.skill._ny_getNuqi.loseNuQi(trigger.target,2);
 		},
 		priority: 114,
 	}
@@ -1866,8 +1831,8 @@ export async function precontent(config, originalPack) {
 					if ((!player.storage._ny_nuqiMax) && player.storage._ny_nuqiMax !== 0) return false;
 				    return event.card.storage._useCardQianghua != true && player.storage._ny_nuqi !== player.storage._ny_nuqiMax;
 				},
-				content:function(){
-					lib.skill._ny_getNuqi.addNuQi(player,1);
+				async content(event, trigger, player){
+					await lib.skill._ny_getNuqi.addNuQi(player,1);
 				},
 				priority: 114,
 			},
@@ -2060,8 +2025,8 @@ export async function precontent(config, originalPack) {
 				viewAsFilter:function(player){
 					return player.storage.isFirstMiaosuanIng && player.storage.isFirstMiaosuanIng == true && player.storage._ny_nuqi && player.storage._ny_nuqi > 0;
 				},
-				precontent: function() {
-					lib.skill._ny_getNuqi.loseNuQi(player,1);
+				async precontent(event, trigger, player) {
+					await lib.skill._ny_getNuqi.loseNuQi(player,1);
 				},
 				filterCard:() => false,
 				selectCard:-1,
@@ -2343,9 +2308,9 @@ export async function precontent(config, originalPack) {
 			if (get.type(event.card) == "trick" && event.targets.length == 1) return true;
 		    return get.type(event.card) == "basic" && player.storage._ny_nuqi !== player.storage._ny_nuqiMax;
 		},
-		content: function() {
+		content: async function(event, trigger, player) {
 			player.storage._ny_fushiTime[3] --;
-			lib.skill._ny_getNuqi.addNuQi(player,2);
+			await lib.skill._ny_getNuqi.addNuQi(player,2);
 		},
 		priority: 114,
 	}
@@ -2362,12 +2327,12 @@ export async function precontent(config, originalPack) {
 			if (player == _status.currentPhase) return false;
 			return event.card.name == 'wuxie' && player.storage._ny_nuqi !== player.storage._ny_nuqiMax;
 		},
-		content: function() {
+		content: async function(event, trigger, player) {
 			player.storage._ny_fushiTime[3] --;
-			lib.skill._ny_getNuqi.addNuQi(player,2);
+			await lib.skill._ny_getNuqi.addNuQi(player,2);
 			var card = _status.currentPhase.getCards('he').randomGet();
 			if (card) {
-	          _status.currentPhase.modedDiscard(card, player);
+				await _status.currentPhase.modedDiscard(card, player);
 	        }
 		},
 		priority: 114,
@@ -2384,10 +2349,10 @@ export async function precontent(config, originalPack) {
 		    if (player.storage._ny_fushiId[3] !== 3 || player.storage._ny_fushiTime[3] <= 0) return false;
 			return event.card.name == 'sha' && event.targets.length && player.storage._ny_nuqi !== player.storage._ny_nuqiMax;
 		},
-		content: function() {
+		content: async function(event, trigger, player) {
 			player.storage._ny_fushiTime[3] --;
-			if (trigger.target.isMinHp(true)) lib.skill._ny_getNuqi.addNuQi(player,2);
-			else lib.skill._ny_getNuqi.addNuQi(player,1);
+			if (trigger.target.isMinHp(true)) await lib.skill._ny_getNuqi.addNuQi(player,2);
+			else await lib.skill._ny_getNuqi.addNuQi(player,1);
 		},
 		priority: 114,
 	}
@@ -2405,10 +2370,10 @@ export async function precontent(config, originalPack) {
 			if (player.getHp() <= 4 && !player.isHealthy()) return true;
 			return player.storage._ny_nuqi !== player.storage._ny_nuqiMax;
 		},
-		content: function() {
+		content: async function(event, trigger, player) {
 			player.storage._ny_fushiTime[3] --;
-			lib.skill._ny_getNuqi.addNuQi(player,1);
-			if (player.getHp() <= 4) player.recover();
+			await lib.skill._ny_getNuqi.addNuQi(player,1);
+			if (player.getHp() <= 4) await player.recover();
 		},
 		priority: 114,
 	}
@@ -2431,8 +2396,8 @@ export async function precontent(config, originalPack) {
 			}
 		    return false;
 		},
-		content: function() {
-			lib.skill._ny_getNuqi.addNuQi(player,2);
+		content: async function(event, trigger, player) {
+			await lib.skill._ny_getNuqi.addNuQi(player,2);
 		},
 		priority: 114,
 		subSkill:{
@@ -2449,9 +2414,9 @@ export async function precontent(config, originalPack) {
 				    if (player.storage._ny_fushiId[3] !== 5 || player.storage._ny_fushiTime[3] <= 0) return false;
 					return player.storage._ny_nuqi !== player.storage._ny_nuqiMax && event.cards.some(c => get.type(c) == "equip");
 				},
-				content: function() {
+				content: async function(event, trigger, player) {
 					player.storage._ny_fushiTime[3] --;
-					lib.skill._ny_getNuqi.addNuQi(player,2);
+					await lib.skill._ny_getNuqi.addNuQi(player,2);
 				},
 				priority: 114,
 			},
@@ -2473,7 +2438,7 @@ export async function precontent(config, originalPack) {
 			let { result } = await player.chooseBool("是否发动【同仇】：获得1点怒气并摸一张牌").set("ai", () => true);
 			if (result.bool) {
 				player.storage._ny_fushiTime[3] --;
-				lib.skill._ny_getNuqi.addNuQi(player,1);
+				await lib.skill._ny_getNuqi.addNuQi(player,1);
 				await player.draw();
 			}
 		},
@@ -2495,7 +2460,7 @@ export async function precontent(config, originalPack) {
 			let { result } = await player.chooseBool("是否发动【同仇】：获得1点怒气并摸一张牌").set("ai", () => true);
 			if (result.bool) {
 				player.storage._ny_fushiTime[3] --;
-				lib.skill._ny_getNuqi.addNuQi(player,1);
+				await lib.skill._ny_getNuqi.addNuQi(player,1);
 				await player.draw();
 			}
 		},
@@ -2513,10 +2478,10 @@ export async function precontent(config, originalPack) {
 		    if (player.storage._ny_fushiId[3] !== 8 || player.storage._ny_fushiTime[3] <= 0) return false;
 			return (get.type(event.card) == 'trick' || get.type(event.card) == 'delay') && event.targets.length && player.storage._ny_nuqi !== player.storage._ny_nuqiMax;
 		},
-		content: function() {
+		content: async function(event, trigger, player) {
 			player.storage._ny_fushiTime[3] --;
-			if (trigger.targets.length > 1) lib.skill._ny_getNuqi.addNuQi(player,2);
-			else lib.skill._ny_getNuqi.addNuQi(player,1);
+			if (trigger.targets.length > 1) await lib.skill._ny_getNuqi.addNuQi(player,2);
+			else await lib.skill._ny_getNuqi.addNuQi(player,1);
 		},
 		priority: 114,
 	}
@@ -2533,9 +2498,9 @@ export async function precontent(config, originalPack) {
 		    if (player.storage._ny_fushiId[3] !== 10 || player.storage._ny_fushiTime[3] <= 0) return false;
 			return player.isDamaged() && player.storage._ny_nuqi !== player.storage._ny_nuqiMax;
 		},
-		content: function() {
+		content: async function(event, trigger, player) {
 			player.storage._ny_fushiTime[3] --;
-			lib.skill._ny_getNuqi.addNuQi(player,player.maxHp - player.hp);
+			await lib.skill._ny_getNuqi.addNuQi(player,player.maxHp - player.hp);
 		},
 		priority: 114,
 	}
@@ -2551,9 +2516,9 @@ export async function precontent(config, originalPack) {
 		    if (player.storage._ny_fushiId[3] !== 11 || player.storage._ny_fushiTime[3] <= 0) return false;
 			return player.countCards('e') > 0 && player.storage._ny_nuqi !== player.storage._ny_nuqiMax;
 		},
-		content: function() {
+		content: async function(event, trigger, player) {
 			player.storage._ny_fushiTime[3] --;
-			lib.skill._ny_getNuqi.addNuQi(player,2);
+			await lib.skill._ny_getNuqi.addNuQi(player,2);
 		},
 		priority: 114,
 	}
@@ -2569,9 +2534,9 @@ export async function precontent(config, originalPack) {
 		    if (player.storage._ny_fushiId[3] !== 12 || player.storage._ny_fushiTime[3] <= 0) return false;
 			return player.storage._ny_nuQi < 2 && player.storage._ny_nuqi !== player.storage._ny_nuqiMax;
 		},
-		content: function() {
+		content: async function(event, trigger, player) {
 			player.storage._ny_fushiTime[3] --;
-			lib.skill._ny_getNuqi.addNuQi(player,2);
+			await lib.skill._ny_getNuqi.addNuQi(player,2);
 		},
 		priority: 114,
 	}
@@ -2587,9 +2552,9 @@ export async function precontent(config, originalPack) {
 		    if (player.storage._ny_fushiId[3] !== 13 || player.storage._ny_fushiTime[3] <= 0) return false;
 			return player.storage._discardNum && player.storage._discardNum > 0 && player.storage._ny_nuqi !== player.storage._ny_nuqiMax;
 		},
-		content: function() {
+		content: async function(event, trigger, player) {
 			player.storage._ny_fushiTime[3] --;
-			lib.skill._ny_getNuqi.addNuQi(player,player.storage._discardNum);
+			await lib.skill._ny_getNuqi.addNuQi(player,player.storage._discardNum);
 		},
 		priority: 114,
 		subSkill:{
@@ -2690,8 +2655,8 @@ export async function precontent(config, originalPack) {
 		charlotte: true,
 		frequent: false,
 		async content (event,trigger,player) {
-			trigger.player.randomDiscard(2);
-			lib.skill._ny_getNuqi.loseNuQi(trigger.player,1);
+			await trigger.player.randomDiscard(2);
+			await lib.skill._ny_getNuqi.loseNuQi(trigger.player,1);
 		},
 	}
 	lib.skill._ny_zhanFa_Firstpozhencuijian = {//id4
@@ -3071,7 +3036,7 @@ export async function precontent(config, originalPack) {
 		    return true;
 		},
 		async content (event,trigger,player) {
-			lib.skill._ny_getNuqi.addNuQi(player,1);
+			await lib.skill._ny_getNuqi.addNuQi(player,1);
 			let { result } = await player.chooseBool("是否令"+get.translation(trigger.player)+"选择一项：1.翻面；2.失去1点怒气且下次受到伤害+1")
 				.set("ai",() => {
 					return -1 * get.attitude(player,trigger.player);
@@ -3094,7 +3059,7 @@ export async function precontent(config, originalPack) {
 				if (result.control == "选项一") {
 					await trigger.player.turnOver();
 				} else if (result.control == "选项二") {
-					lib.skill._ny_getNuqi.loseNuQi(trigger.player,1);
+					await lib.skill._ny_getNuqi.loseNuQi(trigger.player,1);
 					trigger.player.addMark("_ny_zhanFa_yanxingjunfa");
 					trigger.player.when({player:"damageBegin3"})
 						.then(() => {
@@ -3676,10 +3641,10 @@ export async function precontent(config, originalPack) {
 			if (player.storage._ny_fushiId[4] !== 21) return false;
 			return event.source && event.source != player && event.getl(event.source).hs.length > 0;
 		},
-		content: function() {
+		content: async function(event, trigger, player) {
 			if (trigger.source.storage._ny_nuqi > 0 && player.storage._ny_nuqi) {
-				lib.skill._ny_getNuqi.loseNuQi(trigger.source,1);
-				lib.skill._ny_getNuqi.addNuQi(player,1);
+				await lib.skill._ny_getNuqi.loseNuQi(trigger.source,1);
+				await lib.skill._ny_getNuqi.addNuQi(player,1);
 			}
 			if (trigger.getl(trigger.source).hs.length > 3 && (player.storage._ny_zhanFa_shehunduopo !== true)) {
 				player.storage._ny_zhanFa_shehunduopo = true;
@@ -3941,7 +3906,7 @@ export async function precontent(config, originalPack) {
 			let num = trigger.player.storage._ny_nuqi;
 			trigger.player.recoverTo(num);
 			if (trigger.player != player) await player.damage(num,"nosource");
-			lib.skill._ny_getNuqi.loseNuQi(trigger.player,num);
+			await lib.skill._ny_getNuqi.loseNuQi(trigger.player,num);
 		},
 		priority: 1145,
 	}
@@ -4201,7 +4166,7 @@ export async function precontent(config, originalPack) {
 			player.storage._ny_fushiTime[4+trigger.zhuanShuFuShiId1]--;
 			let num = trigger.targets.length + 1;
 			await player.draw(num);
-			lib.skill._ny_getNuqi.addNuQi(player, num);
+			await lib.skill._ny_getNuqi.addNuQi(player, num);
 		},
 		priority: 1145,
 	}

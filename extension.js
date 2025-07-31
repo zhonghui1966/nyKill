@@ -26,11 +26,16 @@ Visit Repository</a>
 <br>详情见帮助内容
 <br>怒焰机制默认关闭，请前往扩展选项处开启
 <br><b onclick="setTimeout(() => ui.click.extensionTab('怒焰武将'), 850)">点击前往设置</b>
-2025.07.27更新<br>
-&ensp; 符石机制重做，增加怒气，强化牌机制<br>
-&ensp; 还原所有怒焰三国杀的符石和战法<br>
-&ensp; 增加<div style="display:inline; font-family: xingkai, xinwei;" data-nature="qunmm">神孙坚</div>，重做了原作者的所有武将<br>
-&ensp; 增加怒焰牌堆，目前仅包含两个版本的【水淹七军】，【怒发冲冠】和【釜底抽薪】<br>
+<li>当前版本：魔改版1.01版本
+<br><b style="color: red">更新内容：</b>
+<br>新增武将：界曹节
+<br>修复一些已知问题
+<br>增加武将传说皮肤机制（在扩展选项处调整，重启后生效）
+<br><b style="color: red">1.0版本更新内容：</b>
+<br>符石机制重做，增加怒气，强化牌等机制
+<br>还原所有怒焰三国杀的符石和战法
+<br>增加神孙坚，重做所有武将
+<br>增加怒焰牌堆，目前仅包含两个版本的【水淹七军】，【怒发冲冠】和【釜底抽薪】
 &ensp; <li>欢迎大家进群支持怒焰武将<br>
 &ensp; <img style=width:238px src="${lib.assetURL}extension/怒焰武将/image/qq.jpg">
 `;
