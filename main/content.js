@@ -1,4 +1,5 @@
 import { lib, game, ui, get, ai, _status } from '../../../noname.js'
+import { config } from "./config.js";
 export const content = function (config, pack) {
     //在这里编写启动阶段执行的代码。
 	//版本检测 and 更新公告
@@ -21,6 +22,10 @@ const b = 1;
 		game.showExtensionChangeLog(pack.changelog);
 	}
 	
+	//初始化版本
+	for (let Config in config) {
+		if (!lib.config["extension_怒焰武将_" + Config] && config[Config]?.init) lib.config["extension_怒焰武将_" + Config] = config[Config].init;
+	}
 	/*if (config.debug) {
 		lib.arenaReady.push(() => {
 			lib.config.characters = window.__configCharactersBackup.slice();

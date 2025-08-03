@@ -25,9 +25,13 @@ Visit Repository</a>
 <br>QQ群：877603179
 <br>详情见帮助内容
 <br>怒焰机制默认关闭，请前往扩展选项处开启
-<br><b onclick="setTimeout(() => ui.click.extensionTab('怒焰武将'), 850)">点击前往设置</b>
-<li>当前版本：魔改版1.01版本
+<br><b onclick="setTimeout(() => ui.click.extensionTab('怒焰武将'), 850)">点击前往设置</b><br>
+<li>当前版本：魔改版1.0.2版本
 <br><b style="color: red">更新内容：</b>
+<br>新增武将：李儒，曹髦
+<br>修复一些已知问题
+<br>怒焰吕玲绮适配新版本怒焰三国杀，增加怒焰吕玲绮版本设置选项
+<br><li><b style="color: red">1.01版本更新内容：</b>
 <br>新增武将：界曹节
 <br>修复一些已知问题
 <br>增加武将传说皮肤机制（在扩展选项处调整，重启后生效）

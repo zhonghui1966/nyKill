@@ -2,6 +2,15 @@ import { lib, game, ui, get, ai, _status } from '../../../noname.js';
 import { characters } from "../character/index.js";
 import { card as nyCard } from "../card/nyCard.js";
 export async function precontent(config, originalPack) {
+	/*lib.skill._test = {
+		trigger: {
+			player: "changeHujiaEnd",
+		},
+		forced: true,
+		filter: function(event, player) {
+			console.log(event);
+		}
+	}*/
 	if (!config.enable) {
 		return;
 	}
@@ -116,8 +125,12 @@ export async function precontent(config, originalPack) {
 				<br>github仓库：<a href="https://github.com/zhonghui1966/nyKill">点击此处进入</a>
 				`;
 				var more = ui.create.div('.hth_more',
-				`<li>当前版本：魔改版1.01版本
+				`<li>当前版本：魔改版1.0.2版本
 				<br><b style="color: red">更新内容：</b>
+				<br>新增武将：李儒，曹髦
+				<br>修复一些已知问题
+				<br>怒焰吕玲绮适配新版本怒焰三国杀，增加怒焰吕玲绮版本设置选项
+				<br><li><b style="color: red">1.01版本更新内容：</b>
 				<br>新增武将：界曹节
 				<br>修复一些已知问题
 				<br>增加武将传说皮肤机制（在扩展选项处调整，重启后生效）
@@ -161,7 +174,7 @@ export async function precontent(config, originalPack) {
 				<br>5.羁绊技能机制：
 				<br>每个怒焰武将有各自的羁绊技能，可以令符石的触发次数增加
 				`+ str + qq
-				//后续颜色给开局的适配+专属符石写进去
+				//后续专属符石写进去
 				);
 				//#FF4500 #1E90FF #9370DB #FF8C00 #2E8B57
 				html.hth_more = more;
@@ -441,9 +454,10 @@ export async function precontent(config, originalPack) {
 				})
 				.forResult();
 			if (result.links?.length) {
+				let addNuqi;
 				for (let i of result.links) {
 					let num = Number(i.slice(-1));
-					if (i.startsWith("tiannu") && !player.storage._noInitNuQi) await lib.skill._ny_getNuqi.addNuQi(player, num);
+					if (i.startsWith("tiannu") && !player.storage._noInitNuQi) addNuqi = num;
 					if (i.startsWith("tianchen")) await lib.skill._ny_getNuqi.gainNuQiMax(player, num);
 					if (i.startsWith("tianyan")) {
 						player.maxHp += num;
@@ -451,6 +465,7 @@ export async function precontent(config, originalPack) {
 						player.update();
 					}
 				}
+				if (addNuqi) await lib.skill._ny_getNuqi.addNuQi(player, addNuqi);
 			}
 		},
 		forced: true,
@@ -673,9 +688,10 @@ export async function precontent(config, originalPack) {
 					timeStr = "";
 				if (player.storage._ny_fushiId[4] && player.storage._ny_fushiId[4] > 0) {
 					str = [
-						{ item: "战法名称", ratio: .6, headerCss },
+						{ item: `战法名称`, ratio: .6, headerCss },
 						{ item: get.translation(lib.skill._ny_getFuShi.obj["zhanFa"][(player.storage._ny_fushiId[4]-1)]), ratio: .8, itemContainerCss },
 					];
+					str[1].item = get.info("_ny_getFuShi").color["zhanFa"] + str[1].item + "</b>";
 					addNewRow(...str);
 				}
 				str = [
@@ -693,6 +709,7 @@ export async function precontent(config, originalPack) {
 							{ item: get.translation(lib.skill._ny_getFuShi.obj[keys[i]][(player.storage._ny_fushiId[i]-1)]), ratio: .6, itemContainerCss },
 							{ item: timeStr, ratio: .8, itemContainerCss },
 						];
+						str[0].item = get.info("_ny_getFuShi").color[keys[i]] + str[0].item + "</b>";
 						addNewRow(...str);
 						hasData = true;
 					}
@@ -705,6 +722,7 @@ export async function precontent(config, originalPack) {
 							{ item: get.translation(player.storage._ny_zhuanShuFuShiId[i]), ratio: .6, itemContainerCss },
 							{ item: timeStr, ratio: .8, itemContainerCss },
 						];
+						str[0].item = get.info("_ny_getFuShi").color["zhuanShu"] + str[0].item + "</b>";
 						addNewRow(...str);
 					}
 					hasData = true;
@@ -721,13 +739,21 @@ export async function precontent(config, originalPack) {
 		forced: true,
 		popup:false,
 		charlotte: true,
+		color: {
+			"jinGong": `<b style="color:#FF4500">`,
+			"fangYu": `<b style="color:#1E90FF">`,
+			"moPai": `<b style="color:#9370DB">`,
+			"nuQi": `<b style="color:#FF8C00">`,
+			"zhanFa": `<b style="color:#2E8B57">`,
+			"zhuanShu": `<b style="color:#FF00FF">`,
+		},
 		obj: {
 			"jinGong":["_ny_jinGong_duopo","_ny_jinGong_jinghong","_ny_jinGong_zhenshe","_ny_jinGong_yuwei","_ny_jinGong_fulian","_ny_jinGong_youlong","_ny_jinGong_gongjian","_ny_jinGong_shenmou","_ny_jinGong_lingjian","_ny_jinGong_qianggong","_ny_jinGong_tianfa","_ny_jinGong_fenyong"],
 			"fangYu":["_ny_fangYu_yuanbing","_ny_fangYu_dunzhen","_ny_fangYu_xiongbing","_ny_fangYu_lingzhen","_ny_fangYu_Firstlingzhen","_ny_fangYu_yingyong","_ny_fangYu_shenyou","_ny_fangYu_miaosuan","_ny_fangYu_Firstmiaosuan","_ny_fangYu_qingling","_ny_fangYu_sishou","_ny_fangYu_tiejia","_ny_fangYu_jianren"],
 			"moPai":["_ny_moPai_shengji","_ny_moPai_cangfeng","_ny_moPai_junzhen","_ny_moPai_zhangu","_ny_moPai_youdi","_ny_moPai_xuncha","_ny_moPai_wuku","_ny_moPai_xirao","_ny_moPai_baoneng","_ny_moPai_huxiao","_ny_moPai_yuling","_ny_moPai_qingshen"],
 			"nuQi":["_ny_nuQi_xingchi","_ny_nuQi_qimou","_ny_nuQi_shayi","_ny_nuQi_fenfa","_ny_nuQi_wuling","_ny_nuQi_tongchou","_ny_nuQi_Firsttongchou","_ny_nuQi_guimou","_ny_nuQi_zhenfen","_ny_nuQi_aibing","_ny_nuQi_jingbing","_ny_nuQi_lingyuan","_ny_nuQi_gujun"],
 			"zhanFa":["_ny_zhanFa_lvedigongcheng","_ny_zhanFa_xushidaifa","_ny_zhanFa_anzhongtuxi","_ny_zhanFa_Firstpozhencuijian","_ny_zhanFa_feiyangbahu","_ny_zhanFa_leitingnuhou","_ny_zhanFa_gexuqipao","_ny_zhanFa_dandadudou","_ny_zhanFa_cuichengbazhai","_ny_zhanFa_longzhenghudou","_ny_zhanFa_yanxingjunfa","_ny_zhanFa_libingmoma","_ny_zhanFa_yetandiying","_ny_zhanFa_bixujishi","_ny_zhanFa_bainiaochaofeng","_ny_zhanFa_yihuajiemu","_ny_zhanFa_zhengzhengrishang","_ny_zhanFa_Firsttongqiangtiebi","_ny_zhanFa_sheguoyouzui","_ny_zhanFa_yixinghuandou","_ny_zhanFa_shehunduopo","_ny_zhanFa_jiuhanzhanyong","_ny_zhanFa_gubenguiyuan","_ny_zhanFa_pozhencuijian","_ny_zhanFa_zhulianbihe"],
-		},//get.translation("jinGong")
+		},
 		filter: function (event, player) {
 			if (lib.config.extension_怒焰武将_nuyan_rule1 == "false") return false;
 			else if (lib.config.extension_怒焰武将_nuyan_rule1 == "onlyMe" && game.me != player) return false;
@@ -745,14 +771,15 @@ export async function precontent(config, originalPack) {
 				list.forEach(i => {
 				    if (lib.translate[i + "_info"]) {
 				        var translation = get.translation(i);
-				        var litm = ('【' + translation + "】<div>" + lib.translate[i + "_info"] + "</div>");
+				        var litm = ('〖' + translation + "〗<div>" + lib.translate[i + "_info"] + "</div>");
 				        lists.push(litm);
 				    }
 				})
-				let next = await player.chooseButton(["请选择一项"+get.translation(k)+"符石获得", [lists.map((item, i) => { return [i, item]; }), "textbutton",],])
-				.set("selectButton", 1)
-				.set("ai", button => Math.floor(Math.random() * 114514))
-				.forResultLinks();
+				let str = get.info("_ny_getFuShi").color[k] + get.translation(k) + "</b>";
+				let next = await player.chooseButton(["请选择一项"+ str +"符石获得", [lists.map((item, i) => { return [i, item]; }), "textbutton"]])
+					.set("selectButton", 1)
+					.set("ai", button => Math.floor(Math.random() * 114514))
+					.forResultLinks();
 				if (next) {
 					var res = Number(next) + 1;
 				} else {
@@ -806,6 +833,8 @@ export async function precontent(config, originalPack) {
 			"nuyan_wei_wenyang":["_ny_zhuanShu_polu"],
 			"nuyan_zhuran": ["_ny_zhuanShu_jianbi"],
 			"nuyan_shenFirst_sunjian":["_ny_zhuanShu_Firstgudingdao","_ny_zhuanShu_gudingdao"],
+			"nuyan_liru": ["_ny_zhuanShu_dujiu"],
+			"nuyan_caomao": ["_ny_zhuanShu_longyuan"],
 		},
 		filter: function (event, player) {
 			if (!player.storage._ny_fushiId) return false;
@@ -820,11 +849,11 @@ export async function precontent(config, originalPack) {
 			list.forEach(i => {
 			    if (lib.translate[i + "_info"]) {
 			        var translation = get.translation(i);
-			        var litm = ('【' + translation + "】<div>" + lib.translate[i + "_info"] + "</div>");
+			        var litm = ('〖' + translation + "〗<div>" + lib.translate[i + "_info"] + "</div>");
 			        lists.push(litm);
 			    }
 			})
-			let next = await player.chooseButton(["请选择一项"+get.translation(player.name)+"的专属符石获得", [lists.map((item, i) => { return [i, item]; }), "textbutton",],])
+			let next = await player.chooseButton(["请选择一项" +get.translation(player.name)+ "的" + get.info("_ny_getFuShi").color["zhuanShu"] + "专属" + "</b>" +"符石获得", [lists.map((item, i) => { return [i, item]; }), "textbutton",],])
 				.set("selectButton", [1,Infinity])
 				.set("ai", button => 114514)
 				.forResultLinks();
@@ -1508,7 +1537,7 @@ export async function precontent(config, originalPack) {
 			return true;
 		},
 		async content (event,trigger,player) {
-			var { result } = await player.chooseBool("进攻符石【深谋】：是否令此牌无法被响应？").set("ai",() => true);
+			var { result } = await player.chooseBool("进攻符石〖深谋〗：是否令此牌无法被响应？").set("ai",() => true);
 			if (result.bool) {
 				player.storage._ny_fushiTime[0] --;
 				await trigger.directHit.addArray(game.players);
@@ -2460,7 +2489,7 @@ export async function precontent(config, originalPack) {
 		    return true;
 		},
 		async content(event,trigger,player){
-			let { result } = await player.chooseBool("是否发动【同仇】：获得1点怒气并摸一张牌").set("ai", () => true);
+			let { result } = await player.chooseBool("是否发动〖同仇〗：获得1点怒气并摸一张牌").set("ai", () => true);
 			if (result.bool) {
 				player.storage._ny_fushiTime[3] --;
 				await lib.skill._ny_getNuqi.addNuQi(player,1);
@@ -2482,7 +2511,7 @@ export async function precontent(config, originalPack) {
 		    return event.player.getHp() <= 4;
 		},
 		async content(event,trigger,player){
-			let { result } = await player.chooseBool("是否发动【同仇】：获得1点怒气并摸一张牌").set("ai", () => true);
+			let { result } = await player.chooseBool("是否发动〖同仇〗：获得1点怒气并摸一张牌").set("ai", () => true);
 			if (result.bool) {
 				player.storage._ny_fushiTime[3] --;
 				await lib.skill._ny_getNuqi.addNuQi(player,1);
@@ -2721,7 +2750,7 @@ export async function precontent(config, originalPack) {
 				},
 				async content (event,trigger,player) {
 					if (!trigger.targets.length) return;
-					const { result } = await player.chooseBool("是否对"+get.translation(trigger.targets)+"发动【破阵摧坚】：<br>"+get.translation("_ny_zhanFa_Firstpozhencuijian_info")).set("ai", () => true);
+					const { result } = await player.chooseBool("是否对"+get.translation(trigger.targets)+"发动〖破阵摧坚〗：<br>"+get.translation("_ny_zhanFa_Firstpozhencuijian_info")).set("ai", () => true);
 					if (!result.bool) return;
 					let num = 0;
 					for (let i of trigger.targets) {
@@ -3080,7 +3109,7 @@ export async function precontent(config, originalPack) {
 						if (player.storage._ny_nuqi > 0) return "选项二";
 						return "选项一";
 					})
-					.set("prompt","【龙争虎斗】：请选择以下一项执行");
+					.set("prompt","〖龙争虎斗〗：请选择以下一项执行");
 				if (result.control == "选项一") {
 					await trigger.player.turnOver();
 				} else if (result.control == "选项二") {
@@ -3407,7 +3436,7 @@ export async function precontent(config, originalPack) {
 			    ai(card) {
 			        return 10 - get.value(card);
 			    },
-			    prompt: "是否发动【移花接木】",
+			    prompt: "是否发动〖移花接木〗",
 			    prompt2: "展示至多五张手牌，随机弃置" + get.translation(trigger.player) + "等量张手牌，其获得你展示的牌，然后，你摸两张牌",
 			});
 			if (result.bool && result.cards.length) {
@@ -3817,7 +3846,7 @@ export async function precontent(config, originalPack) {
 				},
 				async content (event,trigger,player) {
 					if (!trigger.targets.length) return;
-					const { result } = await player.chooseBool("是否对"+get.translation(trigger.targets)+"发动【破阵摧坚】：<br>"+get.translation("_ny_zhanFa_pozhencuijian_info")).set("ai", () => true);
+					const { result } = await player.chooseBool("是否对"+get.translation(trigger.targets)+"发动〖破阵摧坚〗：<br>"+get.translation("_ny_zhanFa_pozhencuijian_info")).set("ai", () => true);
 					if (!result.bool) return;
 					for (i of trigger.targets) {
 						let cards = i.getCards("h");
@@ -3975,7 +4004,7 @@ export async function precontent(config, originalPack) {
 		},
 		content: function(){
 			'step 0'
-			player.chooseCard('你的【筹策】判定为' + get.translation(trigger.player.judging[0]) + '，是否发动专属符石【彼岸花】，打出一张手牌代替之？', 'h', function (card) {
+			player.chooseCard('你的〖筹策〗判定为' + get.translation(trigger.player.judging[0]) + '，是否发动专属符石〖彼岸花〗，打出一张手牌代替之？', 'h', function (card) {
 			        var player = _status.event.player;
 			        var mod2 = game.checkMod(card, player, 'unchanged', 'cardEnabled2', player);
 			        if (mod2 != 'unchanged') return mod2;
@@ -4078,7 +4107,7 @@ export async function precontent(config, originalPack) {
 			for (let i of trigger.getl(player).cards2) {
 				if (i.name == "sha") continue;
 				if (player.storage._ny_fushiTime[4+trigger.zhuanShuFuShiId1] == 0) break;
-				let result = await player.chooseUseTarget("###是否发动专属符石【银月枪】？###视为使用一张【杀】", { name: "sha" }).forResult();
+				let result = await player.chooseUseTarget("###是否发动专属符石〖银月枪〗？###视为使用一张【杀】", { name: "sha" }).forResult();
 				if (result.bool) player.storage._ny_fushiTime[4+trigger.zhuanShuFuShiId1]--;
 			}
 		},
@@ -4364,6 +4393,7 @@ export async function precontent(config, originalPack) {
 		    unequip: true,
 		    skillTagFilter: function(player, tag, arg) {
 		        if (arg?.card?.name == 'juedou' && arg?.card?.storage?._ny_zhuanShu_polu1) return true;
+				return false;
 		    },
 		},
 		subSkill: {
@@ -4403,17 +4433,20 @@ export async function precontent(config, originalPack) {
 			} else return false;
 		},
 		async content(event, trigger, player) {
-			let choiceList = ["令" + get.translation(trigger.player) + "减少一点体力上限", "令你增加一点体力上限并回复一点体力", "cancel2"];
-			let result = await player.chooseControl(choiceList)
+			let choiceList = ["令" + get.translation(trigger.player) + "减少一点体力上限", "令你增加一点体力上限并回复一点体力"];
+			let choices = ["选项一", "选项二", "cancel2"];
+			let result = await player.chooseControl()
+				.set("controls", choices)
+				.set("choiceList", choiceList)
 				.set("ai", () => {
 					let player = _status.event.player;
-					if (player.hp == 1 || get.attitude(player, trigger.player)) return "令你增加一点体力上限并回复一点体力";
-					else return "令" + get.translation(trigger.player) + "减少一点体力上限";
+					if (player.hp == 1 || get.attitude(player, trigger.player)) return "选项二";
+					else return "选项一";
 				})
 				.forResult();
 			if (result.control == "cancel2") return;
 			player.storage._ny_fushiTime[4+trigger.zhuanShuFuShiId2]--;
-			if (result.control == "令" + get.translation(trigger.player) + "减少一点体力上限") await trigger.player.loseMaxHp();
+			if (result.control == "选项一") await trigger.player.loseMaxHp();
 			else {
 				await player.gainMaxHp();
 				await player.recover();

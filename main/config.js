@@ -26,11 +26,11 @@ const configInfo = {
 			if (this.hth_more == undefined) {
 				var more = ui.create.div('.hth_more',
 				`<div style="border: 0px solid white;text-align:left"><div style="font-size:10px; line-height:11px;">
-				<br><li>当前版本：魔改版1.0.1版本
+				<br><li>当前版本：魔改版1.0.2版本
 				<br><b style="color: red">更新内容：</b>
-				<br>新增武将：界曹节
+				<br>新增武将：李儒，曹髦
 				<br>修复一些已知问题
-				<br>增加武将传说皮肤机制（在扩展选项处调整，重启后生效）
+				<br>怒焰吕玲绮适配新版本怒焰三国杀，增加怒焰吕玲绮版本设置选项
 				`
 				);
 				this.hth_more = more;
@@ -124,6 +124,15 @@ const fushiSet = {
 			"global": "全局",
 		},
 	},
+	hujiaSet: {
+		init: "36",
+		name: "怒焰武将护甲上限",
+		intro: "设置怒焰武将护甲上限",
+		item: {
+			"36": "36",
+			"Infinity": "无限",
+		},
+	},
 }
 const characterSet = {
 	nuyan_jie_caojie: {
@@ -135,6 +144,16 @@ const characterSet = {
 			"Second": "二版",
 		},
 		changeSkills: ["nuyan_nvzhongjinguo"],
+	},
+	nuyan_lvlingqi: {
+		init: "New",
+		name: "吕玲绮版本",
+		intro: "怒焰吕玲绮版本设置",
+		item: {
+			"First": "初版",
+			"New": "新版",
+		},
+		changeSkills: ["nuyan_shenweizaixian"],
 	},
 	legendSkin_nuyan_jie_caojie: {
 		init: false,

@@ -4,10 +4,10 @@ export default {
 	connect: true,
 	characterSort: {
 		nyKill:{
-			nyKill_wei:["nuyan_caorui","nuyan_xizhicai","nuyan_jie_zhangchunhua","nuyan_jie_caojinyu", "nuyan_jie_xuhuang", "nuyan_jie_guojia", "nuyan_wei_wenyang"],
+			nyKill_wei:["nuyan_caorui","nuyan_xizhicai","nuyan_jie_zhangchunhua","nuyan_jie_caojinyu", "nuyan_jie_xuhuang", "nuyan_jie_guojia", "nuyan_wei_wenyang", "nuyan_caomao"],
 			nyKill_shu:["nuyan_jie_weiyan","nuyan_zhaoxiang","nuyan_First_mifuren", "nuyan_wuxian"],
 			nyKill_wu:["nuyan_jie_ganning","nuyan_xusheng","nuyan_jie_sunjian","nuyan_First_luotong", "nuyan_jie_lusu", "nuyan_zhuran"],
-			nyKill_qun:["nuyan_lvlingqi","nuyan_jushou","nuyan_jie_diaochan","nuyan_liuqi", "nuyan_jie_caojie"],
+			nyKill_qun:["nuyan_lvlingqi","nuyan_jushou","nuyan_jie_diaochan","nuyan_liuqi", "nuyan_jie_caojie", "nuyan_liru"],
 			nyKill_shen:["nuyan_shenFirst_huangzhong", "nuyan_shenFirst_sunjian"],
 		},
 	},
@@ -38,6 +38,8 @@ export default {
 		"nuyan_zhuran": ["male","wu","7/7",["nuyan_danshou","nuyan_yifudangguan","nuyan_bajianlungong", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:朱|然"]],
 		"nuyan_shenFirst_sunjian": ["male","shen","1/8",["nuyan_hulie","nuyan_shenweiqianjun","nuyan_qinwangpolu", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:孙|坚"]],
 		"nuyan_jie_caojie": ["female", "qun", "6/6", ["nuyan_shouxi", "nuyan_nvzhongjinguo", "nuyan_huiminjishi", "nuyan_Legend_diewufeihua", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|节"]],
+		"nuyan_liru": ["male", "qun", "7/7", ["nuyan_fencheng", "nuyan_fenchengmieji", "nuyan_jueshizhice", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:李|儒"]],
+		"nuyan_caomao": ["male", "wei", "6/6", ["nuyan_qianlong", "nuyan_qingzaofensi", "nuyan_juejintaoni", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|髦"]],
 	},
 	skill:{
 		/*
@@ -86,7 +88,7 @@ export default {
 				let i = Math.floor(Math.random() * list.length);
 				player.storage._ny_fushiTime[i]++;
 				if (i < 4) game.log(player,get.translation(list[i]),"技能符石触发次数+1");
-				else game.log(player,"的专属技能符石【",get.translation(list[i]),"】触发次数+1");
+				else game.log(player,"的专属技能符石〖",get.translation(list[i]),"〗触发次数+1");
 				
 			},
 			priority: 114513,
@@ -311,7 +313,7 @@ export default {
 		    },
 		    //audio: "ext:怒焰武将:6",
 		    async content(event,trigger,player){
-		        let result = await player.chooseTarget('请选择【先辅契约】的目标',lib.translate.nuyan_xianfuqiyue_info,true,function(card,player,target){
+		        let result = await player.chooseTarget('请选择〖先辅契约〗的目标',lib.translate.nuyan_xianfuqiyue_info,true,function(card,player,target){
 		            return target!=player&&(!player.storage.nuyan_xianfuqiyue2||!player.storage.nuyan_xianfuqiyue2.includes(target));
 		        })
 		        	.set('ai',function(target){
@@ -627,7 +629,7 @@ export default {
 								if (cards) _status.currentPhase.modedDiscard(cards);
 							}
 		                } catch (e) {
-		                    alert("发生了一个导致【夜袭敌营】无法正常触发无视防具效果的错误。请关闭十周年UI/手杀ui等扩展以解决");
+		                    alert("发生了一个导致〖夜袭敌营〗无法正常触发无视防具效果的错误。请关闭十周年UI/手杀ui等扩展以解决");
 		                }
 		            });
 		    },
@@ -639,6 +641,7 @@ export default {
 		                 if(_status.event.getParent().name!='nuyan_yexidiying') return false;
 		             }
 		             else if(!arg||!arg.card||!arg.card.nuyan_yexidiying_tag) return false;
+					 return true;
 		         },
 		    },
 			subSkill:{
@@ -926,11 +929,18 @@ export default {
 			locked: true,
 		    async content (event,trigger,player) {
 				let num = Math.ceil(player.storage._ny_nuqi / 2);
-				let choiceList = ["摸" + get.cnNumber(num) + "张牌", "回复" + get.cnNumber(num) + "点体力", "cancel2"];
-				let { result } = await player.chooseControl(choiceList)
-					.set("ai", () => player.hp == 1 ? "回复" + get.cnNumber(num) + "点体力" : "摸" + get.cnNumber(num) + "张牌");
+				let choiceList = ["摸" + get.cnNumber(num) + "张牌", "回复" + get.cnNumber(num) + "点体力"];
+				let choices = ["选项一", "选项二", "cancel2"];
+				if (!player.isDamaged()) {
+					choiceList[1] = '<span style="opacity:0.5">' + choiceList[1] + "</span>";
+					choices.remove("选项二");
+				}
+				let { result } = await player.chooseControl()
+					.set("controls", choices)
+					.set("choiceList", choiceList)
+					.set("ai", () => player.hp == 1 ? "选项二" : "选项一");
 				if (result.control == "cancel2") return;
-				if (result.control == "摸" + get.cnNumber(num) + "张牌") {
+				if (result.control == "选项一") {
 					await player.draw(num);
 				} else await player.recover(num);
 		    },
@@ -1023,7 +1033,7 @@ export default {
 			frequent: true,
 			async content(event,trigger,player) {
 			    var cards = player.getCards("h");
-			    await player.showCards(cards, get.translation(player) + "发动了【帼武】");
+			    await player.showCards(cards, get.translation(player) + "发动了〖帼武〗");
 			    var list = [];
 			    for (var i of cards) {
 			        list.add(get.type2(i, player));
@@ -1123,18 +1133,32 @@ export default {
 		},
 		nuyan_shenweizaixian: {//神威再现
 			nuyan_star:1,
-			forced:true,
-			locked:true,
-			trigger:{
-				global : "phaseEnd",
+			forced: true,
+			locked: true,
+			trigger: {
+				get global() {
+					if (lib.config.extension_怒焰武将_nuyan_lvlingqi == "First") return "phaseEnd";
+					else return;
+				},
+				get source() {
+					if (lib.config.extension_怒焰武将_nuyan_lvlingqi == "New") return "damageEnd";
+					else return;
+				},
 			},
-			filter: function(event,player) {
-				let num = Number(lib.config.extension_怒焰武将_nuyan_star);
-				return (player.hp <= num) || (player.countCards("h") < num);
+			filter: function(event, player) {
+				if (lib.config.extension_怒焰武将_nuyan_lvlingqi == "First") {
+					let num = Number(lib.config.extension_怒焰武将_nuyan_star);
+					return (player.hp <= num) || (player.countCards("h") < num);
+				} else return event?.card?.name == "sha";
 			},
 			async content(event,trigger,player) {
-				await player.recover();
-				await player.draw();
+				if (lib.config.extension_怒焰武将_nuyan_lvlingqi == "First") {
+					await player.recover();
+					await player.draw();
+				} else {
+					await player.draw();
+					await lib.skill._ny_getNuqi.addNuQi(player, 1);
+				}
 			},
 		},
 		nuyan_wushuangxiaoji: {//无双虓姬
@@ -2067,7 +2091,6 @@ export default {
 			intro: {
 			    content: "limited",
 			},
-			//init: (player, skill) => (player.storage[skill] = false),
 			priority: 0,
 		},
 		//怒焰刘琦
@@ -2366,7 +2389,7 @@ export default {
 						return !target.getSkills(null,false,false).some(skill => skill == "nuyan_yongjue");
 					})
 					.set("prompt", get.prompt("nuyan_sheshencunsi"))
-					.set("prompt2", "是否令一名角色获得【勇决】？<br>（" + get.translation("nuyan_yongjue_info") + "）")
+					.set("prompt2", "是否令一名角色获得〖勇决〗？<br>（" + get.translation("nuyan_yongjue_info") + "）")
 					.set("ai",(target) => {
 						var player = _status.event.player;
 						if (player == target && !player.getSkills(null,false,false).some(skill => skill == "nuyan_yongjue")) return 114514;
@@ -2387,11 +2410,14 @@ export default {
 				return event.targets?.some(target => target != player && player.canCompare(target)) && get.color(event.card) == "black" && player.storage._ny_nuqi;
 			},
 			frequent: true,
+			check(event, player) {
+				return true;
+			},
 			async content(event, trigger, player) {
 				for (let i of trigger.targets) {
 					if (!i.isIn() || !player.canCompare(i)) continue;
 					if (!player.storage._ny_nuqi) break;
-					let result = await player.chooseBool("是否发动【勇决】？<br>与" + get.translation(i) + "拼点，若你赢，其失去1点体力，若你没赢，你失去1点怒气").set("ai", () => true).forResult();
+					let result = await player.chooseBool("是否发动〖勇决〗？<br>与" + get.translation(i) + "拼点，若你赢，其失去1点体力，若你没赢，你失去1点怒气").set("ai", () => true).forResult();
 					if (result.bool) {
 						let next = await player.chooseToCompare(i).forResult();
 						if (next.bool) await i.loseHp();
@@ -2871,7 +2897,7 @@ export default {
 						return skill == "nuyan_xianjingduanzhuang";
 					});
 					if (ownedSkills.length > 0 && !player.isTempBanned(filterSkill) && !(player.shixiaoedSkills && player.shixiaoedSkills.includes(filterSkill))) {
-						let next2 = await player.chooseBool("是否发动【娴静端庄】：<br>令" + get.translation(trigger.source) + "失去2点体力？")
+						let next2 = await player.chooseBool("是否发动〖娴静端庄〗：<br>令" + get.translation(trigger.source) + "失去2点体力？")
 							.set("ai", () => -1 * get.attitude(player, trigger.source))
 							.forResult();
 						if (next2.bool) await trigger.source.loseHp(2);
@@ -3315,7 +3341,7 @@ export default {
 						} else break;
 					} else if (get.type(result.card, "trick") == "trick") {
 						let next2 = await player.chooseTarget(1)
-							.set("prompt", "令一名角色获得技能【奇佐】")
+							.set("prompt", "令一名角色获得技能〖奇佐〗")
 							.set("ai", (target) => _status.event.player == target)
 							.forResult();
 						if (next2.bool) {
@@ -3357,7 +3383,7 @@ export default {
 			        }
 			    },
 			    prompt: function(links,player){
-			        return "【奇佐】：将一张牌当作【" + get.translation(links[0][2]) + "】使用";
+			        return "〖奇佐〗：将一张牌当作【" + get.translation(links[0][2]) + "】使用";
 			    },
 			},
 			buttonRequire: function(player, event) {
@@ -3563,7 +3589,7 @@ export default {
 			},
 			async content(event, trigger, player) {
 				await player.discardPlayerCard(trigger.target, [0, player.getDamagedHp()], false)
-					.set("prompt", "【虎烈】：弃置" + get.translation(trigger.target) + "至多" + get.cnNumber(player.getDamagedHp()) + "张牌");
+					.set("prompt", "〖虎烈〗：弃置" + get.translation(trigger.target) + "至多" + get.cnNumber(player.getDamagedHp()) + "张牌");
 				trigger.card.storage.nuyan_hulie_target ??= [];
 				trigger.card.storage.nuyan_hulie_target.push(trigger.targets);
 			},
@@ -3675,7 +3701,7 @@ export default {
 							return;
 						}
 						let result = await trigger.player.chooseToDiscard(num, false, "he")
-							.set("prompt", "【勤王破虏】：弃置" + get.cnNumber(num) + "装备牌，否则立即死亡")
+							.set("prompt", "〖勤王破虏〗：弃置" + get.cnNumber(num) + "装备牌，否则立即死亡")
 							.set("ai", (card) => true)
 							.set("filterCard", (card) => get.type(card) == "equip")
 							.forResult();
@@ -3695,7 +3721,7 @@ export default {
 					content: function() {
 						player.removeSkill("nuyan_qinwangpolu_sunben");
 						player.popup("勤王破虏");
-						game.log(player, "恢复了技能", "#g【勤王破虏】");
+						game.log(player, "恢复了技能", "#g〖勤王破虏〗");
 					},
 				},
 			},
@@ -3778,6 +3804,288 @@ export default {
 			content: async function(event, trigger, player) {
 				player.draw();
 				await lib.skill._ny_getNuqi.addNuQi(player, 1);
+			},
+		},
+		//怒焰李儒
+		nuyan_fencheng: {//焚城
+			enable: "phaseUse",
+			check(event, player) {
+				let num = 0;
+				game.players.forEach(i => {
+					if (i != player) {
+						num -= get.attitude(player, i);
+						if (get.attitude(player, i) > 0) {
+							if (i.hp == 1) return -1;
+						} else num += i.hp;
+					}
+				});
+				return num;
+			},
+			filter: function(event, player) {
+				if (player.getHistory("useSkill")?.filter(evt => evt.skill == "nuyan_fencheng")?.length == 1 && player.storage._ny_zhuanShuFuShiId?.some(id => id == "_ny_zhuanShu_dujiu")) return true;
+				return (player.storage._ny_nuqi ?? 0) >= (player.getHistory("useSkill")?.filter(evt => evt.skill == "nuyan_fencheng")?.length ?? 0);
+			},
+			async content(event, trigger, player) {
+				let num = (player.getHistory("useSkill")?.filter(evt => evt.skill == "nuyan_fencheng")?.length ?? 0) - 1;
+				//专属符石-毒鸠
+				if (num == 1 && player.storage._ny_zhuanShuFuShiId?.some(id => id == "_ny_zhuanShu_dujiu")) {
+					let id = player.storage._ny_zhuanShuFuShiId.find(id => id == "_ny_zhuanShu_dujiu");
+					id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+					if (player.storage._ny_fushiTime?.[4+id] > 0) player.storage._ny_fushiTime[4+id]--;
+					else await lib.skill._ny_getNuqi.loseNuQi(player, num);
+				}
+				else await lib.skill._ny_getNuqi.loseNuQi(player, num);
+				let list = game.players.sortBySeat(player);
+				num = 1;
+				for (let current of list) {
+					if (!current.isIn()) continue;
+					if (current.countCards("he") < num) {
+						await current.loseHp(2);
+						continue;
+					}
+					let str = current == player ? "(你无须失去体力)" : "";
+					let result = await current.chooseToDiscard([num, Infinity], "he", "弃置至少" + get.cnNumber(num) + "张牌或失去2点体力" + str)
+						.set("ai", function (card) {
+							if (ui.selected.cards.length >= num) return -1;
+							if (get.type(card) != "basic") return 10 - get.value(card);
+							return 8 - get.value(card);
+						})
+						.forResult();
+					if (result.bool) {
+						num = result.cards.length + 1;
+					} else if (current != player) await current.loseHp(2);
+				}
+			},
+		},
+		nuyan_fenchengmieji: {//焚城灭迹
+			nuyan_star: 1,
+			inherit: "xinmieji",
+			audio: "xinmieji",
+			//有时间可以给本体李儒异步化
+		},
+		nuyan_jueshizhice: {//绝世之策
+			nuyan_star: 3,
+			trigger: {
+				player: "phaseJieshuBegin",
+			},
+			frequent: true,
+			check(event, player) {
+				let list = game.players.filter(current => current != player && current.getHistory("lose", (evt) => evt.cards2?.length)?.length),
+					num = 0;
+				for (let i of list) {
+					num -= get.attitude(player, i);
+					if (get.attitude(player, i) > 0) {
+						if (i.hp == 1) return -1;
+					} else num += i.hp;
+				}
+				return num;
+			},
+			filter: function(event, player) {
+				return game.hasPlayer(current => current != player && current.getHistory("lose", (evt) => evt.cards2?.length)?.length);
+			},
+			async content(event, trigger, player) {
+				let list = game.players.filter(current => current != player && current.getHistory("lose", (evt) => evt.cards2?.length)?.length).sortBySeat(player);
+				for (let i of list) {
+					await i.damage(player);
+					await player.draw(2);
+				}
+			},
+		},
+		//怒焰曹髦
+		nuyan_qianlong: {//潜龙
+			trigger: {
+				player: "damageEnd",
+			},
+			frequent: true,
+			async content(event, trigger, player) {
+				let num = 3,
+					b = false,
+					limit = Number(lib.config.extension_怒焰武将_hujiaSet);
+				//专属符石-龙渊
+				if (player.storage._ny_zhuanShuFuShiId?.some(id => id == "_ny_zhuanShu_longyuan")) {
+					let id = player.storage._ny_zhuanShuFuShiId.find(id => id == "_ny_zhuanShu_longyuan");
+					id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+					if (player.storage._ny_fushiTime?.[4+id] > 0) {
+						player.storage._ny_fushiTime[4+id]--;
+						num += 2;
+						b = true;
+					}
+				}
+				const cards = get.cards(num);
+				await game.cardsGotoOrdering(cards);
+				await player.showCards(cards, get.translation(player) + '发动了〖潜龙〗');
+				const { result } = await player.chooseCardButton("潜龙：选择其中任意张牌作为“鳞”置入牌堆中，你获得其余牌", false, cards)
+					.set("ai", (button) => 0);
+				if (result.bool) {
+					let pileCards = result.links;
+					cards.removeArray(pileCards);
+					game.log(player, `将${get.cnNumber(pileCards.length)}张牌置入了牌堆`);
+					for (let card of pileCards) {
+						card.nuyan_qianlong = true;
+						await card.discard(false);
+					}
+				}
+				if (cards?.length) await player.gain(cards, "gain2");
+				if (b) await player.changeHujia(4, null, limit);
+			},
+			group: "nuyan_qianlong_effect",
+			subSkill: {
+				effect: {
+					trigger: {
+						player: "gainEnd",
+					},
+					frequent: true,
+					filter: function(event, player) {
+						if (get.itemtype(event.source) == "player") return false;
+						return event.cards.some(c => c.nuyan_qianlong == true);
+					},
+					async content(event, trigger, player) {
+						let cards = trigger.cards.filter(c => c.nuyan_qianlong == true);
+						let num = cards.length,
+							limit = Number(lib.config.extension_怒焰武将_hujiaSet);
+						trigger.player.addGainTag(cards, "鳞");
+						let choiceList = ["令" + get.translation(trigger.player) + "受到" + get.cnNumber(num) + "点雷电伤害", "令其获得一点护甲"];
+						let choices = ["选项一", "选项二", "cancel2"];
+						if (trigger.player.hujia >= limit) {
+							choiceList[1] = '<span style="opacity:0.5">' + choiceList[1] + "</span>";
+							choices.remove("选项二");
+						}
+						let { result } = await player.chooseControl()
+							.set("controls", choices)
+							.set("choiceList", choiceList)
+							.set("ai", () => get.attitude(player, trigger.player) ? "选项二" : "选项一");
+						if (result.control == "cancel2") return;
+						else if (result.control == "选项二") await trigger.player.changeHujia(1, null, limit);
+						else await trigger.player.damage(num, "thunder");
+					},
+				},
+			},
+		},
+		nuyan_qingzaofensi: {//轻躁忿肆
+			nuyan_star: 1,
+			forced: true,
+			locked: true,
+			trigger: {
+				player: "changeHujiaEnd",
+			},
+			filter: function(event, player) {
+				if (_status?.dying?.length) return false;
+				return event.num > 0 && event.type == "gain";
+			},
+			async content(event, trigger, player) {
+				if (!game.hasPlayer((current) => current != player && current.hp >= player.hp)) {
+				    await player.damage(player);
+				    return;
+				}
+				let result = await player.chooseTarget(true)
+					.set("prompt", "〖轻躁忿肆〗：对一名体力值不小于你的角色造成1点伤害")
+					.set("prompt2", "然后，若其不为你，其视为对你使用一张无距离次数限制的【杀】")
+					.set("filterTarget", (card, player, target) => target.hp >= player.hp)
+				    .set("ai", function (target) {
+				        var player = _status.event.player;
+				        return get.damageEffect(target, player, player);
+				    })
+					.forResult();
+				if (result.bool) {
+				    let target = result.targets[0];
+				    player.line(target, "green");
+				    await target.damage(player);
+					if (target.isIn() && target.canUse("sha", player, false) && target != player) {
+					    await target.useCard({ name: "sha", isCard: true }, player, false, "noai");
+					}
+				}
+			},
+		},
+		nuyan_juejintaoni: {//决进讨逆
+			audio: "mbjuejin",
+			nuyan_star: 3,
+			derivation: "nuyan_juetao",
+			limited: true,
+			skillAnimation: true,
+			unique: true,
+			animationColor: "red",
+			mark: true,
+			intro: {
+			    content: "limited",
+			},
+			trigger: {
+				player: "phaseZhunbeiBegin",
+			},
+			init: async function(player,skill) {
+				if (player.isMinHp()) {
+					let result = await player.chooseBool()
+						.set("prompt", get.prompt(skill))
+						.set("prompt2", get.prompt2(skill))
+						.set("ai", () => game.hasPlayer(current => -get.attitude(player, current)))
+						.forResult();
+					if (result.bool) {
+						player.logSkill(skill);
+						player.awakenSkill(skill);
+						let result = await player.chooseTarget(true)
+							.set("prompt", get.prompt(skill))
+							.set("prompt2", get.prompt2(skill))
+							.set("filterTarget", (card, player, target) => player != target)
+							.set("ai", function (target) {
+							    var player = _status.event.player;
+							    return get.damageEffect(target, player, player);
+							})
+							.forResult();
+						let target = result.targets[0];
+						target.addMark("nuyan_juejintaoni_effect");
+						target.addSkill("nuyan_juejintaoni_effect");
+						player.addSkill("nuyan_juetao");
+					}
+				}
+			},
+			direct: true,
+			async content(event, trigger, player) {
+				await get.info(event.name)?.init(player, event.name);
+			},
+			subSkill: {
+				effect: {
+					sub: true,
+					sourceSkill: "nuyan_juejintaoni",
+					mark: true,
+					marktext: "决",
+					intro: {
+						nocount: true,
+						name: "决进讨逆",
+						content: "你本局游戏受到的伤害+#",
+					},
+					onremove: true,
+					charlotte: true,
+					forced: true,
+					trigger: {
+						player: "damageBegin1",
+					},
+					content() {
+						trigger.num += player.countMark(event.name);
+					},
+					priority: 11,
+				},
+			},
+			priority: 11,
+		},
+		nuyan_juetao: {//决讨
+			enable: "phaseUse",
+			filter: function(event, player) {
+				return game.hasPlayer(current => player.canCompare(current) && player != current);
+			},
+			check(event, player, target) {
+				if (player.hp < 2) return -2;
+				if (!player.getCards("h")?.some(c => c.number > 9)) return -1;
+				if (get.attitude(player, target) < 0) return 8 - target.hp - target.countCards("h");
+				else return -1;
+			},
+			filterTarget(card, player, target) {
+				return player != target && player.canCompare(target);
+			},
+			async content(event, trigger, player) {
+				const { target } = event;
+				await player.loseHp();
+				let next = await player.chooseToCompare(target).forResult();
+				if (next.bool) await target.damage(player);
+				else await target.draw();
 			},
 		},
 	},
@@ -4002,6 +4310,10 @@ export default {
 		"_ny_zhuanShu_Firstgudingdao_info":"锁定技，你的攻击范围+4，且若仍小于5，视为5；你使用【杀】无视其防御符石且无法被响应；此【杀】造成伤害时，若目标没有手牌，则此伤害+1。",
 		"_ny_zhuanShu_gudingdao":"古锭刀•神",
 		"_ny_zhuanShu_gudingdao_info":"锁定技，你的攻击范围+4，且若仍小于5，视为5；你使用伤害牌无视其防御符石且无法被响应；此牌造成伤害时，若目标没有手牌，则此伤害+1。",
+		"_ny_zhuanShu_dujiu":"毒鸠",
+		"_ny_zhuanShu_dujiu_info":"锁定技，你于出牌阶段内第二次发动〖焚城〗时不消耗怒气。",
+		"_ny_zhuanShu_longyuan": "龙渊",
+		"_ny_zhuanShu_longyuan_info": "锁定技，你发动〖潜龙〗时，额外展示2张牌，然后你获得4点护甲。",
 		
 		//武将
 		nuyan_caorui: "曹叡",
@@ -4035,6 +4347,8 @@ export default {
 		nuyan_zhuran: "朱然",
 		nuyan_shenFirst_sunjian:"神孙坚",
 		nuyan_jie_caojie:"界曹节",
+		nuyan_liru: "李儒",
+		nuyan_caomao: "曹髦",
 		
 		//通用技能
 		nuyan_fushizongshi:"符石宗师",
@@ -4066,7 +4380,7 @@ export default {
 		nuyan_qixi:"奇袭",
 		nuyan_qixi_info: "出牌阶段，你可以将一张黑色牌当作【过河拆桥】使用；你以此法使用的【过河拆桥】弃置其他角色的牌后，若其装备区有牌，随机弃置其中一张",
 		nuyan_linjiangshenjian:"临江神箭",
-		nuyan_linjiangshenjian_info:"当你因“奇袭”或【过河拆桥】弃置其他角色的一张装备牌时，你摸一张牌",
+		nuyan_linjiangshenjian_info:"当你因〖奇袭〗或【过河拆桥】弃置其他角色的一张装备牌时，你摸一张牌",
 		nuyan_yexidiying:"夜袭敌营",
 		nuyan_yexidiying_info:"一名其他角色的准备阶段开始时，你可以对其使用一张无距离限制且无视防具的【杀】，且若其装备区没有牌，此【杀】伤害+1且其弃置所有与此【杀】颜色相同的手牌。",
 		nuyan_yinghun:"英魂",
@@ -4078,7 +4392,7 @@ export default {
 		nuyan_pojun: "破军",
 		nuyan_pojun_info: "当你使用【杀】指定唯一目标后，你可以将其至多X+1张手牌扣置于其武将牌上，回合结束时，其获得这些牌。（X为你的武将星级）",
 		nuyan_yongliequedi: "勇烈却敌",
-		nuyan_yongliequedi_info: "当你因“破军”扣置牌时，若其中含有锦囊牌，你摸一张牌；含有装备牌，你随机弃置其中一张。",
+		nuyan_yongliequedi_info: "当你因〖破军〗扣置牌时，若其中含有锦囊牌，你摸一张牌；含有装备牌，你随机弃置其中一张。",
 		nuyan_wanfumokai: "万夫莫开",
 		nuyan_wanfumokai_info: "当你使用【杀】对手牌数不大于你的角色造成伤害时，此伤害+1，若其手牌为0则伤害额外+2。",
 		nuyan_kuanggu:"狂骨",
@@ -4089,8 +4403,7 @@ export default {
 		nuyan_kuangnuzhuiji_info:"每个回合限X次(X为此回合开始时场上存活角色数)，当你受到伤害后，你可以对一名其他角色造成等量点伤害。",
 		nuyan_guowu:"帼武",
 		nuyan_guowu_info:"出牌阶段开始时，你可以展示所有手牌，若展示类型数不小于：1，你使用【杀】无法被响应；2，你本阶段使用【杀】的次数+X（X为你的武将星级）；3，你从牌堆或弃牌堆中获得等同于你已损失体力值数量的【杀】。（至少1张）",
-		nuyan_shenweizaixian:"神威再临",
-		nuyan_shenweizaixian_info:"锁定技，每回合结束时，若你的体力值或手牌数不大于你的星级，你回复1点体力并摸一张牌。",
+		nuyan_shenweizaixian:"神威再现",
 		nuyan_wushuangxiaoji:"无双虓姬",
 		nuyan_wushuangxiaoji_info:"锁定技，当你于出牌阶段使用【杀】时，此【杀】伤害+X（X为本阶段你使用【杀】的次数）。",
 		nuyan_shangshi:"伤逝",
@@ -4122,7 +4435,7 @@ export default {
 		nuyan_bizoujiangnan:"避走江南",
 		nuyan_bizoujiangnan_info:"锁定技，每名角色的回合结束时，若你本回合内未使用或打出过牌指定其他角色为目标，你摸两张牌。",
 		nuyan_choutiqiuce:"抽梯求策",
-		nuyan_choutiqiuce_info:"锁定技，你发动“问计”后，你于本回合内使用或打出与你本回合因“问计”获得的牌花色相同的牌无法被响应。",
+		nuyan_choutiqiuce_info:"锁定技，你发动〖问计〗后，你于本回合内使用或打出与你本回合因“问计”获得的牌花色相同的牌无法被响应。",
 		nuyan_qinzheng:"勤政",
 		nuyan_qinzheng_info:"锁定技，你每使用或打出3/5/8张牌时，你从牌堆或弃牌堆中获得一张【杀】或【闪】/【桃】或【酒】/【决斗】和【无中生有】。",
 		nuyan_renzhengaimin:"仁政爱民",
@@ -4132,15 +4445,15 @@ export default {
 		nuyan_guixiu:"闺秀",
 		nuyan_guixiu_info:"当你失去一张手牌后，若你的手牌数不大于你的体力上限，你摸两张牌，否则，你摸一张牌并可以令一名其他角色摸一张牌。",
 		nuyan_xuzhouwangzu:"徐州望族",
-		nuyan_xuzhouwangzu_info:"锁定技，当一名角色因”闺秀“摸一张牌后，若其：已受伤，其回复1点体力，否则其获得1点怒气。",
+		nuyan_xuzhouwangzu_info:"锁定技，当一名角色因〖闺秀〗摸一张牌后，若其：已受伤，其回复1点体力，否则其获得1点怒气。",
 		nuyan_sheshencunsi:"舍身存嗣",
-		nuyan_sheshencunsi_info:"每回合每名角色限一次，当一名角色受到伤害时，你可以弃置X张手牌并防止此伤害（X为伤害值），然后，你可以令一名角色获得“勇决”直至其下回合结束。",
+		nuyan_sheshencunsi_info:"每回合每名角色限一次，当一名角色受到伤害时，你可以弃置X张手牌并防止此伤害（X为伤害值），然后，你可以令一名角色获得〖勇决〗直至其下回合结束。",
 		nuyan_yongjue:"勇决",
 		nuyan_yongjue_info:"出牌阶段，你对其他角色使用黑色单体普通锦囊牌结算结束后，你可以与其拼点，若你赢，其失去1点体力；若你没赢，你失去1点怒气",
 		nuyan_yongyi: "勇毅",
 		nuyan_yongyi_info:"锁定技，当你使用黑色伤害牌指定目标后，若其在你的攻击范围内，你令此牌无视防具且无法被响应；当你成为其他角色使用的【杀】或单体普通锦囊牌的目标后，若此牌为/不为红色，你摸一张牌/令此牌无效。",
 		nuyan_yingxiongxiangxi:"英雄相惜",
-		nuyan_yingxiongxiangxi_info:"锁定技，每回合限一次，其他角色令你进入濒死状态时，其本回合非锁定技失效并获得”义释“，然后你将体力值回复至体力上限，若你有空置的防具栏，则你将牌堆中的随机一张防具牌置入你的装备区。",
+		nuyan_yingxiongxiangxi_info:"锁定技，每回合限一次，其他角色令你进入濒死状态时，其本回合非锁定技失效并获得〖义释〗，然后你将体力值回复至体力上限，若你有空置的防具栏，则你将牌堆中的随机一张防具牌置入你的装备区。",
 		nuyan_yishi:"义释",
 		nuyan_yishi_info:"锁定技，其他角色对你造成伤害时，若你的装备区有牌，则随机弃置其中1张，然后防止此伤害。",
 		nuyan_dingjunzhanshen:"定军战神",
@@ -4161,7 +4474,7 @@ export default {
 		nuyan_shanshenzili:"善身自立",
 		nuyan_shanshenzili_info:"锁定技，一名角色体力减少后，若本回合你未对其造成过伤害，则你回复1点体力（若你未受伤改为获得1点怒气）",
 		nuyan_xianjingduanzhuang:"娴静端庄",
-		nuyan_xianjingduanzhuang_info:"你发动“隅泣“茯得牌后。可以令伤害来源失去2点体力。",
+		nuyan_xianjingduanzhuang_info:"你发动〖隅泣〗茯得牌后。可以令伤害来源失去2点体力。",
 		nuyan_haoshi:"好施",
 		nuyan_haoshi_info: "摸牌阶段，你多摸X张牌，然后你可以将任意张手碑交给一名其他角色，若如此做，你获得等同于你交出牌数量的怒气值(X为场上势力数+1)",
 		nuyan_lianliukangcao:"联刘抗曹",
@@ -4185,7 +4498,7 @@ export default {
 		nuyan_huishixinzhi:"慧识心志",
 		nuyan_huishixinzhi_info:"锁定技，当你的判定牌生效后，你获得之，然后，若此牌点数不小于10，你增加1点体力上限（不超过10），否则你失去1点体力",
 		nuyan_zhiceqizuo:"智策奇佐",
-		nuyan_zhiceqizuo_info:"出牌阶段限1次，你可以判定，若结果为锦囊牌，你可以令一名角色获得“奇佐”直至其下个回合结束；若结果为基本牌，你可以失去1点体力并重复此过程。",
+		nuyan_zhiceqizuo_info:"出牌阶段限1次，你可以判定，若结果为锦囊牌，你可以令一名角色获得〖奇佐〗直至其下个回合结束；若结果为基本牌，你可以失去1点体力并重复此过程。",
 		nuyan_qizuo:"奇佐",
 		nuyan_qizuo_info:"出牌阶段每种牌名限一次，你可以将一张手牌当作任意普通锦囊牌使用（【无懈可击】除外）。",
 		nuyan_chuifeng:"棰锋",
@@ -4213,14 +4526,33 @@ export default {
 		nuyan_huiminjishi_info:"结束阶段，你摸X张牌（X为你的武将星级），然后，你可以展示等量张手牌并令一名其他角色获得之。",
 		nuyan_Legend_diewufeihua:"蝶舞飞花",
 		nuyan_Legend_diewufeihua_info:"锁定技，每轮限一次，一名角色的出牌阶段开始时，你摸1张牌并获得1点怒气；",
+		nuyan_fencheng:"焚城",
+		nuyan_fencheng_info:"出牌阶段，你可以消耗等同于本回合你先前发动此技能次数的怒气值，令所有角色依次选择1项：1.弃置至少X张牌（X为上一名选择的角色以此法弃置牌数+1）；2.若其不为你，其失去2点体力。",
+		nuyan_fenchengmieji:"焚城灭迹",
+		nuyan_fenchengmieji_info:"出牌阶段限一次，你可以将一张黑色锦囊牌置于牌堆顶，令一名其他角色选择一项：1.交给你1张锦囊牌；2.依次弃置2张非锦囊牌（不足则全弃）；",
+		nuyan_jueshizhice:"绝世之策",
+		nuyan_jueshizhice_info:"结束阶段，你可以对本回合失去过牌的其他角色各造成1点伤害，你每因此法造成1点伤害，便摸2张牌。",
+		nuyan_qianlong: "潜龙",
+		nuyan_qianlong_info: "当你受到伤害后，你可以展示牌堆顶的3张牌，然后你可以选择其中任意张牌作为“鳞”随机置于牌堆中，你获得剩余的牌；一名角色从牌堆中获得“鳞”牌后，你选择一项：1.令其受到X点雷电伤害；2.令其获得1点护甲。(X为其本次获得的“鳞”牌数)",
+		nuyan_qingzaofensi: "轻躁忿肆",
+		nuyan_qingzaofensi_info:"锁定技，当你获得护甲后，你须对一名体力值不小于你的角色造成1点伤害，若目标不为你，视为其对你使用1张无次数和距离限制的【杀】",
+		nuyan_juejintaoni: "决进讨逆",
+		//后续企业级理解（
+		nuyan_juejintaoni_info: "限定技，你登场时或准备阶段，若你的体力值为全场最少，你可以指定一名其他角色，其本局游戏受到伤害+1，然后你获得〖决讨〗。",
+		nuyan_juetao:"决讨",
+		nuyan_juetao_info:"出牌阶段，你可以失去1点体力，然后与一名其他角色拼点，若你赢，你对其造成1点伤害；若你没赢，其摸1张牌。",
 	},
 	dynamicTranslate: {//动态翻译
 		nuyan_yuqi: function(player) {
 		    return `每回合限${get.cnNumber(player.storage.nuyan_yuqi[0])}次，当1名角色受到伤害后，你可以观看牌堆顶${get.cnNumber(player.storage.nuyan_yuqi[1])}张牌，并将至多${get.cnNumber(player.storage.nuyan_yuqi[2])}张交给其，然后你获得剩余的牌；当你登场时或准备阶段，你令此技能中的全部中文数字+2(单项不大于10)`;
 		},
 		nuyan_nvzhongjinguo: function() {
-			if (lib.config.extension_怒焰武将_nuyan_jie_caojie == "First") return "锁定技，每轮限X次（X为你的武将星级），当你发动“守玺”时，你获得1点怒气并摸一张牌。";
-			else return "锁定技，每回合限一次，当你发动“守玺”时，你获得1点怒气并摸一张牌。";
+			if (lib.config.extension_怒焰武将_nuyan_jie_caojie == "First") return "锁定技，每轮限X次（X为你的武将星级），当你发动〖守玺〗时，你获得1点怒气并摸一张牌。";
+			else return "锁定技，每回合限一次，当你发动〖守玺〗时，你获得1点怒气并摸一张牌。";
+		},
+		nuyan_shenweizaixian: function() {
+			if (lib.config.extension_怒焰武将_nuyan_lvlingqi == "First") return "锁定技，每回合结束时，若你的体力值或手牌数不大于你的星级，你回复1点体力并摸一张牌。";
+			else return "锁定技，你使用【杀】造成伤害后，你摸一张牌并获得1点怒气。";
 		},
 	},
 };
