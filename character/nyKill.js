@@ -3591,7 +3591,7 @@ export default {
 				await player.discardPlayerCard(trigger.target, [0, player.getDamagedHp()], false)
 					.set("prompt", "〖虎烈〗：弃置" + get.translation(trigger.target) + "至多" + get.cnNumber(player.getDamagedHp()) + "张牌");
 				trigger.card.storage.nuyan_hulie_target ??= [];
-				trigger.card.storage.nuyan_hulie_target.push(trigger.targets);
+				trigger.card.storage.nuyan_hulie_target.addArray(trigger.targets);
 			},
 			group: "nuyan_hulie_effect",
 			subSkill: {
@@ -3608,12 +3608,14 @@ export default {
 					async content(event, trigger, player) {
 						for (let i of trigger.card.storage.nuyan_hulie_target) {
 							if (!i.isIn()) continue;
-							i.useCard({
-								name: "juedou",
-								storage: {
-									_useCardQianghua: true,
-								},
-							}, player, "noai", false, "nuyan_hulie");
+							if (i.canUse("juedou", player, false)) {
+								i.useCard({
+									name: "juedou",
+									storage: {
+										_useCardQianghua: true,
+									},
+								}, player, "noai", false, "nuyan_hulie");
+							}
 						}
 					},
 					sub: true,
