@@ -26,11 +26,12 @@ const configInfo = {
 			if (this.hth_more == undefined) {
 				var more = ui.create.div('.hth_more',
 				`<div style="border: 0px solid white;text-align:left"><div style="font-size:10px; line-height:11px;">
-				<br><li>当前版本：魔改版1.0.2版本
+				<br><li>当前版本：魔改版1.0.3版本
 				<br><b style="color: red">更新内容：</b>
-				<br>新增武将：李儒，曹髦
-				<br>修复一些已知问题
-				<br>怒焰吕玲绮适配新版本怒焰三国杀，增加怒焰吕玲绮版本设置选项
+				<br>新增武将：界马超，初版羊徽瑜
+				<br>修复一些已知问题（包括五谷丰登的问题）
+				<br>增加隐匿机制
+				<br>初步同步本体pr概念解释的功能
 				`
 				);
 				this.hth_more = more;
@@ -132,6 +133,11 @@ const fushiSet = {
 			"36": "36",
 			"Infinity": "无限",
 		},
+	},
+	yinniSet: {
+		init: true,
+		name: "隐匿状态削弱",
+		intro: "开启后为新版隐匿，当怒焰三国杀的技能复原武将牌时，隐匿状态消失",
 	},
 }
 const characterSet = {
