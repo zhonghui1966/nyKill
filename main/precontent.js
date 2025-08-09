@@ -1249,6 +1249,8 @@ export async function precontent(config, originalPack) {
 		    charlotte: true,
 			popup:false,
 		    filter: function (event,player) {
+				if (lib.config.extension_怒焰武将_nuyan_rule4 == "false") return false;
+				else if (lib.config.extension_怒焰武将_nuyan_rule4 == "onlyMe" && game.me != player) return false;
 				if (!event.card) return false;
 				if (event.card.storage._useCardQianghua != undefined) return false;
 		        if (get.type(event.card) == "equip") return false;
