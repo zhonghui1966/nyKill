@@ -4,6 +4,7 @@ import nyKill from "./nyKill.js";
 
 const packList = [nyKill];
 
+//后续自动给武将按势力分小包
 //技能替换
 /*
 for (let character in config) {

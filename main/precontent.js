@@ -16,12 +16,10 @@ export async function precontent(config, originalPack) {
 	}
 	lib.skill._test2 = {
 		trigger: {
-			player: "disableSkill",
+			player: "useCard",
 		},
 		content() {
-			console.log(1)
-			player.draw(trigger.num);
-			trigger.cancel = true;
+			console.log(trigger)
 		}
 	}*/
 	//game.me.tempBanSkill(game.me.getSkills(null, false, false), {global: "phaseEnd"}, false)
@@ -140,8 +138,11 @@ export async function precontent(config, originalPack) {
 				<br>github仓库：<a href="https://github.com/zhonghui1966/nyKill">点击此处进入</a>
 				`;
 				var more = ui.create.div('.hth_more',
-				`<li>当前版本：魔改版1.0.3版本
+				`<li>当前版本：魔改版1.0.4版本
 				<br><b style="color: red">更新内容：</b>
+				<br>新增武将：诸葛瑾，初版王元姬
+				<br>修复一些已知问题
+				<br><b style="color: red">魔改版1.0.3版本更新内容：</b>
 				<br>新增武将：界马超，初版羊徽瑜
 				<br>修复一些已知问题（包括五谷丰登的问题）
 				<br>增加隐匿机制
@@ -899,6 +900,7 @@ export async function precontent(config, originalPack) {
 			古锭刀•神 useCard id1
 			初版古锭刀•神 useCard id2
 			追思 phaseBegin id1
+			落英 dying id3
 			*/
 			obj:{
 				//属性一定要加数组，这个不是trigger，没写非数组适配
@@ -916,6 +918,8 @@ export async function precontent(config, originalPack) {
 				"nuyan_liru": ["_ny_zhuanShu_dujiu"],
 				"nuyan_caomao": ["_ny_zhuanShu_longyuan"],
 				"nuyan_First_yanghuiyu": ["_ny_zhuanShu_zhuisi"],
+				"nuyan_zhugejin": ["_ny_zhuanShu_kongqueling"],
+				"nuyan_First_wangyuanji": ["_ny_zhuanShu_luoying"],
 			},
 			filter: function (event, player) {
 				if (!player.storage._ny_fushiId) return false;
@@ -1819,30 +1823,21 @@ export async function precontent(config, originalPack) {
 					return lib.skill.rekanpo.mod.aiValue.apply(this, arguments);
 				},
 			},
-			locked: false,
 			popup:false,
 			charlotte: true,
-			position: "hes",
+			position: "he",
 			enable: "chooseToUse",
-			filter: function(event,player,triggername){
-			    if (!player.storage._ny_fushiId) return false;
-			    if (player.storage._ny_fushiId[1] !== 2 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
-			    return true;
-			},
 			filterCard: function (card) {
 				return get.type(card) == "equip";
 			},
 			viewAsFilter: function (player) {
-				return player.countCards("hes", { type: "equip" }) > 0;
+				if (!player.storage._ny_fushiId) return false;
+				if (player.storage._ny_fushiId[1] !== 2 || player.storage._ny_fushiTime[1] <= 0) return false;
+				if (player.countMark("_ny_noneFangYuFushi")) return false;
+				return player.countCards("he", { type: "equip" }) > 0;
 			},
-			viewAs: function(player) {
-				let obj = {};
-				if (!player.storage._ny_fushiId) return obj;
-				if (player.storage._ny_fushiId[1] !== 2 || player.storage._ny_fushiTime[1] <= 0) return obj;
-				if (player.countMark("_ny_noneFangYuFushi")) return obj;
-				obj["name"] = "wuxie";
-				return obj;
+			viewAs: {
+				name: "wuxie",
 			},
 			prompt: "将一张装备牌当无懈可击使用",
 			precontent: function() {
@@ -1901,33 +1896,24 @@ export async function precontent(config, originalPack) {
 					return lib.skill.rekanpo.mod.aiValue.apply(this, arguments);
 				},
 			},
-			locked: false,
 			popup:false,
 			charlotte: true,
-			position: "hes",
+			position: "he",
 			enable: ["chooseToRespond","chooseToUse"],
-			filter: function(event,player,triggername){
-			    if (!player.storage._ny_fushiId) return false;
-			    if (player.storage._ny_fushiId[1] !== 4 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
-			    return true;
-			},
 			filterCard: function (card) {
 				return get.type(card) == "equip";
 			},
 			viewAsFilter: function (player) {
-				return player.countCards("hes", { type: "equip" }) > 0;
+				if (!player.storage._ny_fushiId) return false;
+				if (player.storage._ny_fushiId[1] !== 4 || player.storage._ny_fushiTime[1] <= 0) return false;
+				if (player.countMark("_ny_noneFangYuFushi")) return false;
+				return player.countCards("he", { type: "equip" }) > 0;
 			},
-			viewAs: function(player) {
-				let obj = {};
-				if (!player.storage._ny_fushiId) return obj;
-				if (player.storage._ny_fushiId[1] !== 4 || player.storage._ny_fushiTime[1] <= 0) return obj;
-				if (player.countMark("_ny_noneFangYuFushi")) return obj;
-				obj = {
-					name: "shan",
-					storage:{_useCardQianghua:true},
-				};
-				return obj;
+			viewAs: {
+				name: "shan",
+				storage: {
+					_useCardQianghua: true,
+				},
 			},
 			prompt: "将一张装备牌当强化【闪】使用或打出",
 			precontent: function() {
@@ -1960,33 +1946,24 @@ export async function precontent(config, originalPack) {
 					return lib.skill.rekanpo.mod.aiValue.apply(this, arguments);
 				},
 			},
-			locked: false,
 			popup:false,
 			charlotte: true,
-			position: "hes",
+			position: "he",
 			enable: ["chooseToRespond","chooseToUse"],
-			filter: function(event,player,triggername){
-			    if (!player.storage._ny_fushiId) return false;
-			    if (player.storage._ny_fushiId[1] !== 5 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
-			    return true;
-			},
 			filterCard: function (card) {
 				return get.type(card) == "equip";
 			},
 			viewAsFilter: function (player) {
-				return player.countCards("hes", { type: "equip" }) > 0;
+				if (!player.storage._ny_fushiId) return false;
+				if (player.storage._ny_fushiId[1] !== 5 || player.storage._ny_fushiTime[1] <= 0) return false;
+				if (player.countMark("_ny_noneFangYuFushi")) return false;
+				return player.countCards("he", { type: "equip" }) > 0;
 			},
-			viewAs: function(player) {
-				let obj = {};
-				if (!player.storage._ny_fushiId) return obj;
-				if (player.storage._ny_fushiId[1] !== 5 || player.storage._ny_fushiTime[1] <= 0) return obj;
-				if (player.countMark("_ny_noneFangYuFushi")) return obj;
-				obj = {
-					name: "shan",
-					storage:{_ny_fangYu_Firstlingjian:true},
-				};
-				return obj;
+			viewAs: {
+				name: "shan",
+				storage: {
+					_ny_fangYu_Firstlingjian: true,
+				},
 			},
 			prompt: "将一张装备牌当【闪】使用或打出",
 			precontent: function() {
@@ -2038,32 +2015,22 @@ export async function precontent(config, originalPack) {
 					return lib.skill.rekanpo.mod.aiValue.apply(this, arguments);
 				},
 			},
-			locked: false,
 			popup:false,
 			charlotte: true,
-			position: "hes",
+			position: "he",
 			enable: ["chooseToRespond","chooseToUse"],
-			filter: function(event,player,triggername){
-			    if (!player.storage._ny_fushiId) return false;
-				if (!player.isDying()) return false;
-			    if (player.storage._ny_fushiId[1] !== 6 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
-			    return true;
-			},
 			filterCard: function (card) {
 				return get.type(card) == "equip";
 			},
 			viewAsFilter: function (player) {
-				return player.countCards("hes", { type: "equip" }) > 0;
+				if (!player.storage._ny_fushiId) return false;
+				if (!player.isDying()) return false;
+				if (player.storage._ny_fushiId[1] !== 6 || player.storage._ny_fushiTime[1] <= 0) return false;
+				if (player.countMark("_ny_noneFangYuFushi")) return false;
+				return player.countCards("he", { type: "equip" }) > 0;
 			},
-			viewAs: function(player) {
-				let obj = {};
-				if (!player.storage._ny_fushiId) return obj;
-				if (!player.isDying()) return obj;
-				if (player.storage._ny_fushiId[1] !== 6 || player.storage._ny_fushiTime[1] <= 0) return obj;
-				if (player.countMark("_ny_noneFangYuFushi")) return obj;
-				obj["name"] = "jiu";
-				return obj;
+			viewAs: {
+				name: "jiu",
 			},
 			prompt: "将一张装备牌当【酒】使用或打出",
 			precontent: function() {
@@ -4766,7 +4733,7 @@ export async function precontent(config, originalPack) {
 				    skills.addArray(
 				        (lib.character[i][3] || []).filter(function (skill) {
 				            const info = get.info(skill);
-				            return info;
+				            return info && !info.nuyan_jiBan;
 				        })
 				    );
 				}
@@ -4911,6 +4878,105 @@ export async function precontent(config, originalPack) {
 				        }
 				    }
 				}, result.skills);
+			},
+		}
+		lib.skill._ny_zhuanShu_luoying = {//落英 dying id3
+			mod: {
+				aiValue: function (player, card, num) {
+					if (get.name(card) != "jiu" && get.color(card) != "black") return;
+					var cards = player.getCards("hs", function (card) {
+						return get.name(card) == "jiu" || get.color(card) == "black";
+					});
+					cards.sort(function (a, b) {
+						return (get.name(b) == "jiu" ? 1 : 2) - (get.name(a) == "jiu" ? 1 : 2);
+					});
+					var geti = function () {
+						if (cards.includes(card)) {
+							return cards.indexOf(card);
+						}
+						return cards.length;
+					};
+					if (get.name(card) == "jiu") return Math.min(num, [6, 4, 3][Math.min(geti(), 2)]) * 0.6;
+					return Math.max(num, [6, 4, 3][Math.min(geti(), 2)]);
+				},
+				aiUseful: function () {
+					return lib.skill.rekanpo.mod.aiValue.apply(this, arguments);
+				},
+			},
+			popup:false,
+			charlotte: true,
+			position: "he",
+			enable: ["chooseToUse"],
+			filter: function(event,player,triggername){
+			    if (!player.storage._ny_fushiId) return false;
+				if (!player.isDying()) return false;
+			    let id = player.storage._ny_zhuanShuFuShiId?.find(id => id == "_ny_zhuanShu_luoying");
+			    if (id) {
+			    	id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+			    	return player.storage._ny_fushiTime[4+id] > 0;
+			    } else return false;
+			},
+			filterCard: function (card) {
+				return get.color(card) == "black";
+			},
+			viewAsFilter: function (player) {
+				if (!player.storage._ny_fushiId) return false;
+				if (!player.isDying()) return false;
+				let id = player.storage._ny_zhuanShuFuShiId?.find(id => id == "_ny_zhuanShu_luoying");
+				if (id) {
+					id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+					return player.storage._ny_fushiTime[4+id] > 0 && player.countCards("he", { color: "black" }) > 0;
+				} else return false;
+			},
+			viewAs: {
+				name: "jiu",
+			},
+			prompt: "将一张黑色牌当【酒】使用",
+			precontent: function() {
+				player.storage._ny_zhuanShu_luoying ??= 0;
+				player.storage._ny_zhuanShu_luoying++
+				player.when({ global: "phaseEnd" })
+					.then(() => delete player.storage._ny_zhuanShu_luoying);
+				//我的理解是只有印卡扣次数
+				let id = player.storage._ny_zhuanShuFuShiId?.find(id => id == "_ny_zhuanShu_luoying");
+				id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+				player.storage._ny_fushiTime[4+id]--;
+			},
+			check: function (card) {
+				return 114514 - get.value(card);
+			},
+			subSkill: {
+				effect: {
+					popup: false,
+					forced: true,
+					charlotte: true,
+					trigger: {
+						player: "dyingAfter",
+					},
+					filter: function(event, player) {
+						let id = player.storage._ny_zhuanShuFuShiId?.find(id => id == "_ny_zhuanShu_luoying");
+						if (id) {
+							id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+							return player.storage._ny_fushiTime[4+id] > 0;
+						} else return false;
+					},
+					async cost(event, trigger, player) {
+						event.result = await player.chooseBool()
+							.set("prompt", get.prompt("_ny_zhuanShu_luoying"))
+							.set("prompt2", "对" + get.translation(_status.currentPhase) + "造成" + get.cnNumber((player.storage._ny_zhuanShu_luoying ?? 0) + 2) + "点伤害")
+							.set("ai", () => get.attitude(_status.event.player, _status.currentPhase))
+							.forResult();
+					},
+					content() {
+						player.storage._ny_zhuanShu_luoying ??= 0;
+						player.storage._ny_zhuanShu_luoying++
+						player.when({ global: "phaseEnd" })
+							.then(() => delete player.storage._ny_zhuanShu_luoying);
+						let num = player.storage._ny_zhuanShu_luoying + 1;
+						_status.currentPhase.damage(num, player);
+					},
+					priority: 1145,
+				},
 			},
 		}
 	});

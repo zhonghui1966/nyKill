@@ -26,12 +26,10 @@ const configInfo = {
 			if (this.hth_more == undefined) {
 				var more = ui.create.div('.hth_more',
 				`<div style="border: 0px solid white;text-align:left"><div style="font-size:10px; line-height:11px;">
-				<br><li>当前版本：魔改版1.0.3版本
+				<br><li>当前版本：魔改版1.0.4版本
 				<br><b style="color: red">更新内容：</b>
-				<br>新增武将：界马超，初版羊徽瑜
-				<br>修复一些已知问题（包括五谷丰登的问题）
-				<br>增加隐匿机制
-				<br>初步同步本体pr概念解释的功能
+				<br>新增武将：诸葛瑾，初版王元姬
+				<br>修复一些已知问题
 				`
 				);
 				this.hth_more = more;

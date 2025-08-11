@@ -26,8 +26,11 @@ Visit Repository</a>
 <br>详情见帮助内容
 <br>怒焰机制默认关闭，请前往扩展选项处开启
 <br><b onclick="setTimeout(() => ui.click.extensionTab('怒焰武将'), 850)">点击前往设置</b><br>
-<li>当前版本：魔改版1.0.3版本
+<li>当前版本：魔改版1.0.4版本
 <br><b style="color: red">更新内容：</b>
+<br>新增武将：诸葛瑾，初版王元姬
+<br>修复一些已知问题
+<br><b style="color: red">魔改版1.0.3版本更新内容：</b>
 <br>新增武将：界马超，初版羊徽瑜
 <br>修复一些已知问题（包括五谷丰登的问题）
 <br>增加隐匿机制
