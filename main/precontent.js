@@ -138,8 +138,12 @@ export async function precontent(config, originalPack) {
 				<br>github仓库：<a href="https://github.com/zhonghui1966/nyKill">点击此处进入</a>
 				`;
 				var more = ui.create.div('.hth_more',
-				`<li>当前版本：魔改版1.0.4版本
+				`<li>当前版本：魔改版1.0.5版本
 				<br><b style="color: red">更新内容：</b>
+				<br>新增武将：左慈
+				<br>曹叡同步怒焰三国杀更新
+				<br>修复一些已知问题
+				<br><b style="color: red">魔改版1.0.4版本更新内容：</b>
 				<br>新增武将：诸葛瑾，初版王元姬
 				<br>修复一些已知问题
 				<br><b style="color: red">魔改版1.0.3版本更新内容：</b>
@@ -604,7 +608,8 @@ export async function precontent(config, originalPack) {
 				game.addVideo("markSkill", player, ["_ny_getNuqi"]);
 			},
 			addNuQi : async function(player,num) {
-				if (num <= 0) return;
+				if (typeof num == "number" && num <= 0) return;
+				if (!num) num = 1;
 				if ((!player.storage._ny_nuqi) && player.storage._ny_nuqi !== 0) return;
 				if ((!player.storage._ny_nuqiMax) && player.storage._ny_nuqiMax !== 0) return;
 				player.storage._ny_nuqi += num;
@@ -649,7 +654,8 @@ export async function precontent(config, originalPack) {
 				}
 			},
 			loseNuQi : async function(player,num) {
-				if (num <= 0) return;
+				if (typeof num == "number" && num <= 0) return;
+				if (!num) num = 1;
 				if ((!player.storage._ny_nuqi) && player.storage._ny_nuqi !== 0) return;
 				if ((!player.storage._ny_nuqiMax) && player.storage._ny_nuqiMax !== 0) return;
 				if (player.storage._ny_nuqi < num) num = player.storage._ny_nuqi;
@@ -680,6 +686,8 @@ export async function precontent(config, originalPack) {
 			},
 			//怒气上限至多为6
 			gainNuQiMax: async function(player, num) {
+				if (typeof num == "number" && num <= 0) return;
+				if (!num) num = 1;
 				if (!player.storage._ny_nuqiMax) {
 					player.storage._nu_nuqi = 0;
 					player.storage._ny_nuqiMax = num;
@@ -689,6 +697,8 @@ export async function precontent(config, originalPack) {
 				player.storage._ny_nuqiMax = Math.min(player.storage._ny_nuqiMax, 6);
 			},
 			loseNuQiMax: async function(player, num) {
+				if (typeof num == "number" && num <= 0) return;
+				if (!num) num = 1;
 				if ((!player.storage._ny_nuqi) && player.storage._ny_nuqi !== 0) return;
 				if ((!player.storage._ny_nuqiMax) && player.storage._ny_nuqiMax !== 0) return;
 				if (num >= player.storage._ny_nuqiMax) {
@@ -920,6 +930,7 @@ export async function precontent(config, originalPack) {
 				"nuyan_First_yanghuiyu": ["_ny_zhuanShu_zhuisi"],
 				"nuyan_zhugejin": ["_ny_zhuanShu_kongqueling"],
 				"nuyan_First_wangyuanji": ["_ny_zhuanShu_luoying"],
+				"nuyan_zuoci": ["_ny_zhuanShu_shendaoling"],
 			},
 			filter: function (event, player) {
 				if (!player.storage._ny_fushiId) return false;
@@ -2574,7 +2585,7 @@ export async function precontent(config, originalPack) {
 		}
 		lib.skill._ny_nuQi_tongchou = {//id6
 			trigger: {
-			    player: ["damageEnd","loseHpAfter"],
+			    global: ["damageEnd","loseHpAfter"],
 			},
 			forced: true,
 			popup:false,
@@ -2596,7 +2607,7 @@ export async function precontent(config, originalPack) {
 		}
 		lib.skill._ny_nuQi_Firsttongchou = {//id7
 			trigger: {
-			    player: ["changeHp"],
+			    global: "changeHp",
 			},
 			forced: true,
 			popup:false,
@@ -2756,7 +2767,7 @@ export async function precontent(config, originalPack) {
 		            .set("filterTarget", function (card, player, target) { return player != target })
 		            .set("prompt", get.prompt("_ny_zhanFa_lvedigongcheng"))
 		            .set("prompt2", get.prompt2("_ny_zhanFa_lvedigongcheng"))
-					.set("ai", target => -1 * get.attitude(player, target));
+					.set("ai", target => -1 * get.attitude(_status.event.player, target));
 		        "step 1"
 				if (result.bool) {
 					const num = [1, 2, 3].randomGet();
@@ -2945,8 +2956,8 @@ export async function precontent(config, originalPack) {
 					})
 		            .set("prompt", get.prompt("_ny_zhanFa_leitingnuhou"))
 		            .set("prompt2", get.prompt2("_ny_zhanFa_leitingnuhou"))
-					.set("ai", target => function (player, target) {
-						let num = -1 * get.attitude(player, target);
+					.set("ai", target => function (target) {
+						let num = -1 * get.attitude(_status.event.player, target);
 						if (!target.hasSkill('ny_podan')) num * 2;
 						if (num > 0) num += target.countCards("e");
 						return num;
@@ -3149,6 +3160,7 @@ export async function precontent(config, originalPack) {
 					.then(() => {
 						player.chooseBool("是否令"+get.translation(player.storage._ny_zhanFa_longzhenghudou_target)+"无法使用或打出牌且受伤不获得" + zhonghuiFunction.poptipLink("怒气", null, null, true) + "直至其回合结束")
 							.set("ai",() => {
+								const player = _status.event.player;
 								return -1 * get.attitude(player, player.storage._ny_zhanFa_longzhenghudou_target)
 							});
 					})
@@ -3188,8 +3200,9 @@ export async function precontent(config, originalPack) {
 			async content (event,trigger,player) {
 				await lib.skill._ny_getNuqi.addNuQi(player,1);
 				let { result } = await player.chooseBool("是否令"+get.translation(trigger.player)+"选择一项：1.翻面；2.失去1点" + zhonghuiFunction.poptipLink("怒气", null, null, true) + "且下次受到伤害+1")
+					.set("target", trigger.player)
 					.set("ai",() => {
-						return -1 * get.attitude(player,trigger.player);
+						return -1 * get.attitude(_status.event.player,_status.event.target);
 					});
 				if (result.bool) {
 					const choiceList = ["翻面","失去1点" + zhonghuiFunction.poptipLink("怒气", null, null, true) + "且下次受到伤害+1"];
@@ -3201,10 +3214,7 @@ export async function precontent(config, originalPack) {
 					let { result } = await trigger.player.chooseControl()
 						.set("controls",choices)
 						.set("choiceList",choiceList)
-						.set("ai",() => {
-							if (player.storage._ny_nuqi > 0) return "选项二";
-							return "选项一";
-						})
+						.set("ai",() => _status.event.player.storage._ny_nuqi > 0 ? "选项二" : "选项一")
 						.set("prompt","〖龙争虎斗〗：请选择以下一项执行");
 					if (result.control == "选项一") {
 						await trigger.player.turnOver();
@@ -3348,6 +3358,9 @@ export async function precontent(config, originalPack) {
 					trigger:{
 						source:"damageBegin1",
 					},
+					charlotte: true,
+					popup: false,
+					forced: true,
 					filter:function(event,player) {
 						if (!player.storage._ny_zhanFa_yetandiying_players) return false;
 						if (player.storage._ny_zhanFa_yetandiying_players.length == 0) return false;
@@ -3460,7 +3473,7 @@ export async function precontent(config, originalPack) {
 				}
 				if (list.length) {
 				    let { result } = await player.chooseButton(["###百鸟朝凤###是否视为强化使用一张普通锦囊牌？", [list, "vcard"]])
-				        .set("ai", (button) => player.getUseValue(button.link[2]))
+				        .set("ai", (button) => _status.event.player.getUseValue(button.link[2]))
 						.set("filterButton", (button, player) => player.hasUseTarget(button.link[2]));
 					if (!result.bool) return;
 					let card = {
@@ -3765,6 +3778,9 @@ export async function precontent(config, originalPack) {
 						temp = target1.storage._ny_fushiTime;
 						target1.storage._ny_fushiTime = target2.storage._ny_fushiTime;
 						target2.storage._ny_fushiTime = temp;
+						temp = target1.storage._ny_zhuanShuFuShiId;
+						target1.storage._ny_zhuanShuFuShiId = target2.storage._ny_zhuanShuFuShiId;
+						target2.storage._ny_zhuanShuFuShiId = temp;
 						if (target1.storage._ny_fushiId !== undefined) {
 							lib.skill._ny_getNuqi.localMark(target1,"_ny_getFuShi");
 							game.addVideo("markSkill", target1, ["_ny_getFuShi"]);
@@ -4358,6 +4374,7 @@ export async function precontent(config, originalPack) {
 					.set("prompt", get.prompt("_ny_zhuanShu_Firstchixue"))
 					.set("prompt2", get.prompt2("_ny_zhuanShu_Firstchixue"))
 					.set("ai", target => {
+						const player = _status.event.player;
 						let num = get.attitude(player, target);
 						if (num > 0 || player == target) return target.getDamagedHp();
 						if (num < 0) return target.hp;
@@ -4368,7 +4385,7 @@ export async function precontent(config, originalPack) {
 					let target = result.targets[0];
 					let num = Math.min(trigger.num, 2);
 					let next = await player.chooseBool("是否对" + get.translation(target) + "造成" + get.cnNumber(num) + "点伤害<br>或取消并令其回复" + get.cnNumber(num) + "点体力？")
-						.set("ai", () => -1 * get.attitude(player, target))
+						.set("ai", () => -1 * get.attitude(_status.event.player, target))
 						.forResult();
 					if (next.bool) await target.damage(num, player);
 					else await target.recover(num);
@@ -4408,6 +4425,7 @@ export async function precontent(config, originalPack) {
 					.set("prompt", get.prompt("_ny_zhuanShu_chixue"))
 					.set("prompt2", get.prompt2("_ny_zhuanShu_chixue"))
 					.set("ai", target => {
+						const player = _status.event.player;
 						let num = get.attitude(player, target);
 						if (num > 0 || player == target) return target.getDamagedHp();
 						if (num < 0) return target.hp;
@@ -4418,7 +4436,7 @@ export async function precontent(config, originalPack) {
 					let target = result.targets[0];
 					let num = Math.min(trigger.num, 2);
 					let next = await player.chooseBool("是否令" + get.translation(target) + "失去" + get.cnNumber(num) + "点体力<br>或取消并令其回复" + get.cnNumber(num) + "点体力？")
-						.set("ai", () => -1 * get.attitude(player, target))
+						.set("ai", () => -1 * get.attitude(_status.event.player, target))
 						.forResult();
 					if (next.bool) await target.loseHp(num);
 					else await target.recover(num);
@@ -4542,9 +4560,10 @@ export async function precontent(config, originalPack) {
 				let result = await player.chooseControl()
 					.set("controls", choices)
 					.set("choiceList", choiceList)
+					.set("target", trigger.player)
 					.set("ai", () => {
 						let player = _status.event.player;
-						if (player.hp == 1 || get.attitude(player, trigger.player)) return "选项二";
+						if (player.hp == 1 || get.attitude(player, _status.event.target)) return "选项二";
 						else return "选项一";
 					})
 					.forResult();
@@ -4843,7 +4862,7 @@ export async function precontent(config, originalPack) {
 				    return promise;
 				};
 				const ai = function () {
-				    return { bool: true, skills: skills.sort((a, b) => get.skillRank(b, "inout") - get.skillRank(a, "inout")).slice(0, 1) };
+				    return { bool: true, skills: skills.slice().sort((a, b) => get.skillRank(b, "inout") - get.skillRank(a, "inout")).slice(0, 1) };
 				};
 				let next;
 				if (event.isMine()) {

@@ -26,9 +26,10 @@ const configInfo = {
 			if (this.hth_more == undefined) {
 				var more = ui.create.div('.hth_more',
 				`<div style="border: 0px solid white;text-align:left"><div style="font-size:10px; line-height:11px;">
-				<br><li>当前版本：魔改版1.0.4版本
+				<br><li>当前版本：魔改版1.0.5版本
 				<br><b style="color: red">更新内容：</b>
-				<br>新增武将：诸葛瑾，初版王元姬
+				<br>新增武将：左慈
+				<br>曹叡同步怒焰三国杀更新
 				<br>修复一些已知问题
 				`
 				);
