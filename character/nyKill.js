@@ -5084,13 +5084,13 @@ export default {
 				let result = await next.forResult();
 				finish();
 				event.result = {
-					bool: result.links.length > 0,
+					bool: result.links?.length > 0,
 					cost_data: result.links,
 				};
 			},
 			async content(event, trigger, player) {
 				const { cost_data } = event;
-				lib.skill.nuyan_huashen.removeHuashen(player, result.links);
+				lib.skill.nuyan_huashen.removeHuashen(player, cost_data);
 				trigger.cancel();
 			},
 		},
@@ -5102,7 +5102,7 @@ export default {
 			locked: true,
 			forced: true,
 			getIndex: event => event.num,
-			filter(event) {
+			filter(event, player) {
 				return event.num && player.storage.nuyan_huashen?.character?.length < player.maxHp;
 			},
 			async content(event, trigger, player) {
