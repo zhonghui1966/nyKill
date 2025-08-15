@@ -20,7 +20,7 @@ import { extensionDefaultPackage } from "./main/main.js";
 
 
 let changelog = `
-<a onclick="if (zhonghuiFunction) zhonghuiFunction.showRepo("怒焰武将")" style="cursor: pointer;text-decoration: underline;">
+<a onclick="if (zhonghuiFunction) zhonghuiFunction.showRepo('怒焰武将')" style="cursor: pointer;text-decoration: underline;">
 Visit Repository</a>
 <br>QQ群：877603179
 <br>详情见帮助内容

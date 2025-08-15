@@ -37,10 +37,9 @@ export async function precontent(config, originalPack) {
 	if (!zhonghuiFunction) var zhonghuiFunction = {
 		//下列是抄的极略的
 		showRepo(ext) {
-			//记得传参，传一个字符串，如“怒焰武将”
-			var mirrorURL = lib.extensionPack[ext] && lib.extensionPack[ext].mirrorURL;
-			if (!mirrorURL) return;
-			this.openLink(mirrorURL);
+			/*var mirrorURL = lib.extensionPack[ext] && lib.extensionPack[ext].mirrorURL;
+			if (!mirrorURL) return;*/
+			if (ext == "怒焰武将") this.openLink("https://github.com/zhonghui1966/nyKill");
 		},
 		openLink(url) {
 			if (window.cordova) {
