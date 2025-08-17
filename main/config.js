@@ -26,11 +26,14 @@ const configInfo = {
 			if (this.hth_more == undefined) {
 				var more = ui.create.div('.hth_more',
 				`<div style="border: 0px solid white;text-align:left"><div style="font-size:10px; line-height:11px;">
-				<br><li>当前版本：魔改版1.0.5版本
+				<br><li>当前版本：魔改版1.0.6版本
 				<br><b style="color: red">更新内容：</b>
-				<br>新增武将：左慈
-				<br>曹叡同步怒焰三国杀更新
-				<br>修复一些已知问题
+				<br>新增武将：蔡贞姬
+				<br>从该版本起版本更新将会有更详细的介绍
+				<br>修复一些已知问题：
+				<br>1.修复界郭嘉〖奇佐〗不能印卡时仍然出现按钮的问题
+				<br>2.修复曹髦登场时无法发动〖决进讨逆〗的问题
+				<br>增加演奏调式机制，摧毁牌机制半重做，增加自动分包，删去一些多余的代码，帮助界面增加更多概念解释
 				`
 				);
 				this.hth_more = more;

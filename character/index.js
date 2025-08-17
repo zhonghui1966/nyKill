@@ -4,7 +4,6 @@ import nyKill from "./nyKill.js";
 
 const packList = [nyKill];
 
-//后续自动给武将按势力分小包
 //技能替换
 /*
 for (let character in config) {
@@ -36,6 +35,13 @@ for (let character in config) {
 	}
 }
 */
+//给武将按势力分小包
+nyKill.characterSort.nyKill = {};
+for (let char in nyKill.character) {
+	let group = nyKill.character[char][1];
+	nyKill.characterSort.nyKill["nyKill_" + group] ??= [];
+	nyKill.characterSort.nyKill["nyKill_" + group].add(char);
+}
 //清除羁绊技能和不够的星级技能
 let skList = [];
 if (!lib.config?.extension_怒焰武将_jibanLose) {

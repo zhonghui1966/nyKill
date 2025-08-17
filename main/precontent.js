@@ -18,6 +18,10 @@ export async function precontent(config, originalPack) {
 		trigger: {
 			player: "useCard",
 		},
+		filter(event, player) {
+			console.log(this);
+		},
+		forced: true,
 		content() {
 			console.log(trigger)
 		}
@@ -137,8 +141,15 @@ export async function precontent(config, originalPack) {
 				<br>github仓库：<a href="https://github.com/zhonghui1966/nyKill">点击此处进入</a>
 				`;
 				var more = ui.create.div('.hth_more',
-				`<li>当前版本：魔改版1.0.5版本
+				`<li>当前版本：魔改版1.0.6版本
 				<br><b style="color: red">更新内容：</b>
+				<br>新增武将：蔡贞姬
+				<br>从该版本起版本更新将会有更详细的介绍
+				<br>修复一些已知问题：
+				<br>1.修复界郭嘉〖奇佐〗不能印卡时仍然出现按钮的问题
+				<br>2.修复曹髦登场时无法发动〖决进讨逆〗的问题
+				<br>增加演奏调式机制，摧毁牌机制半重做，增加自动分包，删去一些多余的代码，帮助界面增加更多概念解释
+				<br><b style="color: red">魔改版1.0.5版本更新内容：</b>
 				<br>新增武将：左慈
 				<br>曹叡同步怒焰三国杀更新
 				<br>修复一些已知问题
@@ -166,6 +177,14 @@ export async function precontent(config, originalPack) {
 				<br>
 				<hr>
 				<li>概念解释：
+				<br>摧毁牌：
+				<br>被摧毁的牌无法被使用或打出或用于拼点直至进入弃牌堆
+				<br>演奏调式：
+				<br>〖宫调〗：锁定技，你使用基本牌（除【闪】外）的效果+1
+				<br>〖商调〗：锁定技，你使用单体普通锦囊牌（除【无懈可击】外）的效果+1
+				<br>〖角调〗：锁定技，你成为其他角色使用牌的目标时，你随机获得其1张手牌
+				<br>〖徵调〗：锁定技，当你受到不是牌造成的致命伤害时，防止之
+				<br>〖羽调〗：锁定技，锁定技，当你失去大于1点的体力时，将数值改为1点
 				<br>怒焰星级：
 				<br>在扩展设置中可以设置，包括0到6星
 				<br><b onclick="setTimeout(() => ui.click.extensionTab('怒焰武将'), 850)">点击前往设置</b>
@@ -242,29 +261,6 @@ export async function precontent(config, originalPack) {
 	}
 	lib.zhonghuiFunction = zhonghuiFunction;
 	window.zhonghuiFunction = zhonghuiFunction;
-	//生成概念解释 纯💩山
-	//数字代表层数，要加层数记得zhonghuiFunction.noprDescription也要加
-	zhonghuiFunction.tipMap1 = [
-		["天焰石", "你的初始体力值和体力上限+1"],
-		["怒气上限", "怒焰武将默认拥有2点怒气上限，怒气值增加后，若怒气值超过怒气上限，则将怒气值修改为怒气上限"],
-		["强化你使用的牌", `强化后的牌效果+1<br>特殊强化：<br>I.【铁索连环】强化后额外指定一个目标<br>Ⅱ.【怒发冲冠】/【釜底抽薪】强化后数值+2<br>Ⅲ.【闪】强化后摸一张牌<br>Ⅳ.【无懈可击】强化后获得目标锦囊牌<br>V.【乐不思蜀】强化后目标额外跳过摸牌阶段`],
-	];
-	if (typeof game.addPoptip == "function") {
-		game.addPoptip(zhonghuiFunction.tipMap1);
-	}
-	zhonghuiFunction.tipMap2 = [
-		["天嗔石", `你的初始${zhonghuiFunction.poptipLink("怒气上限", null, null, true)}+1`],
-		["怒气", `怒焰武将开局拥有0点怒气值和2点${zhonghuiFunction.poptipLink("怒气上限", null, null, true)}<br>每受到1点伤害后便获得1点怒气<br>怒焰武将在使用强化牌列表内的牌时可以选择消耗1点怒气${zhonghuiFunction.poptipLink("强化你使用的牌", null, null, true)}`],
-	];
-	if (typeof game.addPoptip == "function") {
-		game.addPoptip(zhonghuiFunction.tipMap2);
-	}
-	zhonghuiFunction.tipMap3 = [
-		["天怒石", `你的初始${zhonghuiFunction.poptipLink("怒气", null, null, true)}+1`],
-	];
-	if (typeof game.addPoptip == "function") {
-		game.addPoptip(zhonghuiFunction.tipMap3);
-	}
 	//生成前缀的html 纯💩山
 	lib.namePrefix.set("魏", {
 	    getSpan: () => {
@@ -553,7 +549,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup: false,
-			charlotte: true,
 			priority: 1145141919810,
 		}
 		//++摸牌阶段摸牌数
@@ -570,7 +565,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup: false,
-			charlotte: true,
 			firstDo: true,
 			content() {
 				trigger.num++;
@@ -598,7 +592,6 @@ export async function precontent(config, originalPack) {
 		        }
 		        player.updateMarks();
 		    },
-		    mark: true,
 		    marktext: "🔥",
 			initNuQi: async function(player) {
 				player.storage._ny_nuqi ??= 0;
@@ -715,7 +708,6 @@ export async function precontent(config, originalPack) {
 			},
 		    forced: true,
 			popup:false,
-		    charlotte: true,
 			firstDo: true,
 		    intro: {
 		        name: zhonghuiFunction.poptipLink("怒气", null, null, true),
@@ -757,7 +749,6 @@ export async function precontent(config, originalPack) {
 			trigger: {
 			    global: "gameStart",
 			},
-			mark: true,
 			marktext: "🪨",
 			intro: {
 			    name: "符石(点击查看详细技能)",
@@ -827,7 +818,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			color: {
 				"jinGong": `color:#FF4500`,
 				"fangYu": `color:#1E90FF`,
@@ -889,7 +879,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			/*专属符石由于fushiTime的传递问题，设置了每个时机各有一个id
 			其实这是个💩山，我会改，但我意识到的时候已经十几个专属符石了，懒得改了，后续（
 			id汇总
@@ -910,6 +899,7 @@ export async function precontent(config, originalPack) {
 			初版古锭刀•神 useCard id2
 			追思 phaseBegin id1
 			落英 dying id3
+			从凤栖琴开始，再也不用这种狗屎写法了
 			*/
 			obj:{
 				//属性一定要加数组，这个不是trigger，没写非数组适配
@@ -930,6 +920,7 @@ export async function precontent(config, originalPack) {
 				"nuyan_zhugejin": ["_ny_zhuanShu_kongqueling"],
 				"nuyan_First_wangyuanji": ["_ny_zhuanShu_luoying"],
 				"nuyan_zuoci": ["_ny_zhuanShu_shendaoling"],
+				"nuyan_caizhenji": ["_ny_zhuanShu_fengqiqin"],
 			},
 			filter: function (event, player) {
 				if (!player.storage._ny_fushiId) return false;
@@ -1241,7 +1232,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup: false,
-			charlotte: true,
 			filter:function(event,player){
 				let card = event.card;
 				if ((!card.storage._useCardQianghua || !card.storage._useCardQianghua == true) && (!card.storage._useCardBaseChange || !card.storage._useCardBaseChange > 0)) return false;
@@ -1260,7 +1250,6 @@ export async function precontent(config, originalPack) {
 		    trigger: {player:"useCard0"},
 			//后续铁索增加效果，后续闪电
 			list: ["sha", "shan", "tao", "jiu", "huogong", "juedou", "nanman", "wanjian", "guohe", "shunshou", "wuzhong", "taoyuan", "wuxie", "lebu", "tiesuo", "wugu"],
-		    charlotte: true,
 			popup:false,
 		    filter: function (event,player) {
 				if (lib.config.extension_怒焰武将_nuyan_rule4 == "false") return false;
@@ -1289,7 +1278,6 @@ export async function precontent(config, originalPack) {
 					},
 				    forced: true,
 				    popup: false,
-					charlotte:true,
 				    filter: function (event, player) {
 						var card = event.card;
 						if (!card.storage._useCardQianghua == true) return false;
@@ -1312,7 +1300,6 @@ export async function precontent(config, originalPack) {
 					},
 					forced: true,
 					popup: false,
-					charlotte: true,
 					content: function () {
 						let card = trigger.card;
 						player.when({ global: 'eventNeutralized' })
@@ -1352,7 +1339,6 @@ export async function precontent(config, originalPack) {
 					},
 					forced: true,
 					popup: false,
-					charlotte: true,
 					content: function () {
 						"step 0";
 						player
@@ -1392,7 +1378,6 @@ export async function precontent(config, originalPack) {
 					},
 					forced: true,
 					popup: false,
-					charlotte: true,
 					content: function() {
 						trigger.player.skip("phaseDraw");
 					},
@@ -1401,9 +1386,26 @@ export async function precontent(config, originalPack) {
 		};
 		//摧毁牌
 		lib.skill._ny_cuihui = {
-			charlotte: true,
 			forced:true,
 			popup:false,
+			cuihuiCards: async function(player, cards) {
+				if (get.itemtype(cards) == "card") {
+					cards = [cards];
+				}
+				let func = [];
+				for (let i of player.getSkills(null, false, false)) {
+					if (lib.skill[i]?.unCuihuiAble) {
+						func.add(lib.skill[i].unCuihuiAble);
+					}
+				}
+				if (func.length) {
+					for (let f of func) {
+						//f内部return false代表不能被摧毁
+						cards = cards.filter(card => f(card));
+					}
+				}
+				await player.addGaintag(cards, "_ny_cuihui");
+			},
 			mod: {
 			    cardEnabled2(card) {
 			        if (card.hasGaintag("_ny_cuihui")) return false;
@@ -1419,9 +1421,9 @@ export async function precontent(config, originalPack) {
 			},
 			content:function(){
 				let cards = player.getCards('h');
-				if (!cards.some(i => !i.hasGaintag("_ny_cuihui"))) trigger.cancel();
+				if (!cards.some(i => !i.hasGaintag(event.name))) trigger.cancel();
 				else trigger.filterCard = function(card) {
-					return !card.hasGaintag("_ny_cuihui")
+					return !card.hasGaintag(event.name);
 				};
 			},
 			priority: 1145141919810,
@@ -1430,7 +1432,6 @@ export async function precontent(config, originalPack) {
 		}
 		//防御符石无效
 		lib.skill._ny_noneFangYuFushi = {
-			mark: true,
 			marktext:"封",
 			intro: {
 				nocount:true,
@@ -1440,7 +1441,6 @@ export async function precontent(config, originalPack) {
 		}
 		//隐匿
 		lib.skill._ny_yinni = {
-			mark: true,
 			marktext:"隐",
 			intro: {
 				nocount:true,
@@ -1451,7 +1451,6 @@ export async function precontent(config, originalPack) {
 				player.addMark("_ny_yinni");
 				player.turnOver(false);
 			},
-			charlotte: true,
 			forced: true,
 			popup: false,
 			mod: {
@@ -1483,10 +1482,126 @@ export async function precontent(config, originalPack) {
 				player.updateMarks();
 			},
 		}
+		//演奏调式
+		lib.skill._ny_yanzoudiaoshi = {
+			marktext: "调",
+			nameFunc: (player) => get.translation("_ny_yanzoudiaoshi_" + player.storage._ny_yanzoudiaoshi),
+			intro: {
+				content: (storage, player) => "当前演奏调式：" + `<br>〖${get.translation("_ny_yanzoudiaoshi_" + player.storage._ny_yanzoudiaoshi)}〗：<br>${get.translation("_ny_yanzoudiaoshi_" + player.storage._ny_yanzoudiaoshi + "_info")}`,
+			},
+			list: ["gongdiao", "shangdiao", "jiaodiao", "zhidiao", "yudiao"],
+			init: async function(player) {
+				let list = this.list;
+				let choices = list.map(i => get.translation("_ny_yanzoudiaoshi_" + i));
+				let choiceList = list.map(i => `〖${get.translation("_ny_yanzoudiaoshi_" + i)}〗：<div>${get.translation("_ny_yanzoudiaoshi_" + i + "_info")}</div>`);
+				let str = player.storage._ny_yanzoudiaoshi ? "<br>当前演奏调式：" + `〖${get.translation("_ny_yanzoudiaoshi_" + player.storage._ny_yanzoudiaoshi)}〗：${get.translation("_ny_yanzoudiaoshi_" + player.storage._ny_yanzoudiaoshi + "_info")}` : "";
+				let result = await player.chooseControl()
+					.set("prompt", "请选择一个演奏调式获得之(覆盖当前演奏调式)" + str)
+					.set("controls", choices)
+					.set("choiceList", choiceList)
+					.set("ai", () => _status.event.controls[Math.random() * _status.event.controls.length])
+					.forResult();
+				if (result.control == "cancel2") return;
+				result = list[choices.indexOf(result.control)];
+				player.storage._ny_yanzoudiaoshi = result;
+				game.broadcastAll((skill, func) => {
+					skill.intro.name = func;
+				}, this, this.nameFunc(player));
+				player.markSkill("_ny_yanzoudiaoshi", this.intro);
+				player.updateMarks();
+			},
+			subSkill: {
+				gongdiao: {
+					sub: true,
+					sourceSkill: "_ny_yanzoudiaoshi",
+					direct: true,
+					trigger: {
+						player: "useCard",
+					},
+					priority: 1145141919,
+					filter: function(event, player) {
+						return get.type(event.card) == "basic" && event.card.name !== "shan";
+					},
+					async content(event, trigger, player) {
+						if (!event.name.endsWith(player.storage._ny_yanzoudiaoshi)) return;
+						if (["jlsgqs_mei"].includes(trigger.card.name)) {
+							trigger.card.storage._useCardBaseChange ??= 0;
+							trigger.card.storage._useCardBaseChange ++;
+						} else trigger.baseDamage ++;
+					},
+				},
+				shangdiao: {
+					sub: true,
+					sourceSkill: "_ny_yanzoudiaoshi",
+					direct: true,
+					trigger: {
+						player: "useCard",
+					},
+					priority: 1145141919,
+					filter: function(event, player) {
+						const info = get.info(event.card);
+						if (!info || info.type != "trick" || info.notarget || (info.selectTarget && info.selectTarget != 1)) return false;
+						return true;
+					},
+					async content(event, trigger, player) {
+						if (!event.name.endsWith(player.storage._ny_yanzoudiaoshi)) return;
+						trigger.card.storage._useCardBaseChange ??= 0;
+						trigger.card.storage._useCardBaseChange ++;
+					},
+				},
+				jiaodiao: {
+					sub: true,
+					sourceSkill: "_ny_yanzoudiaoshi",
+					direct: true,
+					trigger: {
+						target: "useCardToTarget",
+					},
+					priority: 1145141919,
+					filter: function(event, player) {
+						return event.player !== player && event.player.countCards("h");
+					},
+					async content(event, trigger, player) {
+						if (!event.name.endsWith(player.storage._ny_yanzoudiaoshi)) return;
+						await player.randomGain(trigger.player, "h");
+					},
+				},
+				zhidiao: {
+					sub: true,
+					sourceSkill: "_ny_yanzoudiaoshi",
+					direct: true,
+					trigger: {
+						player: "damageBegin4",
+					},
+					priority: 1145141919,
+					filter: function(event, player) {
+						return !event.card && event.num >= player.hp;
+					},
+					async content(event, trigger, player) {
+						if (!event.name.endsWith(player.storage._ny_yanzoudiaoshi)) return;
+						trigger.cancel();
+					},
+				},
+				yudiao: {
+					sub: true,
+					sourceSkill: "_ny_yanzoudiaoshi",
+					direct: true,
+					trigger: {
+						player: "loseHpBegin",
+					},
+					priority: -1145141919,
+					filter: function(event, player) {
+						return event.num > 1;
+					},
+					async content(event, trigger, player) {
+						if (!event.name.endsWith(player.storage._ny_yanzoudiaoshi)) return;
+						trigger.num = 1;
+					},
+				},
+			},
+		}
 		
 		//固定技能
 		lib.skill.ny_podan = {
-			charlotte: true,
 			mark: true,
 			marktext:"禁",
 			intro: {
@@ -1524,7 +1639,6 @@ export async function precontent(config, originalPack) {
 		    },
 		    forced: true,
 		    popup:false,
-		    charlotte: true,
 		    filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[0] !== 1 || player.storage._ny_fushiTime[0] <= 0) return false;
@@ -1542,7 +1656,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[0] !== 2 || player.storage._ny_fushiTime[0] <= 0) return false;
@@ -1561,7 +1674,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event, player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[0] !== 3 || player.storage._ny_fushiTime[0] <= 0) return false;
@@ -1580,7 +1692,6 @@ export async function precontent(config, originalPack) {
 		    },
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter(event, player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[0] !== 4 || player.storage._ny_fushiTime[0] <= 0) return false;
@@ -1614,7 +1725,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[0] !== 5 || player.storage._ny_fushiTime[0] <= 0) return false;
@@ -1633,7 +1743,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[0] !== 6 || player.storage._ny_fushiTime[0] <= 0) return false;
@@ -1671,7 +1780,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[0] !== 8 || player.storage._ny_fushiTime[0] <= 0) return false;
@@ -1694,7 +1802,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function (event, player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[0] !== 9 || player.storage._ny_fushiTime[0] <= 0) return false;
@@ -1720,7 +1827,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function (event, player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[0] !== 10 || player.storage._ny_fushiTime[0] <= 0) return false;
@@ -1738,7 +1844,6 @@ export async function precontent(config, originalPack) {
 			trigger: {
 			    source: "damageBefore",
 			},
-			mark:true,
 			marktext:'罚',
 			intro:{
 				nocount:true,
@@ -1747,7 +1852,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function (event, player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[0] !== 11 || player.storage._ny_fushiTime[0] <= 0) return false;
@@ -1773,7 +1877,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup: false,
-			charlotte:true,
 			filter:function (event,player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[0] !== 12 || player.storage._ny_fushiTime[0] <= 0) return false;
@@ -1797,7 +1900,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 		    filter: function(event,player,triggername){
 		        if (!player.storage._ny_fushiId) return false;
 		        if (player.storage._ny_fushiId[1] !== 1 || player.storage._ny_fushiTime[1] <= 0) return false;
@@ -1834,7 +1936,6 @@ export async function precontent(config, originalPack) {
 				},
 			},
 			popup:false,
-			charlotte: true,
 			position: "he",
 			enable: "chooseToUse",
 			filterCard: function (card) {
@@ -1863,7 +1964,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[1] !== 3 || player.storage._ny_fushiTime[1] <= 0) return false;
@@ -1907,7 +2007,6 @@ export async function precontent(config, originalPack) {
 				},
 			},
 			popup:false,
-			charlotte: true,
 			position: "he",
 			enable: ["chooseToRespond","chooseToUse"],
 			filterCard: function (card) {
@@ -1957,7 +2056,6 @@ export async function precontent(config, originalPack) {
 				},
 			},
 			popup:false,
-			charlotte: true,
 			position: "he",
 			enable: ["chooseToRespond","chooseToUse"],
 			filterCard: function (card) {
@@ -1987,7 +2085,6 @@ export async function precontent(config, originalPack) {
 					trigger: {player:"useCard1"},
 					forced: true,
 					popup:false,
-					charlotte: true,
 					filter: function (event,player) {
 						if (!event.card) return false;
 						if (event.card.storage._ny_fangYu_Firstlingjian != true) return false;
@@ -2026,7 +2123,6 @@ export async function precontent(config, originalPack) {
 				},
 			},
 			popup:false,
-			charlotte: true,
 			position: "he",
 			enable: ["chooseToRespond","chooseToUse"],
 			filterCard: function (card) {
@@ -2056,7 +2152,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[1] !== 7 || player.storage._ny_fushiTime[1] <= 0) return false;
@@ -2085,7 +2180,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			async content(event,trigger,player) {
 				let { result } = await player.chooseBool("余威：是否于"+get.translation(trigger.card)+"结算过程中可视为使用【无懈可击】(不限次数)").set("ai",() => true);
 				if (result.bool) {
@@ -2100,7 +2194,6 @@ export async function precontent(config, originalPack) {
 				effect:{
 					forced: true,
 					popup: false,
-					charlotte: true,
 					enable: "chooseToUse",
 					prompt: "妙计：你可以视为使用一张【无懈可击】(不限次数)",
 					viewAs:{
@@ -2121,7 +2214,6 @@ export async function precontent(config, originalPack) {
 				restore:{
 					forced: true,
 					popup: false,
-					charlotte: true,
 					trigger: {
 						global: "useCardAfter",
 					},
@@ -2154,7 +2246,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			async content(event,trigger,player) {
 				let { result } = await player.chooseBool("余威：是否于"+get.translation(trigger.card)+"结算过程中可消耗1点" + zhonghuiFunction.poptipLink("怒气", null, null, true) + "视为使用强化【无懈可击】(不限次数)").set("ai", () => true);
 				if (result.bool) {
@@ -2169,7 +2260,6 @@ export async function precontent(config, originalPack) {
 				effect:{
 					forced: true,
 					popup: false,
-					charlotte: true,
 					enable: "chooseToUse",
 					prompt: "妙计：你可以消耗1点" + zhonghuiFunction.poptipLink("怒气", null, null, true) + "并视为使用一张强化【无懈可击】(不限次数)",
 					viewAs:{
@@ -2194,7 +2284,6 @@ export async function precontent(config, originalPack) {
 				restore:{
 					forced: true,
 					popup: false,
-					charlotte: true,
 					trigger: {
 						global: "useCardAfter",
 					},
@@ -2218,7 +2307,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[1] !== 10 || player.storage._ny_fushiTime[1] <= 0) return false;
@@ -2248,7 +2336,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[1] !== 12 || player.storage._ny_fushiTime[1] <= 0) return false;
@@ -2267,7 +2354,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[1] !== 13 || player.storage._ny_fushiTime[1] <= 0) return false;
@@ -2287,7 +2373,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[2] !== 1 || player.storage._ny_fushiTime[2] <= 0) return false;
@@ -2308,7 +2393,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[2] !== 2 || player.storage._ny_fushiTime[2] <= 0) return false;
@@ -2326,7 +2410,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[2] !== 3 || player.storage._ny_fushiTime[2] <= 0) return false;
@@ -2344,7 +2427,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event, player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[2] !== 4 || player.storage._ny_fushiTime[2] <= 0) return false;
@@ -2365,7 +2447,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event, player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[2] !== 6 || player.storage._ny_fushiTime[2] <= 0) return false;
@@ -2393,7 +2474,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event, player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[2] !== 7 || player.storage._ny_fushiTime[2] <= 0) return false;
@@ -2422,7 +2502,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event, player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[2] !== 11 || player.storage._ny_fushiTime[2] <= 0) return false;
@@ -2440,7 +2519,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[2] !== 12 || player.storage._ny_fushiTime[2] <= 0) return false;
@@ -2459,7 +2537,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,name){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[3] !== 1 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2480,7 +2557,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,name){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[3] !== 2 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2503,7 +2579,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,name){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[3] !== 3 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2522,7 +2597,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,name){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[3] !== 4 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2545,7 +2619,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			getIndex(event, player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[3] !== 5 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2568,7 +2641,6 @@ export async function precontent(config, originalPack) {
 					},
 					forced: true,
 					popup:false,
-					charlotte: true,
 					filter: function(event,player){
 					    if (!player.storage._ny_fushiId) return false;
 					    if (player.storage._ny_fushiId[3] !== 5 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2588,7 +2660,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[3] !== 6 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2610,7 +2681,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[3] !== 7 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2632,7 +2702,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,name){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[3] !== 8 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2652,7 +2721,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,name){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[3] !== 10 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2670,7 +2738,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,name){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[3] !== 11 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2688,7 +2755,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,name){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[3] !== 12 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2706,7 +2772,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup:false,
-			charlotte: true,
 			filter: function(event,player,name){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[3] !== 13 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2725,7 +2790,6 @@ export async function precontent(config, originalPack) {
 					},
 					forced: true,
 					popup:false,
-					charlotte: true,
 					filter: function(event,player,name){
 					    if (!player.storage._ny_fushiId) return false;
 					    if (player.storage._ny_fushiId[3] !== 13 || player.storage._ny_fushiTime[3] <= 0) return false;
@@ -2753,7 +2817,6 @@ export async function precontent(config, originalPack) {
 		        player: ["phaseBegin"],
 		    },
 			popup:false,
-			charlotte: true,
 			frequent: true,
 		    filter: function (event, player, triggername) {
 				if (!player.storage._ny_fushiId) return false;
@@ -2792,7 +2855,6 @@ export async function precontent(config, originalPack) {
 			    return true;
 			},
 		    popup:false,
-		    charlotte: true,
 		    frequent: true,
 		    content: function(){
 				if(player.getHistory("sourceDamage").reduce((acc,cur)=>acc+cur.num,0) <= 4){
@@ -2812,7 +2874,6 @@ export async function precontent(config, originalPack) {
 			    return event.player !== player;
 			},
 			popup:false,
-			charlotte: true,
 			frequent: false,
 			async content (event,trigger,player) {
 				await trigger.player.randomDiscard(2);
@@ -2824,7 +2885,6 @@ export async function precontent(config, originalPack) {
 			    player: "useCard",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: false,
 			filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
@@ -2846,7 +2906,6 @@ export async function precontent(config, originalPack) {
 					},
 					usable:1,
 					popup:false,
-					charlotte: true,
 					frequent: true,
 					filter: function(event,player,triggername){
 						if (!player.storage._ny_fushiId) return false;
@@ -2899,7 +2958,6 @@ export async function precontent(config, originalPack) {
 			        if (card.name == "sha") return num + player.countMark('_ny_zhanFa_feiyangbahu');
 			    },
 			},
-			mark:true,
 			marktext:"飞",
 			intro:{
 				name:"飞扬跋扈",
@@ -2909,7 +2967,6 @@ export async function precontent(config, originalPack) {
 			    player: ["phaseJudgeBegin","phaseUseBegin"],
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
@@ -2935,7 +2992,6 @@ export async function precontent(config, originalPack) {
 			    player: ["phaseZhunbeiBegin"],
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
@@ -2984,7 +3040,6 @@ export async function precontent(config, originalPack) {
 			    player: "dying",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
@@ -3023,7 +3078,6 @@ export async function precontent(config, originalPack) {
 					    target: "useCardToTarget",
 					},
 					popup:false,
-					charlotte: true,
 					forced: true,
 					firstDo: true,
 					filter: function(event,player,triggername){
@@ -3046,7 +3100,6 @@ export async function precontent(config, originalPack) {
 				player:"phaseBegin",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
@@ -3064,7 +3117,6 @@ export async function precontent(config, originalPack) {
 			priority: 1145,
 			subSkill:{
 				effect:{
-					mark:true,
 					marktext:"单",
 					intro: {
 						nocount:true,
@@ -3072,7 +3124,6 @@ export async function precontent(config, originalPack) {
 					    content: "所有角色造成或受到的伤害+1",
 					},
 					popup:false,
-					charlotte: true,
 					forced: true,
 					firstDo: true,
 					trigger: {
@@ -3094,7 +3145,6 @@ export async function precontent(config, originalPack) {
 			    player: "useCardToPlayered",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: false,
 			filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
@@ -3111,7 +3161,7 @@ export async function precontent(config, originalPack) {
 					let cards = trigger.target.getCards("h");
 					if (cards.length > 0 && trigger.getParent().baseDamage > 0) {
 						if (cards.length > trigger.getParent().baseDamage * 2) cards = cards.randomGets(trigger.getParent().baseDamage * 2);
-						trigger.target.addGaintag(cards,'_ny_cuihui');
+						await lib.skill._ny_cuihui.cuihuiCards(trigger.target, cards);
 					}
 				}
 			},
@@ -3123,7 +3173,6 @@ export async function precontent(config, originalPack) {
 			        if (player.hasMark("_ny_zhanFa_longzhenghudou")) return false;
 			    },
 			},
-			mark:true,
 			marktext:'罚',
 			intro:{
 				nocount:true,
@@ -3135,7 +3184,6 @@ export async function precontent(config, originalPack) {
 			    target: "compare",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: false,
 			filter: function(event, player) {
 				if (!player.storage._ny_fushiId) return false;
@@ -3179,7 +3227,6 @@ export async function precontent(config, originalPack) {
 			priority: 1145,
 		}
 		lib.skill._ny_zhanFa_yanxingjunfa = {//id11
-			mark:true,
 			marktext:"刑",
 			intro:{
 				name:'严刑峻法',
@@ -3189,7 +3236,6 @@ export async function precontent(config, originalPack) {
 			    source: "dying",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event, player) {
 				if (!player.storage._ny_fushiId) return false;
@@ -3235,7 +3281,6 @@ export async function precontent(config, originalPack) {
 			priority: 1145,
 		}
 		lib.skill._ny_zhanFa_libingmoma = {//id12
-			mark:true,
 			marktext:"马",
 			intro:{
 				name:'厉兵秣马',
@@ -3252,7 +3297,6 @@ export async function precontent(config, originalPack) {
 				global:"roundStart",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event, player) {
 				if (!player.storage._ny_fushiId) return false;
@@ -3309,7 +3353,6 @@ export async function precontent(config, originalPack) {
 			priority: 1145,
 		}
 		lib.skill._ny_zhanFa_yetandiying = {//id13
-			mark:true,
 			marktext:"夜",
 			intro:{
 				name:'夜探敌营',
@@ -3333,7 +3376,6 @@ export async function precontent(config, originalPack) {
 				return event.player !== player && event.player.countCards('h') > 0;
 			},
 			popup:false,
-			charlotte: true,
 			frequent: false,
 			async content(event,trigger,player){
 				await player.gainPlayerCard(trigger.player, "h", "visible",true);
@@ -3357,7 +3399,6 @@ export async function precontent(config, originalPack) {
 					trigger:{
 						source:"damageBegin1",
 					},
-					charlotte: true,
 					popup: false,
 					forced: true,
 					filter:function(event,player) {
@@ -3375,7 +3416,6 @@ export async function precontent(config, originalPack) {
 			//game.me.damage(2,game.me.next)
 		}
 		lib.skill._ny_zhanFa_bixujishi = {//id14
-			mark:true,
 			marktext:"固",
 			intro:{
 				name:'固本归元',
@@ -3392,7 +3432,6 @@ export async function precontent(config, originalPack) {
 				player:["gainMaxHpAfter","loseMaxHpAfter"],
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player){
 				if (!player.storage._ny_fushiId) return false;
@@ -3425,7 +3464,6 @@ export async function precontent(config, originalPack) {
 						source:"damageBegin1",
 					},
 					popup:false,
-					charlotte: true,
 					forced:true,
 					filter: function(event,player){
 						return player.storage._ny_zhanFa_bixujishi_p > 0;
@@ -3440,7 +3478,6 @@ export async function precontent(config, originalPack) {
 						player:"loseHpBegin",
 					},
 					popup:false,
-					charlotte: true,
 					forced:true,
 					filter: function(event,player){
 						return player.storage._ny_zhanFa_bixujishi_n > 0;
@@ -3458,7 +3495,6 @@ export async function precontent(config, originalPack) {
 				player:"phaseUseBegin",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player){
 				if (!player.storage._ny_fushiId) return false;
@@ -3493,7 +3529,6 @@ export async function precontent(config, originalPack) {
 						player:"useCardAfter",
 					},
 					popup:false,
-					charlotte: true,
 					forced: true,
 					filter: function(event,player){
 						return event.card.storage._ny_zhanFa_bainiaochaofeng;
@@ -3530,7 +3565,6 @@ export async function precontent(config, originalPack) {
 				global:"phaseUseBegin",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player){
 				if (!player.storage._ny_fushiId) return false;
@@ -3558,7 +3592,6 @@ export async function precontent(config, originalPack) {
 			priority: 1145,
 		}
 		lib.skill._ny_zhanFa_zhengzhengrishang = {//id17
-			mark:true,
 			marktext:"蒸",
 			intro:{
 				name:'蒸蒸日上',
@@ -3581,7 +3614,6 @@ export async function precontent(config, originalPack) {
 				player: "phaseZhunbeiBegin",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player){
 				if (!player.storage._ny_fushiId) return false;
@@ -3607,7 +3639,6 @@ export async function precontent(config, originalPack) {
 						player:"useCard",
 					},
 					popup:false,
-					charlotte: true,
 					forced: true,
 					filter: function(event,player) {
 						if (!player.hasMark("_ny_zhanFa_zhengzhengrishang")) return false;
@@ -3625,7 +3656,6 @@ export async function precontent(config, originalPack) {
 				global:"phaseBegin",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player){
 				if (!player.storage._ny_fushiId) return false;
@@ -3642,7 +3672,6 @@ export async function precontent(config, originalPack) {
 						player:"loseHpBegin",
 					},
 					popup:false,
-					charlotte: true,
 					forced: true,
 					filter: function(event,player){
 						if (!player.storage._ny_fushiId) return false;
@@ -3658,7 +3687,6 @@ export async function precontent(config, originalPack) {
 			},
 		}
 		lib.skill._ny_zhanFa_sheguoyouzui = {//id19
-			mark:true,
 			marktext:"赦",
 			intro:{
 				name:'赦过宥罪',
@@ -3669,7 +3697,6 @@ export async function precontent(config, originalPack) {
 				player:"phaseZhunbeiBegin",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player){
 				if (!player.storage._ny_fushiId) return false;
@@ -3724,7 +3751,6 @@ export async function precontent(config, originalPack) {
 				player:"phaseBegin",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player){
 				if (!player.storage._ny_fushiId) return false;
@@ -3806,7 +3832,6 @@ export async function precontent(config, originalPack) {
 			    player: "gainEnd",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: false,
 			filter: function(event,player) {
 				if (!player.storage._ny_fushiId) return false;
@@ -3832,7 +3857,6 @@ export async function precontent(config, originalPack) {
 				player:"phaseUseBegin",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player) {
 				if (!player.storage._ny_fushiId) return false;
@@ -3882,7 +3906,6 @@ export async function precontent(config, originalPack) {
 			priority: 1145,
 		}
 		lib.skill._ny_zhanFa_gubenguiyuan = {//id23
-			mark:true,
 			marktext:"固",
 			intro:{
 				name:"固本归元",
@@ -3892,7 +3915,6 @@ export async function precontent(config, originalPack) {
 				player:"damageEnd",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player) {
 				if (!player.storage._ny_fushiId) return false;
@@ -3916,7 +3938,6 @@ export async function precontent(config, originalPack) {
 						player:"damageBegin1",
 					},
 					popup:false,
-					charlotte: true,
 					forced: true,
 					filter: function(event,player) {
 						return event.nature && player.hasMark("_ny_zhanFa_gubenguiyuan");
@@ -3933,7 +3954,6 @@ export async function precontent(config, originalPack) {
 			    player: "useCard",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: false,
 			filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
@@ -3955,7 +3975,6 @@ export async function precontent(config, originalPack) {
 					},
 					usable:1,
 					popup:false,
-					charlotte: true,
 					forced: true,
 					filter: function(event,player,triggername){
 						if (!player.storage._ny_fushiId) return false;
@@ -3971,7 +3990,7 @@ export async function precontent(config, originalPack) {
 							let cards = i.getCards("h");
 							if (cards.length) {
 								cards = cards.randomGets(Math.ceil(cards.length / 2));
-								i.addGaintag(cards,"_ny_cuihui");
+								await lib.skill._ny_cuihui.cuihuiCards(i, cards);
 							}
 						}
 						trigger.card.storage._ny_zhanFa_pozhencuijian = false;
@@ -3986,7 +4005,6 @@ export async function precontent(config, originalPack) {
 				player:"useCard",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player,triggername){
 				if (!player.storage._ny_fushiId) return false;
@@ -4029,7 +4047,6 @@ export async function precontent(config, originalPack) {
 			priority: 1145,
 			subSkill:{
 				record:{
-					mark:true,
 					marktext:"珠",
 					intro:{
 						name:"珠联璧合",
@@ -4043,7 +4060,6 @@ export async function precontent(config, originalPack) {
 						player:"useCardAfter",
 					},
 					popup:false,
-					charlotte: true,
 					forced: true,
 					filter: function(event,player,triggername){
 						if (!player.storage._ny_fushiId) return false;
@@ -4064,7 +4080,6 @@ export async function precontent(config, originalPack) {
 				global:"dying",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: false,
 			filter: function(event,player) {
 				if (!event.player.storage._ny_nuqi) return false;
@@ -4088,7 +4103,6 @@ export async function precontent(config, originalPack) {
 				global:"dying",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: false,
 			filter: function(event,player) {
 				let id = player.storage._ny_zhuanShuFuShiId?.find(id => id == "_ny_zhuanShu_qinglongshi");
@@ -4109,7 +4123,6 @@ export async function precontent(config, originalPack) {
 				global:"judge",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event,player) {
 				if (!player.countCards("h")) return false;
@@ -4190,7 +4203,6 @@ export async function precontent(config, originalPack) {
 				player:"phaseDrawBegin",
 			},
 			popup:false,
-			charlotte: true,
 			forced: true,
 			locked: true,
 			filter: function(event,player) {
@@ -4212,7 +4224,6 @@ export async function precontent(config, originalPack) {
 			    global: ["equipAfter","addJudgeAfter","gainAfter","loseAsyncAfter","addToExpansionAfter"],
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event, player) {
 				if (player == _status.currentPhase) return false;
@@ -4238,7 +4249,6 @@ export async function precontent(config, originalPack) {
 					if (card.name == "sha" && player.storage._ny_zhuanShu_wanminshu) return num + player.storage._ny_zhuanShu_wanminshu;
 				},
 			},
-			mark: true,
 			marktext: "万",
 			intro:{
 				name:"万民书",
@@ -4250,7 +4260,6 @@ export async function precontent(config, originalPack) {
 				player:"damageEnd",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event, player) {
 				let id = player.storage._ny_zhuanShuFuShiId?.find(id => id == "_ny_zhuanShu_Firstfenghuashan");
@@ -4277,7 +4286,6 @@ export async function precontent(config, originalPack) {
 				player:"changeHp",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event, player) {
 				let id = player.storage._ny_zhuanShuFuShiId?.find(id => id == "_ny_zhuanShu_fenghuashan");
@@ -4326,7 +4334,6 @@ export async function precontent(config, originalPack) {
 				player: "useCardToPlayered",
 			},
 			popup:false,
-			charlotte: true,
 			forced: true,
 			filter: function(event, player) {
 				let id = player.storage._ny_zhuanShuFuShiId?.find(id => id == "_ny_zhuanShu_liaoyuan");
@@ -4358,7 +4365,6 @@ export async function precontent(config, originalPack) {
 				player: "damageEnd",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event, player) {
 				let id = player.storage._ny_zhuanShuFuShiId?.find(id => id == "_ny_zhuanShu_Firstchixue");
@@ -4407,7 +4413,6 @@ export async function precontent(config, originalPack) {
 				player: "changeHp",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event, player, triggername) {
 				if (triggername == "changeHp" && event.num > 0) return false;
@@ -4448,7 +4453,6 @@ export async function precontent(config, originalPack) {
 				global: "phaseChange",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: false,
 			"prompt2": function(event, player) {
 				const phaseName = event.phaseList[event.num].replace(/\|.+/, '');
@@ -4479,7 +4483,6 @@ export async function precontent(config, originalPack) {
 				player: "useCardToPlayered",
 			},
 			popup:false,
-			charlotte: true,
 			forced: true,
 			filter: function(event, player, triggername) {
 				if (event.targets?.length > 1) return false;
@@ -4523,7 +4526,6 @@ export async function precontent(config, originalPack) {
 						global: "damageBefore",
 					},
 					priority: 1145,
-					charlotte: true,
 					popup: true,
 					forced: true,
 					filter: function(event, player) {
@@ -4542,7 +4544,6 @@ export async function precontent(config, originalPack) {
 				global: "phaseEnd",
 			},
 			popup:false,
-			charlotte: true,
 			frequent: true,
 			filter: function(event, player, triggername) {
 				if (player == event.player) return false;
@@ -4590,7 +4591,6 @@ export async function precontent(config, originalPack) {
 				player: "useCard",
 			},
 			popup:false,
-			charlotte: true,
 			forced: true,
 			filter: function(event, player, triggername) {
 				if (!event.targets?.length) return false;
@@ -4630,7 +4630,6 @@ export async function precontent(config, originalPack) {
 						trigger.num += trigger.card.storage._ny_zhuanShu_Firstgudingdao;
 					},
 					popup:false,
-					charlotte: true,
 					forced: true,
 					priority: 1145,
 				},
@@ -4650,7 +4649,6 @@ export async function precontent(config, originalPack) {
 				player: "useCard",
 			},
 			popup:false,
-			charlotte: true,
 			forced: true,
 			filter: function(event, player, triggername) {
 				if (!event.targets?.length) return false;
@@ -4690,7 +4688,6 @@ export async function precontent(config, originalPack) {
 						trigger.num += trigger.card.storage._ny_zhuanShu_gudingdao;
 					},
 					popup:false,
-					charlotte: true,
 					forced: true,
 					priority: 1145,
 				},
@@ -4702,7 +4699,6 @@ export async function precontent(config, originalPack) {
 			},
 			forced: true,
 			popup: false,
-			charlotte: true,
 			priority: 1145,
 			filter: function(event, player) {
 				let id = player.storage._ny_zhuanShuFuShiId?.find(id => id == "_ny_zhuanShu_zhuisi");
@@ -4922,7 +4918,6 @@ export async function precontent(config, originalPack) {
 				},
 			},
 			popup:false,
-			charlotte: true,
 			position: "he",
 			enable: ["chooseToUse"],
 			filter: function(event,player,triggername){
@@ -4967,7 +4962,6 @@ export async function precontent(config, originalPack) {
 				effect: {
 					popup: false,
 					forced: true,
-					charlotte: true,
 					trigger: {
 						player: "dyingAfter",
 					},
@@ -4996,6 +4990,69 @@ export async function precontent(config, originalPack) {
 					priority: 1145,
 				},
 			},
+		}
+		lib.skill._ny_zhuanShu_fengqiqin = {//凤栖琴
+			popup:false,
+			frequent: false,
+			priority: 1145,
+			trigger: {
+				player: "changeHp",
+			},
+			filter(event, player) {
+				if (!player.storage._ny_zhuanShuFuShiId?.some(id => id == "_ny_zhuanShu_fengqiqin")) return false;
+				let id = player.storage._ny_zhuanShuFuShiId.find(id => id == "_ny_zhuanShu_fengqiqin");
+				id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+				return player.storage._ny_fushiTime[4 + id] > 0 && event.num < 0;
+			},
+			getIndex:(event) => Math.abs(event.num),
+			async content(event, trigger, player) {
+				let card = get.cardPile2(function (card) {
+				    return get.number(card) <= 6;
+				}, "random");
+				if (!card) card = get.cardPile(function (card) {
+				    return get.number(card) <= 6;
+				}, "discardPile", "random");
+				if (card) {
+					let id = player.storage._ny_zhuanShuFuShiId.find(id => id == "_ny_zhuanShu_fengqiqin");
+					id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+					player.storage._ny_fushiTime[4 + id]--;
+					await player.gain(card, "gain2");
+					await player.recover(Math.ceil(get.number(card) / 2));
+				}
+			},
+		}
+	});
+	//生成概念解释 纯💩山
+	//数字代表层数，要加层数记得zhonghuiFunction.noprDescription也要加
+	lib.arenaReady.push(() => {
+		zhonghuiFunction.tipMap1 = [
+			["天焰石", "你的初始体力值和体力上限+1"],
+			["怒气上限", "怒焰武将默认拥有2点怒气上限，怒气值增加后，若怒气值超过怒气上限，则将怒气值修改为怒气上限"],
+			["强化你使用的牌", `强化后的牌效果+1<br>特殊强化：<br>I.【铁索连环】强化后额外指定一个目标<br>Ⅱ.【怒发冲冠】/【釜底抽薪】强化后数值+2<br>Ⅲ.【闪】强化后摸一张牌<br>Ⅳ.【无懈可击】强化后获得目标锦囊牌<br>V.【乐不思蜀】强化后目标额外跳过摸牌阶段`],
+		];
+		let list = ["演奏调式"],
+			str = "";
+		for (let i of lib.skill._ny_yanzoudiaoshi.list) {
+			str += `<br>〖${get.translation("nuyan" + i)}〗：${get.translation("nuyan" + i + "_info")}`;
+		}
+		str = str.slice(2);
+		list.push(str);
+		zhonghuiFunction.tipMap1.push(list);
+		if (typeof game.addPoptip == "function") {
+			game.addPoptip(zhonghuiFunction.tipMap1);
+		}
+		zhonghuiFunction.tipMap2 = [
+			["天嗔石", `你的初始${zhonghuiFunction.poptipLink("怒气上限", null, null, true)}+1`],
+			["怒气", `怒焰武将开局拥有0点怒气值和2点${zhonghuiFunction.poptipLink("怒气上限", null, null, true)}<br>每受到1点伤害后便获得1点怒气<br>怒焰武将在使用强化牌列表内的牌时可以选择消耗1点怒气${zhonghuiFunction.poptipLink("强化你使用的牌", null, null, true)}`],
+		];
+		if (typeof game.addPoptip == "function") {
+			game.addPoptip(zhonghuiFunction.tipMap2);
+		}
+		zhonghuiFunction.tipMap3 = [
+			["天怒石", `你的初始${zhonghuiFunction.poptipLink("怒气", null, null, true)}+1`],
+		];
+		if (typeof game.addPoptip == "function") {
+			game.addPoptip(zhonghuiFunction.tipMap3);
 		}
 	});
 }
