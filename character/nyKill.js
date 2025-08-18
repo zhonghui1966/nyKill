@@ -39,6 +39,7 @@ export default {
 		"nuyan_First_wangyuanji": ["female", "wei", "6/6", ["nuyan_shiren", "nuyan_shangjianyihua", "nuyan_qianchongdunmu", "nuyan_mopaidashi", "nuyan_fushidashi"], ["name:王|元姬"]],
 		"nuyan_zuoci": ["male", "qun", "7/7", ["nuyan_huashen", "nuyan_shaoyoushendao", "nuyan_yiguishishen", "nuyan_mopaidashi", "nuyan_fushizongshi"], ["name:左|慈"]],
 		"nuyan_caizhenji": ["female", "wei", "6/6", ["nuyan_tianyin", "nuyan_dihunlvxin", "nuyan_zhongyueheming", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:蔡|贞姬"]],
+		"nuyan_jie_xunyou": ["male", "wei", "6/6", ["nuyan_qice", "nuyan_miaojibaichu", "nuyan_shierqice", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:荀|攸"]],
 	},
 	skill:{
 		/*
@@ -4051,11 +4052,12 @@ export default {
 			    content: "limited",
 			},
 			trigger: {
-				global: "nuyan_juejintaoni_init",
-				player: "phaseZhunbeiBegin",
+				player: ["phaseZhunbeiBegin", "nuyan_juejintaoni_init"],
 			},
 			init2: function(player,skill) {
-				_status.event.trigger("nuyan_juejintaoni_init");
+				let next = game.createEvent("nuyan_juejintaoni_init");
+				next.player = player;
+				next.setContent(() => event.trigger(event.name));
 			},
 			filter(event, player) {
 				return player.isMinHp();
@@ -5106,11 +5108,14 @@ export default {
 		//怒焰蔡贞姬
 		nuyan_tianyin: {//天音
 			init2: function(player) {
-				_status.event.trigger("nuyan_tianyin_init");
+				let next = game.createEvent("nuyan_tianyin_init");
+				next.player = player;
+				next.setContent(() => event.trigger(event.name));
 			},
 			forced: true,
 			trigger: {
-				global: ["phaseEnd", "nuyan_tianyin_init"],
+				global: "phaseEnd",
+				player: "nuyan_tianyin_init",
 			},
 			unCuihuiAble(card) {
 				return ![1, 2, 3, 5, 6].includes(get.number(card));
@@ -5249,11 +5254,12 @@ export default {
 		},
 		nuyan_zhongyueheming: {//众乐和鸣
 			init2(player, skill) {
-				_status.event.trigger("nuyan_zhongyueheming_init");
+				let next = game.createEvent("nuyan_zhongyueheming_init");
+				next.player = player;
+				next.setContent(() => event.trigger(event.name));
 			},
 			trigger: {
-				global: "nuyan_zhongyueheming_init",
-				player: "phaseZhunbeiBegin",
+				player: ["phaseZhunbeiBegin", "nuyan_zhongyueheming_init"],
 			},
 			async cost(event, trigger, player) {
 				//ai等人写（
@@ -5319,6 +5325,146 @@ export default {
 						game.log(player, "使用的", "#y" + get.translation(trigger.card), "无效");
 					},
 				},
+			},
+		},
+		//怒焰界荀攸
+		nuyan_qice: {//奇策
+			audio: "qice",
+			inherit: "qice",
+			hiddenCard(player, name) {
+				if (!player.isPhaseUsing()) return false;
+				if (player.countSkill("nuyan_qice") > 0) return false;
+				const hs = player.getCards('h');
+				if (!hs.length) return false;
+				if (hs.every(card => game.checkMod(card, player, 'unchanged', 'cardEnabled2', player) === false)) return false;
+				return lib.inpile.some(name => get.type(name) == 'trick');
+			},
+			filter(event, player) {
+			    const hs = player.getCards('h');
+			    if (!hs.length) return false;
+			    if (hs.every(card => {
+			        const mod2 = game.checkMod(card, player, 'unchanged', 'cardEnabled2', player);
+			        return mod2 === false;
+			    })) return false;
+			    return lib.inpile.some(name => {
+			        if (get.type(name) != 'trick') return false;
+			        const card = get.autoViewAs({ name }, hs);
+			        return event.filterCard(card, player, event);
+			    });
+			},
+			chooseButton: {
+			    filter(button, player) {
+			        const event = get.event().getParent();
+			        return player.hasCard(card => event.filterCard(get.autoViewAs({ name: button.link[2] }, [card]), player, event), 'h');
+			    },
+			    backup(links, player) {
+			        return {
+			            audio: 'qice',
+			            filterCard: true,
+			            selectCard: [1, Infinity],
+			            check(card) {
+			                if (ui.selected.cards.length) return -1;
+			                return 7 - get.value(card);
+			            },
+			            complexCard: true,
+			            position: 'h',
+			            popname: true,
+			            viewAs: { name: links[0][2] },
+						precontent() {
+							let list = [];
+							for (let i of event.result.cards) {
+								list.add(get.suit(i));
+							}
+							if (list.length) player.draw(list.length);
+						},
+			        }
+			    },
+			    prompt(links, player) {
+			        return '将任意张手牌当作' + get.translation(links[0][2]) + '使用';
+			    },
+			    dialog(player) {
+			        var list = [];
+			        for (var i = 0; i < lib.inpile.length; i++) {
+			            if (get.type(lib.inpile[i]) == "trick") {
+			                list.push(["锦囊", "", lib.inpile[i]]);
+			            }
+			        }
+			        return ui.create.dialog(get.translation("nuyan_qice"), [list, "vcard"]);
+			    },
+			    check(button) {
+			        var player = _status.event.player;
+			        var recover = 0,
+			            lose = 1,
+			            players = game.filterPlayer();
+			        for (var i = 0; i < players.length; i++) {
+			            if (players[i].hp == 1 && get.damageEffect(players[i], player, player) > 0 && !players[i].hasSha()) {
+			                return button.link[2] == "juedou" ? 2 : -1;
+			            }
+			            if (!players[i].isOut()) {
+			                if (players[i].hp < players[i].maxHp) {
+			                    if (get.attitude(player, players[i]) > 0) {
+			                        if (players[i].hp < 2) {
+			                            lose--;
+			                            recover += 0.5;
+			                        }
+			                        lose--;
+			                        recover++;
+			                    } else if (get.attitude(player, players[i]) < 0) {
+			                        if (players[i].hp < 2) {
+			                            lose++;
+			                            recover -= 0.5;
+			                        }
+			                        lose++;
+			                        recover--;
+			                    }
+			                } else {
+			                    if (get.attitude(player, players[i]) > 0) {
+			                        lose--;
+			                    } else if (get.attitude(player, players[i]) < 0) {
+			                        lose++;
+			                    }
+			                }
+			            }
+			        }
+			        if (lose > recover && lose > 0) {
+			            return button.link[2] == "nanman" ? 1 : -1;
+			        }
+			        if (lose < recover && recover > 0) {
+			            return button.link[2] == "taoyuan" ? 1 : -1;
+			        }
+			        return button.link[2] == "wuzhong" ? 1 : -1;
+			    },
+			},
+		},
+		nuyan_miaojibaichu: {//妙计百出
+			nuyan_star: 1,
+			forced: true,
+			locked: true,
+			trigger: {
+				player: "loseHpBefore",
+			},
+			content() {
+				trigger.cancel();
+				player.damage(trigger.num, "nosource");
+			},
+		},
+		nuyan_shierqice: {//十二奇策
+			nuyan_star: 3,
+			locked: true,
+			audio: "zhiyu",
+			trigger: {
+				player: "damageEnd",
+			},
+			async content(event, trigger, player) {
+				let result = await player.draw().forResult();
+				result = get.suit(result[0]);
+				let cards = player.getCards("h", { suit: result });
+				if (!cards.length) return;
+				await player.showCards(cards);
+				if (trigger.source) {
+					if (trigger.source.countDiscardableCards("he") < cards.length) await trigger.source.modedDiscard(trigger.source.getCards("h"));
+					else await trigger.source.chooseToDiscard(true, "he", cards.length, "〖十二奇策〗：弃置" + get.cnNumber(cards.length) + "张牌");
+				}
 			},
 		},
 	},
@@ -5612,6 +5758,7 @@ export default {
 		nuyan_First_wangyuanji: "王元姬",
 		nuyan_zuoci: "左慈",
 		nuyan_caizhenji: "蔡贞姬",
+		nuyan_jie_xunyou:"界荀攸",
 		
 		//通用技能
 		nuyan_fushizongshi:"符石宗师",
@@ -5840,6 +5987,12 @@ export default {
 		nuyan_dihunlvxin_info:"一名角色进入濒死状态时，你可以失去1点怒气，然后你令其将手牌调整至4张，若其不为你，你摸1张牌。",
 		nuyan_zhongyueheming:"众乐和鸣",
 		nuyan_zhongyueheming_info:"准备阶段或你登场时，你可以选择一名其他角色，直至你的回合结束，你与其使用基本牌或单体锦囊牌时，若点数为1,2,3,5,6中的任意点数，则此牌无次数和距离限制，否则令此牌无效。",
+		nuyan_qice:"奇策",
+		nuyan_qice_info:"出牌阶段限一次，你可以将任意张手牌当作一张普通锦囊牌使用并摸等同于这些牌花色数的牌。",
+		nuyan_miaojibaichu:"妙计百出",
+		nuyan_miaojibaichu_info:"锁定技，当你即将失去体力时，你改为受到等量点无来源伤害。",
+		nuyan_shierqice:"十二奇策",
+		nuyan_shierqice_info:"锁定技，当你受到伤害后，你可以摸一张牌并展示所有与此牌花色相同的手牌，令来源弃置等量张牌。",
 	},
 	dynamicTranslate: {//动态翻译
 		nuyan_yuqi: function(player) {
