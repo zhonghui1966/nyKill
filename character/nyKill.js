@@ -3301,7 +3301,7 @@ export default {
 					sourceSkill: "nuyan_liangjinyuanjue",
 					mod: {
 						cardEnabled2:function (card, player) {
-							if (get.color(card) == "black" && player.countMark("nuyan_liangjinyuanjue") && player.isPhaseUsing()) return false;
+							if (get.itemtype(card) == "card" && get.color(card) == "black" && player.countMark("nuyan_liangjinyuanjue") && player.isPhaseUsing()) return false;
 						},
 					},
 				},

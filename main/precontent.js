@@ -4,26 +4,38 @@ import { card as nyCard } from "../card/nyCard.js";
 export async function precontent(config, originalPack) {
 	/*lib.skill._test = {
 		trigger: {
-			player: "disableSkillSub",
+			player: "damage",
 		},
 		forced: true,
 		filter: function(event, player) {
 			return true;
 		},
-		content() {
-			console.log(trigger);
+		async content(event, trigger, player) {
+			trigger.filterStop = () => {
+				console.log(trigger);
+				if (trigger.source && trigger.source.isDead()) {
+					delete trigger.source;
+				}
+				var num = trigger.original_num;
+				for (var i of trigger.change_history) {
+					num += i;
+				}
+				if (num < 2) num = 2;
+				if (num != trigger.num) {
+					trigger.change_history.push(trigger.num - num);
+				}
+				console.log(trigger);
+			}
 		},
 	}
 	lib.skill._test2 = {
 		trigger: {
 			player: "useCard",
 		},
-		filter(event, player) {
-			console.log(this);
-		},
 		forced: true,
 		content() {
-			console.log(trigger)
+			player.damage()
+				.set("cancel", () => console.log(1));
 		}
 	}*/
 	//game.me.tempBanSkill(game.me.getSkills(null, false, false), {global: "phaseEnd"}, false)
@@ -1408,7 +1420,7 @@ export async function precontent(config, originalPack) {
 			},
 			mod: {
 			    cardEnabled2(card) {
-			        if (card.hasGaintag("_ny_cuihui")) return false;
+			        if (get.itemtype(card) == "card" && card.hasGaintag("_ny_cuihui")) return false;
 			    },
 			},
 			trigger:{
@@ -2379,7 +2391,7 @@ export async function precontent(config, originalPack) {
 			    return true;
 			},
 			content: function(){
-				let num = Math.min(Math.abs(trigger.num),5);
+				let num = Math.min(Math.abs(trigger.num), 5);
 				if (num > 0) {
 					player.storage._ny_fushiTime[2] --;
 					player.draw(num);
