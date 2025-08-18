@@ -4057,7 +4057,9 @@ export default {
 			init2: function(player,skill) {
 				let next = game.createEvent("nuyan_juejintaoni_init");
 				next.player = player;
-				next.setContent(() => event.trigger(event.name));
+				next.setContent(() => {
+					event.trigger(event.name);
+				});
 			},
 			filter(event, player) {
 				return player.isMinHp();
@@ -4575,12 +4577,15 @@ export default {
 			unique: true,
 			audio: "rehuashen",
 			trigger: {
-				global: "nuyan_huashenInit",
-				player: ["phaseBegin", "phaseEnd"],
+				player: ["phaseBegin", "phaseEnd", "nuyan_huashen_init"],
 			},
 			init2(player) {
 				lib.skill.nuyan_huashen.addHuashens(player, 5);
-				_status.event.trigger("nuyan_huashenInit");
+				let next = game.createEvent("nuyan_huashen_init");
+				next.player = player;
+				next.setContent(() => {
+					event.trigger(event.name);
+				});
 			},
 			filter(event, player, name) {
 				if (name == "nuyan_huashenInit") {
@@ -4589,7 +4594,7 @@ export default {
 				return player.storage.nuyan_huashen?.character?.length > 0;
 			},
 			async cost(event, trigger, player) {
-				if (event.triggername === "nuyan_huashenInit") {
+				if (event.triggername === "nuyan_huashen_init") {
 					event.result = { bool: true, cost_data: "替换当前化身" };
 					return;
 				}
@@ -5110,7 +5115,9 @@ export default {
 			init2: function(player) {
 				let next = game.createEvent("nuyan_tianyin_init");
 				next.player = player;
-				next.setContent(() => event.trigger(event.name));
+				next.setContent(() => {
+					event.trigger(event.name);
+				});
 			},
 			forced: true,
 			trigger: {
@@ -5256,7 +5263,9 @@ export default {
 			init2(player, skill) {
 				let next = game.createEvent("nuyan_zhongyueheming_init");
 				next.player = player;
-				next.setContent(() => event.trigger(event.name));
+				next.setContent(() => {
+					event.trigger(event.name);
+				});
 			},
 			trigger: {
 				player: ["phaseZhunbeiBegin", "nuyan_zhongyueheming_init"],
