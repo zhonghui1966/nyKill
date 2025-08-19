@@ -33,9 +33,10 @@ export async function precontent(config, originalPack) {
 			player: "useCard",
 		},
 		forced: true,
+		marktext: get.translation("none"),
 		content() {
-			player.damage()
-				.set("cancel", () => console.log(1));
+			lib.skill._test2.marktext = get.translation(get.suit(trigger.card));
+			player.markSkill("_test2")
 		}
 	}*/
 	//game.me.tempBanSkill(game.me.getSkills(null, false, false), {global: "phaseEnd"}, false)
@@ -153,8 +154,21 @@ export async function precontent(config, originalPack) {
 				<br>github仓库：<a href="https://github.com/zhonghui1966/nyKill">点击此处进入</a>
 				`;
 				var more = ui.create.div('.hth_more',
-				`<li>当前版本：魔改版1.0.6版本
+				`<li>当前版本：魔改版1.0.7版本
 				<br><b style="color: red">更新内容：</b>
+				<br>新武将：幻蔡文姬
+				<br>为怒气，符石等机制技能适配对局内的换将
+				<br>为专属符石机制适配双将模式
+				<br>为界马超添加旧版标签（怒焰更新后削弱界马超）
+				<br>优化部分代码
+				<br>修复一些已知问题：
+				<br>1.修复荀攸带”界“标签的错误
+				<br>2.修复摧毁牌机制可能报错的问题
+				<br>3.修复”你登场时“时机的问题
+				<br>4.修复界徐晃〖断粮〗发动报错的问题
+				<br>5.修复界郭嘉〖奇佐〗可以使用装备区的牌印卡的问题
+				<br>6.修复蔡贞姬弃牌阶段内可以弃置不计入手牌上限的牌、〖天音〗可以使用装备区的牌印卡、〖涤魂滤心〗不失去怒气的问题
+				<br><b style="color: red">魔改版1.0.6版本更新内容：</b>
 				<br>新增武将：蔡贞姬
 				<br>从该版本起版本更新将会有更详细的介绍
 				<br>修复一些已知问题：
@@ -480,8 +494,11 @@ export async function precontent(config, originalPack) {
 		lib.skill._ny_chooseStone = {
 			trigger: {
 				global: "gameStart",
+				player: ["enterGame", "changeCharacterAfter"],
 			},
 			filter: function(event, player) {
+				if (get.itemtype(player) != "player") return false;
+				if (player.storage._hasNuYanStones) return false;
 				if ((lib.config?.extension_怒焰武将_nuyan_star ?? 0) < 1) return false;
 				if (lib.config.extension_钟会包_loseBuffLimit) return true;
 				return get.nameList(player).some(name => name.startsWith("nuyan_"));
@@ -557,6 +574,7 @@ export async function precontent(config, originalPack) {
 						}
 					}
 					if (addNuqi) await lib.skill._ny_getNuqi.addNuQi(player, addNuqi);
+					player.storage._hasNuYanStones = true;
 				}
 			},
 			forced: true,
@@ -728,25 +746,28 @@ export async function precontent(config, originalPack) {
 		        },
 		    },
 		    trigger: {
-		        player: "damageEnd",
+		        player: ["enterGame", "changeCharacterAfter", "damageEnd"],
 		        global: "gameStart",
 		    },
-		    filter: function (event, player) {
+		    filter: function (event, player, name) {
+				if (get.itemtype(player) != "player") return false;
+				let bool = typeof player.storage._ny_nuqiMax == "undefined";
+				if (name == "damageEnd" && !bool) return (player.storage._ny_nuqi ?? 0) < (player.storage._ny_nuqiMax ?? 1);
+				if (!bool) return false;
 				if (lib.config.extension_怒焰武将_nuyan_rule2 == "false") return false;
 				else if (lib.config.extension_怒焰武将_nuyan_rule2 == "onlyMe" && game.me != player) return false;
 				//推销一下自己扩展
 				if (lib.config.extension_钟会包_loseBuffLimit) return true;
-				return get.nameList(player).some(name => name.startsWith("nuyan_")) && (player.storage._ny_nuqi ?? 0) < (player.storage._ny_nuqiMax ?? 1);
+				return get.nameList(player).some(name => name.startsWith("nuyan_"));
 		    },
 		    async content(event,trigger,player) {
-				if (trigger.name == 'game') {
-					await lib.skill._ny_getNuqi.initNuQi(player);
-				}
-		        else {
+		        if (trigger.name == "damage") {
 					//受伤不获得怒气的标记写在此处
 					if (player.hasMark('_ny_jinGong_tianfa')) return;
 					if (player.hasMark("_ny_zhanFa_longzhenghudou")) return;
 					await lib.skill._ny_getNuqi.addNuQi(player, trigger.num);
+				} else {
+					await lib.skill._ny_getNuqi.initNuQi(player);
 				}
 		    },
 		    priority: 1145141919810,
@@ -759,6 +780,7 @@ export async function precontent(config, originalPack) {
 			//player.storage._ny_fushiTime = [];同上+专属次数
 			//专属符石id为player.storage._ny_zhuanShuFuShiId，为数组形式，包含玩家所有已拥有的专属符石的技能名
 			trigger: {
+				player: ["enterGame", "changeCharacterAfter"],
 			    global: "gameStart",
 			},
 			marktext: "🪨",
@@ -846,6 +868,8 @@ export async function precontent(config, originalPack) {
 				"zhanFa":["_ny_zhanFa_lvedigongcheng","_ny_zhanFa_xushidaifa","_ny_zhanFa_anzhongtuxi","_ny_zhanFa_Firstpozhencuijian","_ny_zhanFa_feiyangbahu","_ny_zhanFa_leitingnuhou","_ny_zhanFa_gexuqipao","_ny_zhanFa_dandadudou","_ny_zhanFa_cuichengbazhai","_ny_zhanFa_longzhenghudou","_ny_zhanFa_yanxingjunfa","_ny_zhanFa_libingmoma","_ny_zhanFa_yetandiying","_ny_zhanFa_bixujishi","_ny_zhanFa_bainiaochaofeng","_ny_zhanFa_yihuajiemu","_ny_zhanFa_zhengzhengrishang","_ny_zhanFa_Firsttongqiangtiebi","_ny_zhanFa_sheguoyouzui","_ny_zhanFa_yixinghuandou","_ny_zhanFa_shehunduopo","_ny_zhanFa_jiuhanzhanyong","_ny_zhanFa_gubenguiyuan","_ny_zhanFa_pozhencuijian","_ny_zhanFa_zhulianbihe"],
 			},
 			filter: function (event, player) {
+				if (get.itemtype(player) != "player") return false;
+				if (typeof player.storage._ny_fushiId !== "undefined") return false;
 				if (lib.config.extension_怒焰武将_nuyan_rule1 == "false") return false;
 				else if (lib.config.extension_怒焰武将_nuyan_rule1 == "onlyMe" && game.me != player) return false;
 				//推销一下自己扩展
@@ -888,6 +912,7 @@ export async function precontent(config, originalPack) {
 		lib.skill._ny_getZhuanShuFuShi = {
 			trigger:{
 				global:"gameStart",
+				player: ["enterGame", "changeCharacterAfter"],
 			},
 			forced: true,
 			popup:false,
@@ -933,41 +958,44 @@ export async function precontent(config, originalPack) {
 				"nuyan_First_wangyuanji": ["_ny_zhuanShu_luoying"],
 				"nuyan_zuoci": ["_ny_zhuanShu_shendaoling"],
 				"nuyan_caizhenji": ["_ny_zhuanShu_fengqiqin"],
+				"nuyan_huan_caiwenji": ["_ny_zhuanShu_keqingdi"],
 			},
 			filter: function (event, player) {
+				if (get.itemtype(player) != "player") return false;
 				if (!player.storage._ny_fushiId) return false;
-				for (let i in lib.skill._ny_getZhuanShuFuShi.obj) {
-					if (player.name == i) return true;
-				}
-				return false;
+				return get.nameList(player).some(name => (name in get.info("_ny_getZhuanShuFuShi").obj) && !(name in player.getStorage("_hasNuyanZhuanshuFushiChoosed")));
 			},
 			async content(event,trigger,player) {
-				let list = lib.skill._ny_getZhuanShuFuShi.obj[player.name],
-					lists = [];
-				list.forEach(i => {
-				    if (lib.translate[i + "_info"]) {
-				        var translation = get.translation(i);
-				        var litm = ('〖' + translation + "〗<div>" + lib.translate[i + "_info"] + "</div>");
-				        lists.push(litm);
-				    }
-				})
-				let next = await player.chooseButton([`请选择一项${get.translation(player.name)}的<b style="${get.info("_ny_getFuShi").color["zhuanShu"]}">专属</b>符石获得`, [lists.map((item, i) => { return [i, item]; }), "textbutton"]])
-					.set("selectButton", [1, Infinity])
-					.set("ai", button => 114514)
-					.forResultLinks();
-				if (next) {
-					player.storage._ny_zhuanShuFuShiId = [];
-					for (let i in next.sort()) {
-						player.storage._ny_zhuanShuFuShiId.push(lib.skill._ny_getZhuanShuFuShi.obj[player.name][i]);
-						if (lib.config.extension_怒焰武将_InfinityFuShi == "global" || (lib.config.extension_怒焰武将_InfinityFuShi == "onlyMe" && game.me == player)) player.storage._ny_fushiTime.push(Infinity);
-						else player.storage._ny_fushiTime.push(6);
-					}
-					//如果仅有专属符石，刷新出符石标记界面
-					if (!player.storage._ny_fushiId.some(num => num > 0)) {
-						lib.skill._ny_getNuqi.localMark(player,"_ny_getFuShi");
-						game.addVideo("markSkill", player, ["_ny_getFuShi"]);
+				for (let name of get.nameList(player)) {
+					if (name in player.getStorage("_hasNuyanZhuanshuFushiChoosed")) continue;
+					let list = lib.skill._ny_getZhuanShuFuShi.obj[name],
+						lists = [];
+					list.forEach(i => {
+					    if (lib.translate[i + "_info"]) {
+					        var translation = get.translation(i);
+					        var litm = ('〖' + translation + "〗<div>" + lib.translate[i + "_info"] + "</div>");
+					        lists.push(litm);
+					    }
+					})
+					let next = await player.chooseButton([`请选择一项${get.translation(name)}的<b style="${get.info("_ny_getFuShi").color["zhuanShu"]}">专属</b>符石获得`, [lists.map((item, i) => { return [i, item]; }), "textbutton"]])
+						.set("selectButton", [1, Infinity])
+						.set("ai", button => 114514)
+						.forResultLinks();
+					if (next) {
+						player.storage._ny_zhuanShuFuShiId ??= [];
+						for (let i in next.sort()) {
+							player.storage._ny_zhuanShuFuShiId.push(lib.skill._ny_getZhuanShuFuShi.obj[name][i]);
+							if (lib.config.extension_怒焰武将_InfinityFuShi == "global" || (lib.config.extension_怒焰武将_InfinityFuShi == "onlyMe" && game.me == player)) player.storage._ny_fushiTime.push(Infinity);
+							else player.storage._ny_fushiTime.push(6);
+						}
+						//如果仅有专属符石，刷新出符石标记界面
+						if (!player.storage._ny_fushiId.some(num => num > 0)) {
+							lib.skill._ny_getNuqi.localMark(player,"_ny_getFuShi");
+							game.addVideo("markSkill", player, ["_ny_getFuShi"]);
+						}
 					}
 				}
+				player.markAuto("_hasNuyanZhuanshuFushiChoosed", get.nameList(player));
 			},
 			priority: 191981,
 		}
@@ -5031,6 +5059,71 @@ export async function precontent(config, originalPack) {
 					await player.gain(card, "gain2");
 					await player.recover(Math.ceil(get.number(card) / 2));
 				}
+			},
+		}
+		lib.skill._ny_zhuanShu_keqingdi = {//柯琴笛
+			popup: false,
+			priority: 1145,
+			trigger: {
+				global: ["gameStart", "loseHpBegin"],
+				player: ["enterGame", "changeCharacterAfter", "phaseZhunbeiBegin"],
+			},
+			filter(event, player, name) {
+				if (get.itemtype(player) != "player") return false;
+				if (!player.storage._ny_zhuanShuFuShiId?.some(id => id == "_ny_zhuanShu_keqingdi")) return false;
+				let id = player.storage._ny_zhuanShuFuShiId.find(id => id == "_ny_zhuanShu_keqingdi");
+				id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+				if (player.storage._ny_fushiTime[4 + id] <= 0) return false;
+				if (name == "loseHpBegin") return player.storage.nuyan_jiaowei_used;
+				else if (player.storage.nuyan_jiaowei_used) return false;
+				return game.hasPlayer(current => !current.hasSkill("nuyan_wangyou"));
+			},
+			async cost(event, trigger, player) {
+				if (player.storage.nuyan_jiaowei_used) event.result = await player.chooseBool()
+					.set("prompt", get.translation(trigger.player) + "即将失去" + get.cnNumber(trigger.num) + "点体力，是否防止之并令其获得〖忘机〗？")
+					.set("prompt2", "〖忘机〗：" + get.translation("nuyan_wangji_info"))
+					.set("target", trigger.player)
+					.set("ai", () => {
+						const { player, target } = _status.event;
+						const att = get.attitude(player, target);
+						if (target.hasSkill("nuyan_wangji")) return att;
+						let value = 0,
+							skillValue = 0;
+						target.getCards("e").forEach(i => value += get.value(i));
+						target.getSkills(null, false, false).forEach(sk => {
+							if (!lib.skill[sk].charlotte && !lib.skill[sk].persevereSkill && !lib.skill[sk].juexingji && !lib.skill[sk].dutySkill) skillValue += get.skillRank(sk);
+						})
+						skillValue *= 10;
+						if (att < 0 && skillValue > value) return 114514;
+						else if (att > 0 && skillValue < 5) return target.getCards("j").some(c => c.name == "lebu");
+						return 0;
+					})
+					.forResult();
+				else event.result = await player.chooseTarget(false)
+					.set("prompt", get.prompt(event.name.slice(0, -5)))
+					.set("prompt2", get.prompt2(event.name.slice(0, -5)))
+					.set("filterTarget", (card, player, target) => !target.hasSkill("nuyan_wangyou"))
+					.set("ai", (target) => {
+						let att = get.attitude(_status.event.player, target);
+						let value = 0;
+						target.getCards("e").forEach(i => value += get.value(i));
+						if (att < 0) return value - (target.hp * 66);
+						if (att > 0) return (target.hp * 6) - value;
+						if (target.hp <= 1 && att > 0) return 114514
+						return -114514;
+					})
+					.forResult();
+			},
+			async content(event, trigger, player) {
+				let id = player.storage._ny_zhuanShuFuShiId.find(id => id == "_ny_zhuanShu_keqingdi");
+				id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+				player.storage._ny_fushiTime[4 + id]--;
+				if (player.storage.nuyan_jiaowei_used) {
+					trigger.cancel();
+					trigger.player.addTempSkill("nuyan_wangji", { player: "phaseEnd" });
+					return;
+				}
+				event.targets[0].addTempSkill("nuyan_wangyou", { player: "phaseBegin" });
 			},
 		}
 	});

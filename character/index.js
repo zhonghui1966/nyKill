@@ -79,7 +79,7 @@ if (lib.device || lib.node) {
 		const prefixList = ["界", "谋", "幻", "神", "起", "魏"];
 		for (let name in pack.character) {
 			//初始化第五格
-			if (!pack.character[name][4]) pack.character[name][4] = [];
+			pack.character[name][4] ??= [];
 			//原画
 			if (lib.config["extension_怒焰武将_legendSkin_" + name]) pack.character[name][4].push(`${lib.device || lib.node ? "ext:" : "db:extension-"}怒焰武将/image/character/legendSkin_${name}.jpg`);
 			else pack.character[name][4].push(`${lib.device || lib.node ? "ext:" : "db:extension-"}怒焰武将/image/character/${name}.jpg`);
