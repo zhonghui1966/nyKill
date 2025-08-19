@@ -3688,7 +3688,7 @@ export default {
 				}
 			},
 			trigger: {
-				player: ["damageBegin", "loseHp"],
+				player: ["damageBegin", "loseHpBegin"],
 			},
 			filter: function(event, player) {
 				return player.hp == 1 && event.num > 0;
