@@ -1539,9 +1539,11 @@ export async function precontent(config, originalPack) {
 					.set("prompt", "请选择一个演奏调式获得之(覆盖当前演奏调式)" + str)
 					.set("controls", choices)
 					.set("choiceList", choiceList)
-					.set("ai", () => _status.event.controls[Math.random() * _status.event.controls.length])
+					.set("ai", () => {
+						const { controls } = get.event();
+						return controls[Math.floor(Math.random() * controls.length)];
+					})
 					.forResult();
-				if (result.control == "cancel2") return;
 				result = list[choices.indexOf(result.control)];
 				player.storage._ny_yanzoudiaoshi = result;
 				game.broadcastAll((skill, func) => {
