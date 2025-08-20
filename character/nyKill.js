@@ -4622,7 +4622,7 @@ export default {
 						}
 						let max = Math.max(...rankList);
 						let maxRankList = rankList.filter(i => i == max);
-						let aiChar = maxRankList[(maxRankList.length * Math.random()) + 1];
+						let aiChar = maxRankList[Math.floor(maxRankList.length * Math.random()) + 1];
 						aiChar = player.storage.nuyan_huashen.character[rankList.indexOf(aiChar)];
 						if (player.storage.nuyan_huashen.current === aiChar || maxRankList[0] < 2) {
 							return "制衡其他化身";
@@ -4742,7 +4742,7 @@ export default {
 							}
 							let max = Math.max(...rankList);
 							let maxRankList = rankList.filter(i => i == max);
-							let aiChar = maxRankList[(maxRankList.length * Math.random()) + 1];
+							let aiChar = maxRankList[Math.floor((maxRankList.length * Math.random())) + 1];
 							aiChar = player.storage.nuyan_huashen.character[rankList.indexOf(aiChar)];
 							return player.storage.nuyan_huashen[button.link] == aiChar ? 2.5 : 1 + Math.random();
 						});
