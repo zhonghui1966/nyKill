@@ -6177,7 +6177,7 @@ export default {
 				player: "useCardAfter",
 			},
 			filter(event, player) {
-				return get.info("nuyan_lieyanqinyin").getCards(player, event).length;
+				return get.info("nuyan_lieyanqinyin").getCards(player, event).includes(event.card.name);
 			},
 			getCards(player, event) {
 				var list = [];
@@ -6196,7 +6196,7 @@ export default {
 			async cost(event, trigger, player) {
 				const list = get.info("nuyan_lieyanqinyin").getCards(player, trigger);
 				list.map(i => ["锦囊", "", i]);
-				let result = await player.chooseButton(['是否将一张黑色手牌当做一张【水淹七军】使用？', [list, 'vcard']], false)
+				let result = await player.chooseButton(['是否将一张黑色手牌当做一张【水淹七军】普通使用？', [list, 'vcard']], false)
 					.set("ai", (button) => player.getUseValue(button.link[2]))
 					.set("filterButton", (button, player) => player.hasUseTarget(button.link[2]))
 					.forResult();
@@ -6223,7 +6223,7 @@ export default {
 				    lib.skill.nuyan_lieyanqinyin_backup.viewAs = card;
 				}, card);
 				const next = player.chooseToUse();
-				next.set('openskilldialog', '将一张黑色手牌当做' + get.translation(card) + '使用');
+				next.set('openskilldialog', '将一张黑色手牌当做' + get.translation(card) + '普通使用');
 				next.set('norestore', true);
 				next.set('addCount', false);
 				next.set('_backupevent', 'nuyan_lieyanqinyin_backup');
