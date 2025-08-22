@@ -34,9 +34,12 @@ export async function precontent(config, originalPack) {
 		},
 		forced: true,
 		marktext: get.translation("none"),
+		filter() {
+			console.log(this);
+			return true;
+		},
 		content() {
-			lib.skill._test2.marktext = get.translation(get.suit(trigger.card));
-			player.markSkill("_test2")
+			console.log(this);
 		}
 	}*/
 	//game.me.tempBanSkill(game.me.getSkills(null, false, false), {global: "phaseEnd"}, false)
@@ -623,6 +626,18 @@ export async function precontent(config, originalPack) {
 		        player.updateMarks();
 		    },
 		    marktext: "🔥",
+			isMinNuQi(player, isOnly) {
+				let min = Infinity,
+					nuqi = player.storage._ny_nuqi ?? 0;
+				game.players.forEach(current => {
+					let num = current.storage._ny_nuqi ?? 0;
+					if (min > num && current != player) min = num;
+				});
+				if (min >= nuqi) {
+					if (min == nuqi && isOnly) return false;
+					return true;
+				} else return false;
+			},
 			initNuQi: async function(player) {
 				player.storage._ny_nuqi ??= 0;
 				player.storage._ny_nuqiMax ??= 2;
@@ -865,7 +880,7 @@ export async function precontent(config, originalPack) {
 				"fangYu":["_ny_fangYu_yuanbing","_ny_fangYu_dunzhen","_ny_fangYu_xiongbing","_ny_fangYu_lingzhen","_ny_fangYu_Firstlingzhen","_ny_fangYu_yingyong","_ny_fangYu_shenyou","_ny_fangYu_miaosuan","_ny_fangYu_Firstmiaosuan","_ny_fangYu_qingling","_ny_fangYu_sishou","_ny_fangYu_tiejia","_ny_fangYu_jianren"],
 				"moPai":["_ny_moPai_shengji","_ny_moPai_cangfeng","_ny_moPai_junzhen","_ny_moPai_zhangu","_ny_moPai_youdi","_ny_moPai_xuncha","_ny_moPai_wuku","_ny_moPai_xirao","_ny_moPai_baoneng","_ny_moPai_huxiao","_ny_moPai_yuling","_ny_moPai_qingshen"],
 				"nuQi":["_ny_nuQi_xingchi","_ny_nuQi_qimou","_ny_nuQi_shayi","_ny_nuQi_fenfa","_ny_nuQi_wuling","_ny_nuQi_tongchou","_ny_nuQi_Firsttongchou","_ny_nuQi_guimou","_ny_nuQi_zhenfen","_ny_nuQi_aibing","_ny_nuQi_jingbing","_ny_nuQi_lingyuan","_ny_nuQi_gujun"],
-				"zhanFa":["_ny_zhanFa_lvedigongcheng","_ny_zhanFa_xushidaifa","_ny_zhanFa_anzhongtuxi","_ny_zhanFa_Firstpozhencuijian","_ny_zhanFa_feiyangbahu","_ny_zhanFa_leitingnuhou","_ny_zhanFa_gexuqipao","_ny_zhanFa_dandadudou","_ny_zhanFa_cuichengbazhai","_ny_zhanFa_longzhenghudou","_ny_zhanFa_yanxingjunfa","_ny_zhanFa_libingmoma","_ny_zhanFa_yetandiying","_ny_zhanFa_bixujishi","_ny_zhanFa_bainiaochaofeng","_ny_zhanFa_yihuajiemu","_ny_zhanFa_zhengzhengrishang","_ny_zhanFa_Firsttongqiangtiebi","_ny_zhanFa_sheguoyouzui","_ny_zhanFa_yixinghuandou","_ny_zhanFa_shehunduopo","_ny_zhanFa_jiuhanzhanyong","_ny_zhanFa_gubenguiyuan","_ny_zhanFa_pozhencuijian","_ny_zhanFa_zhulianbihe"],
+				"zhanFa":["_ny_zhanFa_lvedigongcheng","_ny_zhanFa_xushidaifa","_ny_zhanFa_anzhongtuxi","_ny_zhanFa_Firstpozhencuijian","_ny_zhanFa_feiyangbahu","_ny_zhanFa_leitingnuhou","_ny_zhanFa_gexuqipao","_ny_zhanFa_dandadudou","_ny_zhanFa_cuichengbazhai","_ny_zhanFa_longzhenghudou","_ny_zhanFa_yanxingjunfa","_ny_zhanFa_libingmoma","_ny_zhanFa_yetandiying","_ny_zhanFa_bixujishi","_ny_zhanFa_bainiaochaofeng","_ny_zhanFa_yihuajiemu","_ny_zhanFa_zhengzhengrishang","_ny_zhanFa_Firsttongqiangtiebi","_ny_zhanFa_sheguoyouzui","_ny_zhanFa_yixinghuandou","_ny_zhanFa_shehunduopo","_ny_zhanFa_jiuhanzhanyong","_ny_zhanFa_gubenguiyuan","_ny_zhanFa_pozhencuijian","_ny_zhanFa_zhulianbihe","_ny_zhanFa_shirupozhu"],
 			},
 			filter: function (event, player) {
 				if (get.itemtype(player) != "player") return false;
@@ -959,6 +974,7 @@ export async function precontent(config, originalPack) {
 				"nuyan_zuoci": ["_ny_zhuanShu_shendaoling"],
 				"nuyan_caizhenji": ["_ny_zhuanShu_fengqiqin"],
 				"nuyan_huan_caiwenji": ["_ny_zhuanShu_keqingdi"],
+				"nuyan_caochun": ["_ny_zhuanShu_hanshuang"],
 			},
 			filter: function (event, player) {
 				if (get.itemtype(player) != "player") return false;
@@ -1289,7 +1305,7 @@ export async function precontent(config, originalPack) {
 		lib.skill._useCardQianghua = {
 		    trigger: {player:"useCard0"},
 			//后续铁索增加效果，后续闪电
-			list: ["sha", "shan", "tao", "jiu", "huogong", "juedou", "nanman", "wanjian", "guohe", "shunshou", "wuzhong", "taoyuan", "wuxie", "lebu", "tiesuo", "wugu"],
+			list: ["sha", "shan", "tao", "jiu", "huogong", "juedou", "nanman", "wanjian", "guohe", "shunshou", "wuzhong", "taoyuan", "wuxie", "lebu", "tiesuo", "wugu", "nuyan_fudichouxin", "nuyan_nufachongguan", "nuyan_Firstshuiyanqijun", "nuyan_shuiyanqijun"],
 			popup:false,
 		    filter: function (event,player) {
 				if (lib.config.extension_怒焰武将_nuyan_rule4 == "false") return false;
@@ -1297,14 +1313,14 @@ export async function precontent(config, originalPack) {
 				if (!event.card) return false;
 				if (event.card.storage._useCardQianghua != undefined) return false;
 		        if (get.type(event.card) == "equip") return false;
-		        if ((player.storage._ny_nuqi ?? 0) < 1) return false;
+		        if ((player.storage._ny_nuqi ?? 0) < 1 && !player.countMark("_ny_qianghuaNoNuqi")) return false;
 				for (let i of get.info("_useCardQianghua").list) {
 					if (i == event.card.name && i !== "wugu") return true;
 				}
 		        return false;
 		    },
 		    async content(event,trigger,player) {
-		        await lib.skill._ny_getNuqi.loseNuQi(player,1);
+				if (!player.countMark("_ny_qianghuaNoNuqi")) await lib.skill._ny_getNuqi.loseNuQi(player,1);
 		        trigger.card.storage._useCardQianghua = true;
 		    },
 			check(event, player) {
@@ -1477,6 +1493,14 @@ export async function precontent(config, originalPack) {
 				nocount:true,
 				name:"你的防御符石失效",
 			    content: "",
+			},
+		}
+		lib.skill._ny_qianghuaNoNuqi = {
+			marktext: "怒",
+			intro: {
+				nocount: true,
+				name: "你强化使用牌无需消耗怒气",
+				content: "",
 			},
 		}
 		//隐匿
@@ -4116,6 +4140,33 @@ export async function precontent(config, originalPack) {
 				},
 			},
 		}
+		lib.skill._ny_zhanFa_shirupozhu = {//id26
+			popup: false,
+			priority: 1145,
+			frequent: true,
+			trigger: {
+				source: ["damageBefore", "damageSource"],
+			},
+			filter(event, player) {
+				if (!player.storage._ny_fushiId) return false;
+				if (player.storage._ny_fushiId[4] !== 26) return false;
+				if (!event.card) return false;
+				let info = get.info(event.card);
+				if (!info || info.notarget || info.type != "trick") return false;
+				return info.selectTarget && info.selectTarget != 1;
+			},
+			async content(event, trigger, player) {
+				if (event.triggername.endsWith("Before")) {
+					game.setNature(trigger, "fire");
+				} else {
+					if (trigger.card.storage?._useCardQianghua) {
+						await lib.skill._ny_getNuqi.addNuQi(player, 1);
+						const cards = trigger.player.getCards("h").randomGets(trigger.num);
+						await lib.skill._ny_cuihui.cuihuiCards(trigger.player, cards);
+					}
+				}
+			},
+		}
 		//专属符石
 		lib.skill._ny_zhuanShu_Firstqinglongshi = {//初版青龙石dying id1
 			trigger:{
@@ -4155,7 +4206,7 @@ export async function precontent(config, originalPack) {
 			},
 			async content(event,trigger,player) {
 				player.storage._ny_fushiTime[4+trigger.zhuanShuFuShiId2]--;
-				trigger.player.recoverTo();
+				trigger.player.recoverTo(1);
 				if (trigger.player != player) await player.damage("nosource");
 			},
 			priority: 1145,
@@ -5055,7 +5106,7 @@ export async function precontent(config, originalPack) {
 				    return get.number(card) <= 6;
 				}, "discardPile", "random");
 				if (card) {
-					let id = player.storage._ny_zhuanShuFuShiId.find(id => id == "_ny_zhuanShu_fengqiqin");
+					let id = player.storage._ny_zhuanShuFuShiId.find(id => id == event.name);
 					id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
 					player.storage._ny_fushiTime[4 + id]--;
 					await player.gain(card, "gain2");
@@ -5117,7 +5168,7 @@ export async function precontent(config, originalPack) {
 					.forResult();
 			},
 			async content(event, trigger, player) {
-				let id = player.storage._ny_zhuanShuFuShiId.find(id => id == "_ny_zhuanShu_keqingdi");
+				let id = player.storage._ny_zhuanShuFuShiId.find(id => id == event.name);
 				id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
 				player.storage._ny_fushiTime[4 + id]--;
 				if (player.storage.nuyan_jiaowei_used) {
@@ -5126,6 +5177,73 @@ export async function precontent(config, originalPack) {
 					return;
 				}
 				event.targets[0].addTempSkill("nuyan_wangyou", { player: "phaseBegin" });
+			},
+		}
+		lib.skill._ny_zhuanShu_hanshuang = {//寒霜
+			popup: false,
+			priority: 1145,
+			trigger: {
+				global: "phaseUseBegin",
+			},
+			filter(event, player) {
+				if (!player.storage._ny_zhuanShuFuShiId?.some(id => id == "_ny_zhuanShu_hanshuang")) return false;
+				let id = player.storage._ny_zhuanShuFuShiId.find(id => id == "_ny_zhuanShu_hanshuang");
+				id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+				if (player.storage._ny_fushiTime[4 + id] <= 0) return false;
+				return player.countDiscardableCards(player, "he", { type: "equip" }) && event.player != player;
+			},
+			forced: true,
+			async content(event, trigger, player) {
+				let result = await player.chooseToDiscard(false, "he")
+					.set("target", trigger.player)
+					.set("filterCard", (card) => get.type(card) == "equip")
+					.set("ai", (card) => {
+						const { player, target } = get.event();
+						let att = get.attitude(player, target);
+						if (att > 0) return -114514;
+						else return target.countCards("h") - get.value(card);
+					})
+					.set("prompt", get.prompt(event.name))
+					.set("prompt2", get.prompt2(event.name))
+					.forResult();
+				if (!result.bool) return;
+				let id = player.storage._ny_zhuanShuFuShiId.find(id => id == event.name);
+				id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+				player.storage._ny_fushiTime[4 + id]--;
+				let color = get.color(result.cards[0]);
+				trigger.player.markAuto(event.name + "_effect", color);
+				trigger.player.markSkill(event.name + "_effect");
+				trigger.player.when({ player: "phaseUseEnd" })
+					.then(() => {
+						delete player.storage["_ny_zhuanShu_hanshuang"];
+						player.unmarkSkill("_ny_zhuanShu_hanshuang");
+					});
+			},
+			subSkill: {
+				effect: {
+					sub: true,
+					sourceSkill: "_ny_zhuanShu_hanshuang",
+					marktext: "寒",
+					intro: {
+						name: "寒霜",
+						markcount:(storage) => storage?.length,
+						content(storage) {
+							if (!storage?.length) return;
+							let str = "";
+							for (let i of storage) {
+								str += get.translation(i) + "、";
+							}
+							str = str.slice(0, -1);
+							return "直至本阶段结束，你无法使用或打出" + str + "的牌";
+						},
+					},
+					popup: false,
+					mod: {
+						cardEnabled2(card, player) {
+							if (player.getStorage("_ny_zhuanShu_hanshuang_effect").includes(get.color(card))) return false;
+						},
+					},
+				},
 			},
 		}
 	});

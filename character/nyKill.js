@@ -33,7 +33,7 @@ export default {
 		"nuyan_jie_caojie": ["female", "qun", "6/6", ["nuyan_shouxi", "nuyan_nvzhongjinguo", "nuyan_huiminjishi", "nuyan_Legend_diewufeihua", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|节"]],
 		"nuyan_liru": ["male", "qun", "7/7", ["nuyan_fencheng", "nuyan_fenchengmieji", "nuyan_jueshizhice", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:李|儒"]],
 		"nuyan_caomao": ["male", "wei", "6/6", ["nuyan_qianlong", "nuyan_qingzaofensi", "nuyan_juejintaoni", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|髦"]],
-		"nuyan_jie_machao": ["male", "shu", "7/7", ["nuyan_tieji", "nuyan_weizhenliangzhou", "nuyan_yijidangqian", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:马|超"]],
+		"nuyan_jieFirst_machao": ["male", "shu", "7/7", ["nuyan_tieji", "nuyan_weizhenliangzhou", "nuyan_yijidangqian", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:马|超"]],
 		"nuyan_First_yanghuiyu": ["female", "wei", "6/6", ["nuyan_hongyi", "nuyan_huirongrenxin", "nuyan_ciweibingji", "nuyan_nuqidashi", "nuyan_fushidashi"], ["name:羊|徽瑜"]],
 		"nuyan_zhugejin": ["male", "wu", "7/7", ["nuyan_hongyuan", "nuyan_zhifangganjian", "nuyan_moudingquanju", "nuyan_mopaidashi", "nuyan_fushidashi"], ["name:诸葛|瑾"]],
 		"nuyan_First_wangyuanji": ["female", "wei", "6/6", ["nuyan_shiren", "nuyan_shangjianyihua", "nuyan_qianchongdunmu", "nuyan_mopaidashi", "nuyan_fushidashi"], ["name:王|元姬"]],
@@ -41,6 +41,8 @@ export default {
 		"nuyan_caizhenji": ["female", "wei", "6/6", ["nuyan_tianyin", "nuyan_dihunlvxin", "nuyan_zhongyueheming", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:蔡|贞姬"]],
 		"nuyan_xunyou": ["male", "wei", "6/6", ["nuyan_qice", "nuyan_miaojibaichu", "nuyan_shierqice", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:荀|攸"]],
 		"nuyan_huan_caiwenji": ["female", "wei", "6/6", ["nuyan_yayue", "nuyan_lvxindihun", "nuyan_xingyunliushui", "nuyan_mopaidashi", "nuyan_fushizongshi"], ["name:蔡|文姬"]],
+		"nuyan_caochun": ["male", "wei", "7/7", ["nuyan_shanjia", "nuyan_pijianzhirui", "nuyan_duyuxiaoji", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|纯"]],
+		"nuyan_jie_zhouyu": ["male", "wu", "6/6", ["nuyan_fanjian", "nuyan_botaoxiongyong", "nuyan_lieyanqinyin", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:周|瑜"]],
 	},
 	skill:{
 		/*
@@ -4067,9 +4069,7 @@ export default {
 			init2: function(player,skill) {
 				let next = game.createEvent("nuyan_juejintaoni_init");
 				next.player = player;
-				next.setContent(() => {
-					event.trigger(event.name);
-				});
+				next.setContent("emptyEvent");
 			},
 			filter(event, player) {
 				return player.isMinHp();
@@ -4593,9 +4593,7 @@ export default {
 				lib.skill.nuyan_huashen.addHuashens(player, 5);
 				let next = game.createEvent("nuyan_huashen_init");
 				next.player = player;
-				next.setContent(() => {
-					event.trigger(event.name);
-				});
+				next.setContent("emptyEvent");
 			},
 			filter(event, player, name) {
 				if (name == "nuyan_huashenInit") {
@@ -5125,9 +5123,7 @@ export default {
 			init2: function(player) {
 				let next = game.createEvent("nuyan_tianyin_init");
 				next.player = player;
-				next.setContent(() => {
-					event.trigger(event.name);
-				});
+				next.setContent("emptyEvent");
 			},
 			forced: true,
 			trigger: {
@@ -5280,9 +5276,7 @@ export default {
 			init2(player, skill) {
 				let next = game.createEvent("nuyan_zhongyueheming_init");
 				next.player = player;
-				next.setContent(() => {
-					event.trigger(event.name);
-				});
+				next.setContent("emptyEvent");
 			},
 			trigger: {
 				player: ["phaseZhunbeiBegin", "nuyan_zhongyueheming_init"],
@@ -5499,9 +5493,7 @@ export default {
 			init2: function(player) {
 				let next = game.createEvent("nuyan_yayue_init");
 				next.player = player;
-				next.setContent(() => {
-					event.trigger(event.name);
-				});
+				next.setContent("emptyEvent");
 			},
 			trigger: {
 				global: "phaseEnd",
@@ -5744,6 +5736,532 @@ export default {
 				},
 			},
 		},
+		//怒焰曹纯
+		//后续强化打出牌？
+		nuyan_shanjia: {//缮甲
+			trigger: {
+				player: "phaseUseBegin",
+			},
+			marktext: "缮",
+			audio: "shanjia",
+			onremove: true,
+			frequent: true,
+			intro: {
+				name: "缮甲",
+				markcount: (storage) => storage?.length,
+				content(storage) {
+					if (!storage.length) return;
+					let str = "";
+					for (let i of storage) {
+						str += get.translation(i) + "、"
+					}
+					str = str.slice(0, -1);
+					return "本局游戏共失去过" + get.cnNumber(storage.length) + "张装备牌：<br>" + str;
+				},
+			},
+			async content(event, trigger, player) {
+				player.chat("雪豹，我们肘！");
+				await player.draw(3);
+				let num = player.storage[event.name].length,
+					result;
+				if (num < 3) {
+					result = await player.chooseToDiscard(3 - num, true, "he")
+						.set("ai", (card) => {
+							if (get.type(card) == "equip" && !_status.event.player.storage.nuyan_shanjia.includes(card.name)) return 114514;
+							else if (get.type(card) == "basic") return 2 - get.value(card);
+							return 6 - get.value(card);
+						})
+						.set("prompt", "〖缮甲〗：弃置" + get.cnNumber(3 - num) + "张牌<br>若你未弃置基本牌/锦囊牌，你此阶段强化使用牌不消耗怒气/使用牌无距离限制，若均满足，你摸X张牌（X为你本局游戏内失去的装备牌牌名数）")
+						.forResultCards();
+				} else result = [];
+				let bool1 = result.some(card => get.type(card) == "basic"),
+					bool2 = result.some(card => get.type(card, "trick") == "trick");
+				if (!bool1) {
+					player.addMark("_ny_qianghuaNoNuqi");
+					player.when({ global: "phaseUseEnd" })
+						.then(() => {
+							player.clearMark("_ny_qianghuaNoNuqi");
+							player.unmarkSkill("_ny_qianghuaNoNuqi");
+							player.updateMarks();
+						});
+				}
+				if (!bool2) {
+					player.addMark("nuyan_shanjia_effect");
+					player.when({ global: "phaseUseEnd" })
+						.then(() => {
+							player.clearMark("nuyan_shanjia_effect");
+							player.unmarkSkill("nuyan_shanjia_effect");
+							player.updateMarks();
+						});
+				}
+				if (!bool1 && !bool2) {
+					await player.draw(player.storage[event.name].length);
+				}
+			},
+			group: ["nuyan_shanjia_record", "nuyan_shanjia_effect"],
+			subSkill: {
+				effect: {
+					mod: {
+						targetInRange: function (card, player, target) {
+							if (player.countMark("nuyan_shanjia_effect")) return true;
+						},
+					},
+					sub: true,
+					sourceSkill: "nuyan_shanjia",
+					charlotte: true,
+					marktext: "缮",
+					intro: {
+						name: "缮甲",
+						nocount: true,
+						content: "你本阶段使用牌无距离限制",
+					},
+				},
+				record: {
+					sub: true,
+					sourceSkill: "nuyan_shanjia",
+					charlotte: true,
+					popup: false,
+					forced: true,
+					init(player) {
+						let history = player.actionHistory;
+						let list = [];
+						for (var i = 0; i < history.length; i++) {
+						    for (var j = 0; j < history[i].lose?.length; j++) {
+						        list.addArray(history[i].lose[j]?.cards2?.filter(function (card) {
+						            return get.type(card) == "equip";
+						        }).map(c => c.name));
+						    }
+						}
+						player.storage.nuyan_shanjia = list;
+						if (list.length > 0) player.markSkill("nuyan_shanjia");
+					},
+					trigger: {
+					    player: "loseAfter",
+					    global: ["loseAsyncAfter","equipAfter","addJudgeAfter","addToExpansionAfter","gainAfter"],
+					},
+					async content(event, trigger, player) {
+						lib.skill.nuyan_shanjia_record.init(player);
+					},
+				},
+			},
+		},
+		nuyan_pijianzhirui: {//披坚执锐
+			init2(player) {
+				let next = game.createEvent("nuyan_pijianzhirui_init");
+				next.player = player;
+				next.setContent("emptyEvent");
+			},
+			nuyan_star: 1,
+			trigger: {
+				player: ["phaseZhunbeiBegin", "nuyan_pijianzhirui_init"],
+			},
+			async cost(event, trigger, player) {
+				const hasEquip = player.getStorage("nuyan_pijianzhirui_equip").slice()
+				    .map(equip => equip[2]);
+				let virtualList = {
+					equip1: [],
+					equip2: [],
+				};
+				if (hasEquip.length) {
+					for (let i of hasEquip) {
+						virtualList[get.subtype(i)].add(i);
+					}
+				}
+				let allEquip = lib.inpile.slice();
+				//allEuqip.addArray(lib.cardPack.mode_derivation);
+				allEquip = allEquip.filter(cardName => {
+					return get.type(cardName) == "equip";
+				});
+				let chooseList = [];
+				chooseList.push('###披坚执锐###<div class="text center">选择一个装备牌的牌名，当你对应的副类别区域内没有牌时，你视为装备着你选择的牌名的牌（每个副类别对应一个装备牌，若已有则改为替换为你选择的牌名）</div>');
+				for (let i of ["equip1", "equip2"]) {
+				    let str = get.translation(i) + "栏：";
+				    if (virtualList[i]?.length) {
+				        str += "已视为装备【" + get.translation(virtualList[i]) + "】";
+				    } else {
+				        str += "未视为装备任何牌";
+				    }
+				    chooseList.push(str);
+				    let equips = allEquip.filter(name => get.subtypes(name).includes(i));
+				    let list = [equips, "vcard"];
+				    if (equips.length) {
+				        chooseList.push(list);
+				    }
+				}
+				const {
+				    result: { bool, links },
+				} = await player
+				    .chooseButton(chooseList)
+				    .set("filterButton", button => {
+				        let hasEquip = get.event("hasEquip");
+						return !hasEquip.includes(button.link[2]);
+				    })
+				    .set("hasEquip", hasEquip)
+				    .set("ai", button => get.equipValue({ name: button.link[2] }, get.player()));
+				event.result = {
+				    bool: bool,
+				    cost_data: links,
+				};
+			},
+			async content(event, trigger, player) {
+				const { cost_data } = event,
+					equip = event.name + "_equip";
+				const subtypes = cost_data.map(name => get.subtypes(name[2])).flat();
+				player.unmarkAuto(
+				    equip,
+				    player.getStorage(equip).filter(name => subtypes.some(t => get.subtypes(name[2]).includes(t)))
+				);
+				player.markAuto(equip, cost_data);
+				await lib.skill.nuyan_pijianzhirui.gainSkills(player, event.name);
+			},
+			async gainSkills(player, skill) {
+				const equip = skill + "_equip";
+				//清除原有技能
+				game.broadcastAll((skill, equip) => {
+					lib.skill[skill].group = [equip];
+				}, skill, equip);
+				//获取技能
+				for (let item of player.getStorage(equip)) {
+					let skills = lib.card[item[2]]?.skills ?? [];
+					for (let sk of skills) {
+						let info = lib.skill[sk];
+						info.subtypeNum = Number(get.subtype(item[2]).slice(-1));
+						if (info.audio) info.audio = sk;
+						const func = () => true;
+						let temp = info.filter || func;
+						// 创建唯一的 Symbol 作为属性键，防止filterx和filter一起变化
+						const filterx = Symbol('filterx');
+						info[filterx] = temp;
+						info.filter = function (event, player, triggername, target) {
+							if (player.getEquip(this.subtypeNum)) return false;
+							return this[filterx].call(this, event, player, triggername, target);
+						};
+						temp = info.viewAsFilter || func;
+						const viewAsFilterx = Symbol('viewAsFilterx');
+						info[viewAsFilterx] = temp;
+						info.viewAsFilter = function(player) {
+							if (player.getEquip(this.subtypeNum)) return false;
+							return this[viewAsFilterx].call(this, player);
+						};
+						if (info.mod) {
+							temp = {...info.mod};
+							const modx = Symbol("modx");
+							info[modx] = temp;
+							for (let i in info.mod) {
+								info.mod[i] = function() {
+									if (!player.getEquip(this.subtypeNum)) {
+										return this[modx][i].call(this, ...arguments);
+									}
+								}.bind(info);
+							}
+						}
+						const name = skill + "_" + sk;
+						game.broadcastAll((name, info, card, skill) => {
+							lib.skill[name] = info;
+							lib.translate[name] = get.translation(card);
+							lib.skill[skill].group.add(name);
+						}, name, info, item[2], skill);
+					}
+				}
+			},
+			group: ["nuyan_pijianzhirui_equip"],
+			subSkill: {
+				equip: {
+					sub: true,
+					sourceSkill: "nuyan_pijianzhirui",
+					onremove: true,
+					marktext: "披",
+					intro: {
+						name: "披坚执锐",
+						mark(dialog, storage = []) {
+						    if (!storage.length) {
+						        return "当前未视为装备任意牌";
+						    }
+						    dialog.addText("当前视为装备");
+						    dialog.addSmall([storage, "vcard"]);
+						},
+					},
+					mod: {
+					    globalFrom(from, to, distance) {
+					        return distance + from.getStorage("nuyan_pijianzhirui_equip").reduce((sum, name) => sum + (lib.card[name[2]]?.distance?.globalFrom || 0), 0);
+					    },
+					    globalTo(from, to, distance) {
+					        return distance + to.getStorage("nuyan_pijianzhirui_equip").reduce((sum, name) => sum + (lib.card[name[2]]?.distance?.globalTo || 0), 0);
+					    },
+					    attackRange(from, distance) {
+					        return distance - from.getStorage("nuyan_pijianzhiruiu_equip").reduce((sum, name) => sum + (lib.card[name[2]]?.distance?.attackFrom || 0), 0);
+					    },
+					    attackTo(from, to, distance) {
+					        return distance + to.getStorage("nuyan_pijianzhirui_equip").reduce((sum, name) => sum + (lib.card[name[2]]?.distance?.attackTo || 0), 0);
+					    },
+					},
+					popup: false,
+				},
+			},
+		},
+		nuyan_duyuxiaoji: {//督御骁骑
+			nuyan_star: 3,
+			trigger: {
+				global: "phaseBegin",
+			},
+			filter(event, player) {
+				return player.countCards("he", { type: "equip" }) && player !== event.player;
+			},
+			async cost(event, trigger, player) {
+				let result = await player.chooseCardTarget({
+					filterCard: (card) => get.type(card) == "equip",
+					forced: false,
+					position: "he",
+					prompt: get.prompt(event.name.slice(0, -5)),
+					prompt2: get.prompt2(event.name.slice(0, -5)),
+					target: trigger.player,
+					ai2: (target) => {
+						if (target == _status.event.target) return 114514;
+						return -get.attitude(_status.event.target, target);
+					}
+				}).forResult();
+				if (result.bool) {
+					event.result = {
+						bool: true,
+						cost_data: {
+							card: result.cards[0],
+							target: result.targets[0],
+						},
+					}
+				}
+			},
+			async content(event, trigger, player) {
+				const { card, target } = event.cost_data;
+				player.give(card, trigger.player);
+				trigger.player.markAuto("nuyan_duyuxiaoji_effect", target);
+				trigger.player.addTempSkill("nuyan_duyuxiaoji_effect");
+			},
+			subSkill: {
+				effect: {
+					sub: true,
+					sourceSkill: "nuyan_duyuxiaoji",
+					charlotte: true,
+					onremove(player, skill) {
+						delete player.storage[skill];
+						delete player.storage[skill + "_known"];
+					},
+					forced: true,
+					mark: true,
+					marktext: "督",
+					intro: {
+						name: "",
+						content(storage, player) {
+							let str = "你于出牌阶段使用伤害牌指定唯一目标后，若目标为〖督御骁骑〗所选角色之一，你摸一张牌，否则此牌结算结束后，你结束此阶段。<br>已知〖督御骁骑〗所选角色：";
+							if (player.storage.nuyan_duyuxiaoji_effect_known) str += get.translation(player.storage.nuyan_duyuxiaoji_effect_known);
+							else str += "无";
+							return str;
+						},
+					},
+					trigger: {
+						player: "useCardToPlayered",
+					},
+					filter(event, player) {
+						return event.targets?.length == 1 && get.tag(event.card, "damage") && player.isPhaseUsing() && player.storage.nuyan_duyuxiaoji_effect?.length;
+					},
+					content() {
+						if (player.storage[event.name].includes(trigger.target)) {
+							player.draw();
+						} else {
+							const evt = trigger.getParent("phaseUse");
+							if (evt && evt.player == player && evt.name == "phaseUse" && !evt.skipped) {
+								evt.skipped = true;
+								game.log(player, "跳过了出牌阶段");
+							}
+						}
+						player.markAuto(event.name + "_known", trigger.target);
+					},
+				},
+			},
+		},
+		//怒焰界周瑜
+		nuyan_fanjian: {//反间
+			enable: "chooseToUse",
+			hiddenCard: function(player, name) {
+				return get.info("nuyan_fanjian").buttonRequire(player).includes(name);
+			},
+			filter: function(event, player, triggername) {
+			    return get.info("nuyan_fanjian").buttonRequire(player, event).length;
+			},
+			chooseButton: {
+			    dialog: function(event, player){
+			        let list = get.info("nuyan_fanjian").buttonRequire(player, event);
+					list = list.map(i => i = ["锦囊", "", i]);
+			        return ui.create.dialog("〖反间〗：将一张牌当作【水淹七军】使用", [list,'vcard']);
+			    },
+				check: (button) => player.getUseValue(button.link[2]),
+				filterButton: (button, player) => player.hasUseTarget(button.link[2]),
+			    backup: function(links,player){
+			        return {
+			            filterCard(card) {
+							return get.suit(card) == "spade";
+						},
+						selectCard: 1,
+						popname: true,
+						position: "h",
+						viewAs:{
+							name:links[0][2],
+							storage: {
+								nuyan_fanjian: true,
+							},
+						},
+			        }
+			    },
+			    prompt: function(links,player){
+			        return "〖反间〗：将一张手牌当作【" + get.translation(links[0][2]) + "】使用";
+			    },
+			},
+			buttonRequire: function(player, event) {
+				var list = [];
+				const hs = player.getCards('h', { suit: "spade" });
+				if (!hs.length) return list;
+				if (hs.every(card => game.checkMod(card, player, 'unchanged', 'cardEnabled2', player) === false)) return list;
+				let cardList = lib.inpile;
+				//cardList.addArray(lib.cardPack.mode_derivation);
+			    for (var name of lib.inpile) {
+					if (!get.translation(name).includes("水淹七军")) continue;
+			    	if (event) {
+			    		if (event.filterCard(get.autoViewAs({ name }, "unsure"), player, event)) list.push(name);
+			    	}
+			        else list.push(name);
+			    }
+			    return list;
+			},
+			group: "nuyan_fanjian_effect",
+			subSkill: {
+				effect: {
+					sub: true,
+					sourceSkill: "nuyan_fanjian",
+					charlotte: true,
+					forced: true,
+					trigger: {
+						player: "useCardAfter",
+					},
+					filter(event, player) {
+						return event.card.storage?.nuyan_fanjian && event.card.storage?._useCardQianghua;
+					},
+					content() {
+						const card = get.cardPile2((card) => get.color(card) == "black", "random");
+						player.gain(card, "gain2");
+					},
+				},
+			},
+		},
+		nuyan_botaoxiongyong: {//波涛汹涌
+			locked: true,
+			forced: true,
+			nuyan_star: 1,
+			judgeDraw(player) {
+				return [!player.isMinHandcard(true), !player.isMinHp(true), !lib.skill._ny_getNuqi.isMinNuQi(player, true)];
+			},
+			trigger: {
+				player: "phaseDrawBegin1",
+			},
+			filter(event, player) {
+				if (event.numFixed) return false;
+				return get.info("nuyan_botaoxiongyong").judgeDraw(player).some(bool => bool);
+			},
+			content() {
+				const list = get.info("nuyan_botaoxiongyong").judgeDraw(player).filter(bool => bool);
+				trigger.num += 2 * list.length;
+			},
+		},
+		nuyan_lieyanqinyin: {//烈焰琴音
+			nuyan_star: 3,
+			trigger: {
+				player: "useCardAfter",
+			},
+			filter(event, player) {
+				return get.info("nuyan_lieyanqinyin").getCards(player, event).length;
+			},
+			getCards(player, event) {
+				var list = [];
+				const hs = player.getCards('h', { color: "black" });
+				if (!hs.length) return list;
+				if (hs.every(card => game.checkMod(card, player, 'unchanged', 'cardEnabled2', player) === false)) return list;
+				if (event?.card.storage?.nuyan_lieyanqinyin) return list;
+				let cardList = lib.inpile;
+				//cardList.addArray(lib.cardPack.mode_derivation);
+				for (var name of lib.inpile) {
+					if (!get.translation(name).includes("水淹七军")) continue;
+					list.push(name);
+				}
+				return list;
+			},
+			async cost(event, trigger, player) {
+				const list = get.info("nuyan_lieyanqinyin").getCards(player, trigger);
+				list.map(i => ["锦囊", "", i]);
+				let result = await player.chooseButton(['是否将一张黑色手牌当做一张【水淹七军】使用？', [list, 'vcard']], false)
+					.set("ai", (button) => player.getUseValue(button.link[2]))
+					.set("filterButton", (button, player) => player.hasUseTarget(button.link[2]))
+					.forResult();
+				if (!result.bool) {
+					event.result = { bool: false };
+					return;
+				}
+				const card = {
+					name: result.links[0][2],
+					nature: result.links[0][3],
+					storage: {
+						nuyan_lieyanqinyin: true,
+						_useCardQianghua: false,
+					},
+				};
+				event.result = {
+					bool: true,
+					cost_data: card,
+				};
+			},
+			async content(event, trigger, player) {
+				const card = event.cost_data;
+				game.broadcastAll(card => {
+				    lib.skill.nuyan_lieyanqinyin_backup.viewAs = card;
+				}, card);
+				const next = player.chooseToUse();
+				next.set('openskilldialog', '将一张黑色手牌当做' + get.translation(card) + '使用');
+				next.set('norestore', true);
+				next.set('addCount', false);
+				next.set('_backupevent', 'nuyan_lieyanqinyin_backup');
+				next.set('custom', {
+				    add: {},
+				    replace: { window() { } }
+				});
+				next.backup('nuyan_lieyanqinyin_backup');
+				await next;
+			},
+			subSkill: {
+				backup: {
+					filterCard(card) {
+					    return get.itemtype(card) == "card" && get.color(card) == "black";
+					},
+					position: "h",
+					filterTarget: function(card, player, target) {
+					    if (!card || !target || target.removed) return false;
+					    const info = get.info(card);
+					    if (!info?.deadTarget && target.isDead()) return false;
+					    if (!info?.includeOut && target.isOut()) return false;
+					    const filter = info.filterTarget;
+					    if (!info.singleCard || ui.selected.targets.length == 0) {
+					        let mod = game.checkMod(card, player, target, "unchanged", "playerEnabled", player);
+					        if (mod != "unchanged") return mod;
+					        mod = game.checkMod(card, player, target, "unchanged", "targetEnabled", target);
+					        if (mod != "unchanged") return mod;
+					    }
+					    if (typeof filter == "boolean") return filter;
+					    if (typeof filter == "function") return Boolean(filter(card, player, target));
+					},
+					selectCard: 1,
+					check: card => 6 - get.value(card),
+					log: false,
+					sub: true,
+					sourceSkill: "nuyan_lieyanqinyin",
+				},
+			},
+		},
 	},
 	characterTitle: {//武将称号
 	},
@@ -5946,6 +6464,8 @@ export default {
 		"_ny_zhanFa_pozhencuijian_info":"当你使用单体普通锦囊牌指定目标后，你可令此牌效果+2且无法被响应，然后，每回合限一次，此牌结算结束后，你可摧毁目标的半数手牌（向上取整）。",
 		"_ny_zhanFa_zhulianbihe":"珠联璧合",
 		"_ny_zhanFa_zhulianbihe_info":"当你使用一张与你使用的上一张牌点数相等的转化牌时，你从牌堆或弃牌堆中获得一张点数为此牌点数+1的牌，然后，若此牌为伤害牌，此牌无法被响应。",
+		"_ny_zhanFa_shirupozhu":"势如破竹",
+		"_ny_zhanFa_shirupozhu_info":"你使用群体锦囊牌造成的伤害视为火焰伤害，若此牌为强化使用，则你获得1点怒气并摧毁目标等同于此牌伤害值的手牌。",
 		//专属符石
 		"_ny_zhuanShu_Firstqinglongshi":"初版青龙石",
 		"_ny_zhuanShu_Firstqinglongshi_info":"当一名角色进入濒死状态时，若其怒气值大于0，你可令其将体力值回复至X点并失去所有怒气，然后，若其不为你，你受到X点无来源伤害。（X为其怒气值）",
@@ -6005,6 +6525,8 @@ export default {
 		nuyan_wangyou_info:"锁定技，你装备区内的牌失效；你废除你的判定区；其他角色计算与你的距离+X（X为你的体力值）",
 		nuyan_wangji: "忘机",
 		nuyan_wangji_info: "锁定技，你装备区内的牌失效；你的所有其他技能（使命技，觉醒技除外）失效；你废除你的判定区；其他角色计算与你的距离+X（X为你的体力上限）",
+		"_ny_zhuanShu_hanshuang":"寒霜",
+		"_ny_zhuanShu_hanshuang_info":"其他角色的出牌阶段开始时，你可以弃置一张装备牌，令其本阶段无法使用或打出与此牌颜色相同的牌。",
 		
 		//武将
 		nuyan_caorui: "曹叡",
@@ -6048,6 +6570,8 @@ export default {
 		nuyan_caizhenji: "蔡贞姬",
 		nuyan_xunyou:"荀攸",
 		nuyan_huan_caiwenji: "幻蔡文姬",
+		nuyan_caochun: "曹纯",
+		nuyan_jie_zhouyu:"界周瑜",
 		
 		//通用技能
 		nuyan_fushizongshi:"符石宗师",
@@ -6290,6 +6814,18 @@ export default {
 		nuyan_xingyunliushui_info:"觉醒技，你于回合外发动〖雅乐〗无次数限制；每个回合结束时，若你于本回合连续使用或打出了六张点数相同的牌，则你获得〖焦尾〗并令一名角色执行一个额外的回合。",
 		nuyan_jiaowei: "焦尾",
 		nuyan_jiaowei_info: "锁定技，你使用或打出点数为1,2,3,5,6的牌后，摸1张牌并获得1点怒气。",
+		nuyan_shanjia: "缮甲",
+		nuyan_shanjia_info:"出牌阶段开始时，你摸3张牌，然后弃置3-X张牌，若你本次没有弃置：1.基本牌，此阶段你强化使用牌不消耗怒气；2.锦囊牌，此阶段你使用牌无距离限制；若两项都满足，你摸X张牌(X为你本局失去过装备牌的牌名数)。",
+		nuyan_pijianzhirui: "披坚执锐",
+		nuyan_pijianzhirui_info: "你首次登场时或准备阶段，你可以选择或更改一个装备牌的牌名（武器和防具各限1个）；当你未装备武器/防具时，视为你装备你声明的牌名的牌。",
+		nuyan_duyuxiaoji:"督御骁骑",
+		nuyan_duyuxiaoji_info:"其他角色回合开始时，你可以交给其1张装备牌并为其指定一名“督御”目标（其触发条件前对其隐藏），若如此做，直至本回合结束，当其于出牌阶段使用伤害牌指定唯一目标后，若此牌目标拥有“督御”标记，其摸1张牌，否则此牌结算后，结束其出牌阶段。",
+		nuyan_fanjian:"反间",
+		nuyan_fanjian_info:"出牌阶段，你可以将一张♠手牌当做【水淹七军】使用，你以此法强化使用的【水淹七军】结算结束后，你从牌堆中获得一张黑色牌。",
+		nuyan_botaoxiongyong:"波涛汹涌",
+		nuyan_botaoxiongyong_info:"锁定技，摸牌阶段，你多摸2X张牌，（X为以下项中你满足的项数：1.你手牌数不为全场最少；2.你体力值不为全场最少；3.你怒气值不为全场最少）。",
+		nuyan_lieyanqinyin:"烈焰琴音",
+		nuyan_lieyanqinyin_info:"你不以此法使用的【水淹七军】结算结束后，你可以将一张黑色手牌当做【水淹七军】普通使用。",
 	},
 	dynamicTranslate: {//动态翻译
 		nuyan_yuqi: function(player) {
