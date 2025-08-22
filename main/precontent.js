@@ -157,8 +157,16 @@ export async function precontent(config, originalPack) {
 				<br>github仓库：<a href="https://github.com/zhonghui1966/nyKill">点击此处进入</a>
 				`;
 				var more = ui.create.div('.hth_more',
-				`<li>当前版本：魔改版1.0.7版本
+				`<li>当前版本：魔改版1.0.8版本
 				<br><b style="color: red">更新内容：</b>
+				<br>新武将：曹纯，界周瑜
+				<br>同步怒焰三国杀，新增符石--势如破竹
+				<br>为怒焰三国杀卡牌增加强化效果
+				<br>优化部分代码
+				<br>修复一些已知问题：
+				<br>1.修复界马超不显示名字的问题
+				<br>2.修复曹叡专属符石〖青龙石〗效果是回复1点体力而非回复至1点体力的问题
+				<br><b style="color: red">魔改版1.0.7版本更新内容：</b>
 				<br>新武将：幻蔡文姬
 				<br>为怒气，符石等机制技能适配对局内的换将
 				<br>为专属符石机制适配双将模式

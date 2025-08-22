@@ -2448,6 +2448,7 @@ export default {
 			},
 		},
 		//怒焰神黄忠
+		//后续定军战神适配局内获得技能
 		nuyan_yongyi: {//勇毅
 			trigger:{
 				player: "useCardToPlayered",
