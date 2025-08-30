@@ -3969,7 +3969,7 @@ export default {
 				const cards = get.cards(num);
 				await game.cardsGotoOrdering(cards);
 				await player.showCards(cards, get.translation(player) + '发动了〖潜龙〗');
-				const { result } = await player.chooseCardButton("潜龙：选择其中任意张牌作为“鳞”置入牌堆中，你获得其余牌", false, cards)
+				const { result } = await player.chooseCardButton("潜龙：选择其中任意张牌作为“鳞”置入牌堆中，你获得其余牌", false, cards, [1, Infinity])
 					.set("ai", (button) => 0);
 				if (result.bool) {
 					let pileCards = result.links;
@@ -3987,7 +3987,7 @@ export default {
 			subSkill: {
 				effect: {
 					trigger: {
-						player: "gainEnd",
+						global: "gainEnd",
 					},
 					frequent: true,
 					filter: function(event, player) {
@@ -3998,7 +3998,7 @@ export default {
 						let cards = trigger.cards.filter(c => c.nuyan_qianlong == true);
 						let num = cards.length,
 							limit = Number(lib.config.extension_怒焰武将_hujiaSet);
-						trigger.player.addGainTag(cards, "鳞");
+						trigger.player.addGaintag(cards, "鳞");
 						let choiceList = ["令" + get.translation(trigger.player) + "受到" + get.cnNumber(num) + "点雷电伤害", "令其获得一点护甲"];
 						let choices = ["选项一", "选项二", "cancel2"];
 						if (trigger.player.hujia >= limit) {
@@ -6302,8 +6302,8 @@ export default {
 		"ny_podan_info":"锁定技，当你不因【酒】回复体力时，取消之。",
 		
 		"_useCardQianghua":"怒焰-使用牌强化",
-		//"_useCardQianghua_info":"消耗1点&poptip=怒气&以&poptip=强化你使用的牌&",
-		//后续版本更新给translate上强度（
+		//"_useCardQianghua_info":`消耗1点${zhonghuiFunction.poptip("怒气")}以${zhonghuiFunction.poptip("强化牌", null, null, null, "强化此牌")}`,
+		//translate相关要适配旧版比较难，后续再弄
 		"_useCardQianghua_info":"消耗1点怒气以强化你使用的牌",
 		
 		//进攻符石

@@ -276,19 +276,33 @@ export async function precontent(config, originalPack) {
 			else html.innerHTML = "▶" + get.translation(skill);
 		},
 		get noprDescription () {
-			if (!zhonghuiFunction.tipMap1) return;
-			let tipMap = zhonghuiFunction.tipMap1;
-			if (zhonghuiFunction.tipMap2) tipMap.addArray(zhonghuiFunction.tipMap2);
-			if (zhonghuiFunction.tipMap3) tipMap.addArray(zhonghuiFunction.tipMap3);
+			if (!zhonghuiFunction.tipMap) return;
 			let result = {};
-			for (let list of tipMap) {
-				result[list[0]] = list[1];
+			for (let map in zhonghuiFunction.tipMap) {
+				for (let item in map) {
+					result[item] = map[item];
+				}
 			}
 			return result;
 		},
-		poptipLink(name, explain, style, noprExplain) {
+		poptip(name, explain, style, noprExplain, showName) {
 			if (!style) style = "color: unset";
-			if (typeof game.addPoptip == "function") return get.poptipLink(name, explain, style);
+			if (lib.poptip) {
+				if (lib.poptip.getInfo("rule_" + name) == get.translation("rule_" + name)) {
+					lib.poptip.add(name, {
+						name: name,
+						info: explain,
+					});
+				}
+				if (!explain) explain = lib.poptip.getInfo("rule_" + name);
+				if (showName) {
+					lib.poptip.add(showName, {
+						name: showName,
+						info: explain,
+					});
+				}
+				return `<b style="${style}">${get.poptip(name)}</b>`;
+			}
 			else {
 				if (noprExplain) return `<b style="${style}">${name}</b>`;
 				if (!explain) explain = zhonghuiFunction.noprDescription[name];
@@ -527,7 +541,7 @@ export async function precontent(config, originalPack) {
 				});
 				list = list.map(i => {
 					let str = i.slice(-3);
-					return i.slice(0, -3) + `${zhonghuiFunction.poptipLink(str, null, styleStr[str])}` + endStr;
+					return i.slice(0, -3) + `${zhonghuiFunction.poptip(str, null, styleStr[str])}` + endStr;
 				});
 				let result = await player.chooseButton([1, 3], false)
 					.set("createDialog", ["怒焰星级符石镶嵌",
@@ -763,7 +777,7 @@ export async function precontent(config, originalPack) {
 			popup:false,
 			firstDo: true,
 		    intro: {
-		        name: zhonghuiFunction.poptipLink("怒气", null, null, true),
+		        name: zhonghuiFunction.poptip("怒气", null, null, true),
 		        content: function (storage, player) {
 		            return "当前怒气值：" + player.storage._ny_nuqi + "/" + player.storage._ny_nuqiMax;
 		        },
@@ -822,7 +836,7 @@ export async function precontent(config, originalPack) {
 						name;
 					if (player.storage._ny_fushiId[4] && player.storage._ny_fushiId[4] > 0) {
 						name = lib.skill._ny_getFuShi.obj["zhanFa"][(player.storage._ny_fushiId[4]-1)];
-						name = zhonghuiFunction.poptipLink(get.translation(name), get.translation(name + "_info"), get.info("_ny_getFuShi").color["zhanFa"], true);
+						name = zhonghuiFunction.poptip(get.translation(name), get.translation(name + "_info"), get.info("_ny_getFuShi").color["zhanFa"], true);
 						str = [
 							{ item: `战法名称`, ratio: .6, itemContainerCss },
 							{ item: name, ratio: .8, itemContainerCss },
@@ -841,7 +855,7 @@ export async function precontent(config, originalPack) {
 							timeStr = String(player.storage._ny_fushiTime[i]);
 							if (timeStr == "Infinity") timeStr = "无限";
 							name = lib.skill._ny_getFuShi.obj[keys[i]][(player.storage._ny_fushiId[i]-1)];
-							name = zhonghuiFunction.poptipLink(get.translation(name), get.translation(name + "_info"), get.info("_ny_getFuShi").color[keys[i]], true);
+							name = zhonghuiFunction.poptip(get.translation(name), get.translation(name + "_info"), get.info("_ny_getFuShi").color[keys[i]], true);
 							str = [
 								{ item: name, ratio: .6, itemContainerCss },
 								{ item: timeStr, ratio: .8, itemContainerCss },
@@ -855,7 +869,7 @@ export async function precontent(config, originalPack) {
 							timeStr = String(player.storage._ny_fushiTime[Number(i)+4]);
 							if (timeStr == "Infinity") timeStr = "无限";
 							name = player.storage._ny_zhuanShuFuShiId[i];
-							name = zhonghuiFunction.poptipLink(get.translation(name), get.translation(name + "_info"), get.info("_ny_getFuShi").color["zhuanShu"], true);
+							name = zhonghuiFunction.poptip(get.translation(name), get.translation(name + "_info"), get.info("_ny_getFuShi").color["zhuanShu"], true);
 							str = [
 								{ item: name, ratio: .6, itemContainerCss },
 								{ item: timeStr, ratio: .8, itemContainerCss },
@@ -1922,7 +1936,7 @@ export async function precontent(config, originalPack) {
 			intro:{
 				nocount:true,
 				name:'天罚',
-				content:'此次伤害结算内，你无法因受到伤害而获得' + zhonghuiFunction.poptipLink("怒气", null, null, true),
+				content:'此次伤害结算内，你无法因受到伤害而获得' + zhonghuiFunction.poptip("怒气", null, null, true),
 			},
 			forced: true,
 			popup:false,
@@ -2321,7 +2335,7 @@ export async function precontent(config, originalPack) {
 			forced: true,
 			popup:false,
 			async content(event,trigger,player) {
-				let { result } = await player.chooseBool("余威：是否于"+get.translation(trigger.card)+"结算过程中可消耗1点" + zhonghuiFunction.poptipLink("怒气", null, null, true) + "视为使用强化【无懈可击】(不限次数)").set("ai", () => true);
+				let { result } = await player.chooseBool("余威：是否于"+get.translation(trigger.card)+"结算过程中可消耗1点" + zhonghuiFunction.poptip("怒气", null, null, true) + "视为使用强化【无懈可击】(不限次数)").set("ai", () => true);
 				if (result.bool) {
 					player.storage._ny_fushiTime[1] --;
 					let card = trigger.card;
@@ -2335,7 +2349,7 @@ export async function precontent(config, originalPack) {
 					forced: true,
 					popup: false,
 					enable: "chooseToUse",
-					prompt: "妙计：你可以消耗1点" + zhonghuiFunction.poptipLink("怒气", null, null, true) + "并视为使用一张强化【无懈可击】(不限次数)",
+					prompt: "妙计：你可以消耗1点" + zhonghuiFunction.poptip("怒气", null, null, true) + "并视为使用一张强化【无懈可击】(不限次数)",
 					viewAs:{
 						name: "wuxie",
 						suit: "none",
@@ -2740,7 +2754,7 @@ export async function precontent(config, originalPack) {
 			    return true;
 			},
 			async content(event,trigger,player){
-				let { result } = await player.chooseBool("是否发动〖同仇〗：获得1点" + zhonghuiFunction.poptipLink("怒气", null, null, true) + "并摸一张牌").set("ai", () => true);
+				let { result } = await player.chooseBool("是否发动〖同仇〗：获得1点" + zhonghuiFunction.poptip("怒气", null, null, true) + "并摸一张牌").set("ai", () => true);
 				if (result.bool) {
 					player.storage._ny_fushiTime[3] --;
 					await lib.skill._ny_getNuqi.addNuQi(player,1);
@@ -2761,7 +2775,7 @@ export async function precontent(config, originalPack) {
 			    return event.player.getHp() <= 4;
 			},
 			async content(event,trigger,player){
-				let { result } = await player.chooseBool("是否发动〖同仇〗：获得1点" + zhonghuiFunction.poptipLink("怒气", null, null, true) + "并摸一张牌").set("ai", () => true);
+				let { result } = await player.chooseBool("是否发动〖同仇〗：获得1点" + zhonghuiFunction.poptip("怒气", null, null, true) + "并摸一张牌").set("ai", () => true);
 				if (result.bool) {
 					player.storage._ny_fushiTime[3] --;
 					await lib.skill._ny_getNuqi.addNuQi(player,1);
@@ -3251,7 +3265,7 @@ export async function precontent(config, originalPack) {
 			intro:{
 				nocount:true,
 				name:'龙争虎斗',
-				content:'你无法使用或打出牌或因受到伤害而获得' + zhonghuiFunction.poptipLink("怒气", null, null, true) + '直至你的回合结束',
+				content:'你无法使用或打出牌或因受到伤害而获得' + zhonghuiFunction.poptip("怒气", null, null, true) + '直至你的回合结束',
 			},
 			trigger: {
 			    player: "compare",
@@ -3279,7 +3293,7 @@ export async function precontent(config, originalPack) {
 			    }
 				player.when({player:"chooseToCompareAfter"})
 					.then(() => {
-						player.chooseBool("是否令"+get.translation(player.storage._ny_zhanFa_longzhenghudou_target)+"无法使用或打出牌且受伤不获得" + zhonghuiFunction.poptipLink("怒气", null, null, true) + "直至其回合结束")
+						player.chooseBool("是否令"+get.translation(player.storage._ny_zhanFa_longzhenghudou_target)+"无法使用或打出牌且受伤不获得" + zhonghuiFunction.poptip("怒气", null, null, true) + "直至其回合结束")
 							.set("ai",() => {
 								const player = _status.event.player;
 								return -1 * get.attitude(player, player.storage._ny_zhanFa_longzhenghudou_target)
@@ -3318,13 +3332,13 @@ export async function precontent(config, originalPack) {
 			},
 			async content (event,trigger,player) {
 				await lib.skill._ny_getNuqi.addNuQi(player,1);
-				let { result } = await player.chooseBool("是否令"+get.translation(trigger.player)+"选择一项：1.翻面；2.失去1点" + zhonghuiFunction.poptipLink("怒气", null, null, true) + "且下次受到伤害+1")
+				let { result } = await player.chooseBool("是否令"+get.translation(trigger.player)+"选择一项：1.翻面；2.失去1点" + zhonghuiFunction.poptip("怒气", null, null, true) + "且下次受到伤害+1")
 					.set("target", trigger.player)
 					.set("ai",() => {
 						return -1 * get.attitude(_status.event.player,_status.event.target);
 					});
 				if (result.bool) {
-					const choiceList = ["翻面","失去1点" + zhonghuiFunction.poptipLink("怒气", null, null, true) + "且下次受到伤害+1"];
+					const choiceList = ["翻面","失去1点" + zhonghuiFunction.poptip("怒气", null, null, true) + "且下次受到伤害+1"];
 					const choices = ["选项一","选项二"];
 					if (!trigger.player.storage._ny_nuqi) {
 						choiceList[1] = '<span style="opacity:0.5">' + choiceList[1] + "</span>";
@@ -5256,36 +5270,56 @@ export async function precontent(config, originalPack) {
 		}
 	});
 	//生成概念解释 纯💩山
-	//数字代表层数，要加层数记得zhonghuiFunction.noprDescription也要加
+	//数字代表层数
 	lib.arenaReady.push(() => {
-		zhonghuiFunction.tipMap1 = [
-			["天焰石", "你的初始体力值和体力上限+1"],
-			["怒气上限", "怒焰武将默认拥有2点怒气上限，怒气值增加后，若怒气值超过怒气上限，则将怒气值修改为怒气上限"],
-			["强化你使用的牌", `强化后的牌效果+1<br>特殊强化：<br>I.【铁索连环】强化后额外指定一个目标<br>Ⅱ.【怒发冲冠】/【釜底抽薪】强化后数值+2<br>Ⅲ.【闪】强化后摸一张牌<br>Ⅳ.【无懈可击】强化后获得目标锦囊牌<br>V.【乐不思蜀】强化后目标额外跳过摸牌阶段`],
-		];
-		let list = ["演奏调式"],
-			str = "";
+		zhonghuiFunction.initTipMap = function(num) {
+			if (num == "all") num = Infinity;
+			if (num >= 1) {
+				zhonghuiFunction.tipMap[1] = {
+					"天嗔石": `你的初始${zhonghuiFunction.poptip("怒气上限", null, null, true)}+1`,
+					"怒气": `怒焰武将开局拥有0点怒气值和2点${zhonghuiFunction.poptip("怒气上限", null, null, true)}<br>每受到1点伤害后便获得1点怒气<br>怒焰武将在使用强化牌列表内的牌时可以选择消耗1点怒气${zhonghuiFunction.poptip("强化牌", null, null, true, "强化你使用的牌")}`,
+				};
+			}
+			if (num >= 2) {
+				zhonghuiFunction.tipMap[2] = {
+					"天怒石": `你的初始${zhonghuiFunction.poptip("怒气", null, null, true)}+1`,
+				};
+			}
+		}
+		zhonghuiFunction.tipMap = [null, null, null];
+		zhonghuiFunction.tipMap[0] = {
+			"天焰石": "你的初始体力值和体力上限+1",
+			"怒气上限": "怒焰武将默认拥有2点怒气上限，怒气值增加后，若怒气值超过怒气上限，则将怒气值修改为怒气上限",
+			"强化牌": `强化后的牌效果+1<br>特殊强化：<br>I.【铁索连环】强化后额外指定一个目标<br>Ⅱ.【怒发冲冠】/【釜底抽薪】强化后数值+2<br>Ⅲ.【闪】强化后摸一张牌<br>Ⅳ.【无懈可击】强化后获得目标锦囊牌<br>V.【乐不思蜀】强化后目标额外跳过摸牌阶段`,
+			"摧毁": "被摧毁的牌无法被使用，打出或用于拼点直至进入弃牌堆",
+			"演奏调式": "",
+		}
+		let str = "";
 		for (let i of lib.skill._ny_yanzoudiaoshi.list) {
 			str += `<br>〖${get.translation("nuyan" + i)}〗：${get.translation("nuyan" + i + "_info")}`;
 		}
 		str = str.slice(2);
-		list.push(str);
-		zhonghuiFunction.tipMap1.push(list);
-		if (typeof game.addPoptip == "function") {
-			game.addPoptip(zhonghuiFunction.tipMap1);
+		zhonghuiFunction.tipMap[0]["演奏调式"] = str;
+		if (lib.skill._useCardQianghua?.list) {
+			let list = lib.skill._useCardQianghua.list.map(i => get.translation(i)).join("、");
+			if (list.length) {
+				zhonghuiFunction.tipMap[0]["强化牌"] += "<br>强化牌列表：<br>" + list;
+			}
 		}
-		zhonghuiFunction.tipMap2 = [
-			["天嗔石", `你的初始${zhonghuiFunction.poptipLink("怒气上限", null, null, true)}+1`],
-			["怒气", `怒焰武将开局拥有0点怒气值和2点${zhonghuiFunction.poptipLink("怒气上限", null, null, true)}<br>每受到1点伤害后便获得1点怒气<br>怒焰武将在使用强化牌列表内的牌时可以选择消耗1点怒气${zhonghuiFunction.poptipLink("强化你使用的牌", null, null, true)}`],
-		];
-		if (typeof game.addPoptip == "function") {
-			game.addPoptip(zhonghuiFunction.tipMap2);
-		}
-		zhonghuiFunction.tipMap3 = [
-			["天怒石", `你的初始${zhonghuiFunction.poptipLink("怒气", null, null, true)}+1`],
-		];
-		if (typeof game.addPoptip == "function") {
-			game.addPoptip(zhonghuiFunction.tipMap3);
+		if (lib.poptip) {
+			for (let num in zhonghuiFunction.tipMap) {
+				num = Number(num);
+				zhonghuiFunction.initTipMap(num);
+				let map = zhonghuiFunction.tipMap[num];
+				for (let item in map) {
+					lib.poptip.add(item, {
+						name: item,
+						info: map[item],
+					});
+				}
+			}
+		} else {
+			zhonghuiFunction.initTipMap("all");
 		}
 	});
 }
