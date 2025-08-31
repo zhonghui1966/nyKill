@@ -43,6 +43,7 @@ export default {
 		"nuyan_huan_caiwenji": ["female", "wei", "6/6", ["nuyan_yayue", "nuyan_lvxindihun", "nuyan_xingyunliushui", "nuyan_mopaidashi", "nuyan_fushizongshi"], ["name:蔡|文姬"]],
 		"nuyan_caochun": ["male", "wei", "7/7", ["nuyan_shanjia", "nuyan_pijianzhirui", "nuyan_duyuxiaoji", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|纯"]],
 		"nuyan_jie_zhouyu": ["male", "wu", "6/6", ["nuyan_fanjian", "nuyan_botaoxiongyong", "nuyan_lieyanqinyin", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:周|瑜"]],
+		"nuyan_caoying": ["female", "wei", "6/6", ["nuyan_lingren", "nuyan_shuiqingzhuoying", "nuyan_longchengfengming", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:曹|婴"]],
 	},
 	skill:{
 		/*
@@ -5925,33 +5926,30 @@ export default {
 				for (let item of player.getStorage(equip)) {
 					let skills = lib.card[item[2]]?.skills ?? [];
 					for (let sk of skills) {
-						let info = lib.skill[sk];
+						let info = get.copy(lib.skill[sk]);
 						info.subtypeNum = Number(get.subtype(item[2]).slice(-1));
 						if (info.audio) info.audio = sk;
 						const func = () => true;
-						let temp = info.filter || func;
-						// 创建唯一的 Symbol 作为属性键，防止filterx和filter一起变化
-						const filterx = Symbol('filterx');
-						info[filterx] = temp;
-						info.filter = function (event, player, triggername, target) {
-							if (player.getEquip(this.subtypeNum)) return false;
-							return this[filterx].call(this, event, player, triggername, target);
-						};
-						temp = info.viewAsFilter || func;
-						const viewAsFilterx = Symbol('viewAsFilterx');
-						info[viewAsFilterx] = temp;
-						info.viewAsFilter = function(player) {
-							if (player.getEquip(this.subtypeNum)) return false;
-							return this[viewAsFilterx].call(this, player);
-						};
+						if (info.filter) {
+							info.filterCopy = get.copy(info.filter) || func;
+							info.filter = function (event, player, triggername, target) {
+								if (player.getEquip(this.subtypeNum)) return false;
+								return this["filterCopy"].call(this, event, player, triggername, target);
+							};
+						}
+						if (info.viewAsFilter) {
+							info.viewAsFilterx = get.copy(info.viewAsFilter) || func;
+							info.viewAsFilter = function(player) {
+								if (player.getEquip(this.subtypeNum)) return false;
+								return this["viewAsFilterx"].call(this, player);
+							};
+						}
 						if (info.mod) {
-							temp = {...info.mod};
-							const modx = Symbol("modx");
-							info[modx] = temp;
+							info.modx = get.copy(info.mod) || {};
 							for (let i in info.mod) {
 								info.mod[i] = function() {
 									if (!player.getEquip(this.subtypeNum)) {
-										return this[modx][i].call(this, ...arguments);
+										return this["modx"][i].call(this, ...arguments);
 									}
 								}.bind(info);
 							}
@@ -6263,6 +6261,121 @@ export default {
 				},
 			},
 		},
+		//怒焰曹婴
+		nuyan_lingren: {//凌人
+			enable: "phaseUse",
+			usable: 1,
+			audio: "xinfu_lingren",
+			filterTarget: (card, player, target) => player != target,
+			selectTarget() {
+				let player = _status.event.player,
+					filterSkill = "nuyan_shuiqingzhuoying";
+				const ownedSkills = player.getSkills(null, false, true).filter(skill => {
+				    return skill == filterSkill;
+				});
+				let b = ownedSkills.length !== 0 && !player.isTempBanned(filterSkill) && !(player.shixiaoedSkills && player.shixiaoedSkills.includes(filterSkill));
+				if (b) return [1, 2];
+				return 1;
+			},
+			async content(event, trigger, player) {
+				const { target } = event;
+				if (event.targets.length > 1 && event.targets[0] == event.target) player.logSkill("nuyan_shuiqingzhuoying");
+				//专属符石-凤鸣剑
+				let id, times = [];
+				if (player.storage._ny_zhuanShuFuShiId?.some(id => id == "_ny_zhuanShu_fengmingjian")) {
+					id = player.storage._ny_zhuanShuFuShiId.find(id => id == "_ny_zhuanShu_fengmingjian");
+					id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+					if (player.storage._ny_fushiTime?.[4+id] > 0) {
+						id += 4;
+						times = player.storage._ny_fushiTime;
+					}
+				}
+				let cards = await target.showHandcards().forResultCards();
+				let typeList = [],
+					remainCards = [],
+					cardList = [];
+				cards = cards.randomSort();
+				for (let item of cards) {
+					if (!typeList.includes(get.type(item))) {
+						typeList.add(get.type(item));
+						remainCards.add(item);
+					}
+				}
+				typeList.forEach(t => {
+					let card = get.cardPile2((c) => get.type(c) == t, "random");
+					if (card) cardList.add(card);
+				});
+				await player.gain(cardList, "gain2");
+				if (times.length && times[id] > 0) {
+					times[id] --;
+					cards = cards.filter(c => !remainCards.includes(c));
+					await target.modedDiscard(cards);
+				}
+				player.markAuto(event.name + "_effect", target);
+				player.addTempSkill(event.name + "_effect", { player: "phaseUseEnd" });
+			},
+			subSkill: {
+				effect: {
+					sub: true,
+					sourceSkill: "nuyan_lingren",
+					charlotte: true,
+					forced: true,
+					trigger: {
+						player: "useCardToPlayer",
+					},
+					onremove(player, skill) {
+						delete player.storage[skill];
+						delete player.storage[skill.slice(0, -7)];
+					},
+					filter(event, player) {
+						if (!get.tag(event.card, "damage")) return false;
+						if (!player.getStorage("nuyan_lingren_effect").some(current => event.target == current)) return false;
+						let cards = event.target.getCards("h");
+						return cards.some(c => get.type(c) == get.type(event.card));
+					},
+					async content(event, trigger, player) {
+						let parent = trigger.getParent();
+						if (lib.skill._useCardBaseChange?.list?.includes(trigger.card.name)) {
+							trigger.card.storage._useCardBaseChange ??= 0;
+							trigger.card.storage._useCardBaseChange ++;
+						} else parent.baseDamage++;
+						parent.directHit.addArray(game.players);
+						await lib.skill._ny_getNuqi.addNuQi(player);
+					},
+				},
+			},
+		},
+		nuyan_shuiqingzhuoying: {//水清濯缨
+			nuyan_star: 1,
+		},
+		nuyan_longchengfengming: {//龙城凤鸣
+			nuyan_star: 3,
+			trigger: {
+				player: "damageBegin3",
+			},
+			filter(event, player) {
+				if (!event.card) return false;
+				if (event.num <= 1) return false;
+				return player.countCards("h", { type: get.type(event.card) });
+			},
+			async cost(event, trigger, player) {
+				let result = await player.chooseToDiscard(false, "he", "chooseonly")
+					.set("filterCard", (card) => get.type(card) == get.type(trigger.card))
+					.set("prompt", get.prompt(event.name.slice(0, -5)))
+					.set("prompt2", get.prompt2(event.name.slice(0, -5)))
+					.forResult();
+				event.result = {
+					bool: result.bool,
+					cost_data: result.cards[0] || {},
+				};
+			},
+			async content(event, trigger, player) {
+				const card = event.cost_data;
+				await player.discard(card);
+				trigger.num = 1;
+				await player.draw();
+			},
+		},
 	},
 	characterTitle: {//武将称号
 	},
@@ -6528,6 +6641,8 @@ export default {
 		nuyan_wangji_info: "锁定技，你装备区内的牌失效；你的所有其他技能（使命技，觉醒技除外）失效；你废除你的判定区；其他角色计算与你的距离+X（X为你的体力上限）",
 		"_ny_zhuanShu_hanshuang":"寒霜",
 		"_ny_zhuanShu_hanshuang_info":"其他角色的出牌阶段开始时，你可以弃置一张装备牌，令其本阶段无法使用或打出与此牌颜色相同的牌。",
+		"_ny_zhuanShu_fengmingjian":"凤鸣剑",
+		"_ny_zhuanShu_fengmingjian_info":"锁定技，当一名角色因“凌人”展示手牌后，其将手牌弃置至随机每种类型的牌各一张。",
 		
 		//武将
 		nuyan_caorui: "曹叡",
@@ -6573,6 +6688,7 @@ export default {
 		nuyan_huan_caiwenji: "幻蔡文姬",
 		nuyan_caochun: "曹纯",
 		nuyan_jie_zhouyu:"界周瑜",
+		nuyan_caoying: "曹婴",
 		
 		//通用技能
 		nuyan_fushizongshi:"符石宗师",
@@ -6827,6 +6943,12 @@ export default {
 		nuyan_botaoxiongyong_info:"锁定技，摸牌阶段，你多摸2X张牌，（X为以下项中你满足的项数：1.你手牌数不为全场最少；2.你体力值不为全场最少；3.你怒气值不为全场最少）。",
 		nuyan_lieyanqinyin:"烈焰琴音",
 		nuyan_lieyanqinyin_info:"你不以此法使用的【水淹七军】结算结束后，你可以将一张黑色手牌当做【水淹七军】普通使用。",
+		nuyan_lingren:"凌人",
+		nuyan_lingren_info:"出牌阶段限一次，你可以展示一名其他角色的所有手牌，然后从牌堆中随机获得其手牌中拥有类型的牌各一张；若如此做，本阶段你对其使用伤害牌时，若其手牌中有与此牌相同类型的牌，则此牌无法被响应且造成的伤害+1，然后你获得1点怒气。",
+		nuyan_shuiqingzhuoying:"水清濯缨",
+		nuyan_shuiqingzhuoying_info:"你发动“凌人”时可以额外选择一个目标。",
+		nuyan_longchengfengming:"龙城凤鸣",
+		nuyan_longchengfengming_info:"当你受到大于1点的伤害时，你可以弃置一张与造成此伤害的牌相同类型的牌，将本次伤害值改为1并摸一张牌。",
 	},
 	dynamicTranslate: {//动态翻译
 		nuyan_yuqi: function(player) {

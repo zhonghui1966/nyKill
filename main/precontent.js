@@ -288,17 +288,21 @@ export async function precontent(config, originalPack) {
 		poptip(name, explain, style, noprExplain, showName) {
 			if (!style) style = "color: unset";
 			if (lib.poptip) {
-				if (lib.poptip.getInfo("rule_" + name) == get.translation("rule_" + name)) {
-					lib.poptip.add(name, {
+				if (explain) {
+					lib.poptip.add({
+						id: name,
 						name: name,
 						info: explain,
+						type: "rule",
 					});
 				}
-				if (!explain) explain = lib.poptip.getInfo("rule_" + name);
+				if (!explain) explain = lib.poptip.getInfo(name);
 				if (showName) {
-					lib.poptip.add(showName, {
+					lib.poptip.add({
+						id: name,
 						name: showName,
 						info: explain,
+						type: "rule",
 					});
 				}
 				return `<b style="${style}">${get.poptip(name)}</b>`;
@@ -997,6 +1001,7 @@ export async function precontent(config, originalPack) {
 				"nuyan_caizhenji": ["_ny_zhuanShu_fengqiqin"],
 				"nuyan_huan_caiwenji": ["_ny_zhuanShu_keqingdi"],
 				"nuyan_caochun": ["_ny_zhuanShu_hanshuang"],
+				"nuyan_caoying": ["_ny_zhuanShu_fengmingjian"],
 			},
 			filter: function (event, player) {
 				if (get.itemtype(player) != "player") return false;
@@ -5312,9 +5317,11 @@ export async function precontent(config, originalPack) {
 				zhonghuiFunction.initTipMap(num);
 				let map = zhonghuiFunction.tipMap[num];
 				for (let item in map) {
-					lib.poptip.add(item, {
+					lib.poptip.add({
+						id: item,
 						name: item,
 						info: map[item],
+						type: "rule",
 					});
 				}
 			}
