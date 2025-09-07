@@ -2,6 +2,8 @@ import { lib, game, ui, get, ai, _status } from '../../../noname.js';
 import { characters } from "../character/index.js";
 import { card as nyCard } from "../card/nyCard.js";
 export async function precontent(config, originalPack) {
+	//后续怒发冲冠ai优化
+	//后续谋奕添加ai，（遥遥无期
 	/*lib.skill._test = {
 		trigger: {
 			player: "damage",
@@ -852,8 +854,8 @@ export async function precontent(config, originalPack) {
 						{ item: "剩余触发次数", ratio: .8, itemContainerCss },
 					];
 					addNewRow(...str);
-					let hasData;
-					let keys = Object.keys(lib.skill._ny_getFuShi.obj);
+					let hasData,
+						keys = Object.keys(lib.skill._ny_getFuShi.obj);
 			    	for (let i = 0; i < 4; i++) {
 						if (player.storage._ny_fushiId[i] && player.storage._ny_fushiId[i] > 0) {
 							timeStr = String(player.storage._ny_fushiTime[i]);
@@ -879,8 +881,8 @@ export async function precontent(config, originalPack) {
 								{ item: timeStr, ratio: .8, itemContainerCss },
 							];
 							addNewRow(...str);
+							hasData = true;
 						}
-						hasData = true;
 					}
 					if (!hasData) {
 						str = [
@@ -1002,6 +1004,7 @@ export async function precontent(config, originalPack) {
 				"nuyan_huan_caiwenji": ["_ny_zhuanShu_keqingdi"],
 				"nuyan_caochun": ["_ny_zhuanShu_hanshuang"],
 				"nuyan_caoying": ["_ny_zhuanShu_fengmingjian"],
+				"nuyan_mou_simayi": ["_ny_zhuanShu_yingzhi"],
 			},
 			filter: function (event, player) {
 				if (get.itemtype(player) != "player") return false;
@@ -1514,14 +1517,6 @@ export async function precontent(config, originalPack) {
 			//game.me.getCards("h").gaintag.remove('_ny_cuihui')
 		}
 		//防御符石无效
-		lib.skill._ny_noneFangYuFushi = {
-			marktext:"封",
-			intro: {
-				nocount:true,
-				name:"你的防御符石失效",
-			    content: "",
-			},
-		}
 		lib.skill._ny_qianghuaNoNuqi = {
 			marktext: "怒",
 			intro: {
@@ -1691,37 +1686,6 @@ export async function precontent(config, originalPack) {
 					},
 				},
 			},
-		}
-		
-		//固定技能
-		lib.skill.ny_podan = {
-			mark: true,
-			marktext:"禁",
-			intro: {
-				nocount:true,
-				name:"当你不因【酒】回复体力时，取消之",
-			    content: "",
-			},
-			trigger: {
-			    player: "recoverBefore",
-			},
-			filter: function (event, player) {
-				if (event.card && event.card.name == 'jiu') return false;
-				return true;
-			},
-			forced: true,
-			firstDo: true,
-			content() {
-			    trigger.cancel();
-			},
-			ai: {
-			    effect: {
-			        target(card, player, target) {
-			            if (get.tag(card, "recover") && card.name != 'jiu') return "zeroplayertarget";
-			        },
-			    },
-			},
-			priority: 0,
 		}
 		
 		//符石技能
@@ -1996,7 +1960,6 @@ export async function precontent(config, originalPack) {
 		    filter: function(event,player,triggername){
 		        if (!player.storage._ny_fushiId) return false;
 		        if (player.storage._ny_fushiId[1] !== 1 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
 		        return true;
 		    },
 		    content: function(){
@@ -2037,7 +2000,6 @@ export async function precontent(config, originalPack) {
 			viewAsFilter: function (player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[1] !== 2 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
 				return player.countCards("he", { type: "equip" }) > 0;
 			},
 			viewAs: {
@@ -2060,7 +2022,6 @@ export async function precontent(config, originalPack) {
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[1] !== 3 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
 			    if (event.source == undefined || event.source == player) return false;
 				return event.source.countCards('he') > 0;
 			},
@@ -2108,7 +2069,6 @@ export async function precontent(config, originalPack) {
 			viewAsFilter: function (player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[1] !== 4 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
 				return player.countCards("he", { type: "equip" }) > 0;
 			},
 			viewAs: {
@@ -2157,7 +2117,6 @@ export async function precontent(config, originalPack) {
 			viewAsFilter: function (player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[1] !== 5 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
 				return player.countCards("he", { type: "equip" }) > 0;
 			},
 			viewAs: {
@@ -2225,7 +2184,6 @@ export async function precontent(config, originalPack) {
 				if (!player.storage._ny_fushiId) return false;
 				if (!player.isDying()) return false;
 				if (player.storage._ny_fushiId[1] !== 6 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
 				return player.countCards("he", { type: "equip" }) > 0;
 			},
 			viewAs: {
@@ -2248,7 +2206,6 @@ export async function precontent(config, originalPack) {
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[1] !== 7 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
 				if (event.name == "loseHp") return true;
 			    return get.type(event.card, "trick") == "trick";
 			},
@@ -2265,7 +2222,6 @@ export async function precontent(config, originalPack) {
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[1] !== 8 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
 				let info = get.info(event.card);
 				if (!info || info.type != "trick" || info.notarget || (info.selectTarget && info.selectTarget != 1)) return false;
 				if (player.storage.isMiaosuanIng == true) return false;
@@ -2331,7 +2287,6 @@ export async function precontent(config, originalPack) {
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[1] !== 9 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
 				let info = get.info(event.card);
 				if (!info || info.type != "trick" || info.notarget || (info.selectTarget && info.selectTarget != 1)) return false;
 				if (player.storage.isFirstMiaosuanIng == true) return false;
@@ -2403,7 +2358,6 @@ export async function precontent(config, originalPack) {
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[1] !== 10 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
 				if (event.name == "loseHp") return true;
 			    return event.num > 1;
 			},
@@ -2418,7 +2372,6 @@ export async function precontent(config, originalPack) {
 			    maxHandcard: function (player, num) {
 					if (!player.storage._ny_fushiId) return;
 					if (player.storage._ny_fushiId[1] !== 11 || player.storage._ny_fushiTime[1] <= 0) return;
-					if (player.countMark("_ny_noneFangYuFushi")) return;
 			        return num + 6 + (player.maxHp - player.hp);
 			    },
 			},
@@ -2432,7 +2385,6 @@ export async function precontent(config, originalPack) {
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[1] !== 12 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
 			    return event.num > 1;
 			},
 			content: function () {
@@ -2450,7 +2402,6 @@ export async function precontent(config, originalPack) {
 			filter: function(event,player,triggername){
 			    if (!player.storage._ny_fushiId) return false;
 			    if (player.storage._ny_fushiId[1] !== 13 || player.storage._ny_fushiTime[1] <= 0) return false;
-				if (player.countMark("_ny_noneFangYuFushi")) return false;
 			    return player.isMinHp();
 			},
 			content: function () {
@@ -3095,7 +3046,7 @@ export async function precontent(config, originalPack) {
 				let { result } = await player.chooseTarget(1)
 		            .set("filterTarget", function (card,player, target) {
 						if (player == target) return false;
-						if (!target.hasSkill('ny_podan')) return true;
+						if (!target.hasSkill('nuyan_podan')) return true;
 						let cards  = target.getCards("he");
 						for (let i of cards) {
 						    let type = get.type2(i);
@@ -3106,7 +3057,7 @@ export async function precontent(config, originalPack) {
 		            .set("prompt2", get.prompt2("_ny_zhanFa_leitingnuhou"))
 					.set("ai", target => function (target) {
 						let num = -1 * get.attitude(_status.event.player, target);
-						if (!target.hasSkill('ny_podan')) num * 2;
+						if (!target.hasSkill('nuyan_podan')) num * 2;
 						if (num > 0) num += target.countCards("e");
 						return num;
 					});
@@ -3121,9 +3072,7 @@ export async function precontent(config, originalPack) {
 						cards.add(card);
 					}
 					target.modedDiscard(cards);
-					target.addSkill('ny_podan');
-					target.when({ player:"phaseEnd" })
-						.then(() => player.removeSkill('ny_podan'));
+					target.addTempSkill("nuyan_podan", { player:"phaseEnd" });
 				}
 			},
 			priority: 1145,
@@ -4623,14 +4572,7 @@ export async function precontent(config, originalPack) {
 					trigger.card.storage._ny_zhuanShu_polu1 = true;
 				} else {
 					trigger.card.storage._ny_zhuanShu_polu2 = true;
-					trigger.target.addMark("_ny_noneFangYuFushi");
-					trigger.target.when({global: "useCardAfter"})
-						.filter(evt => evt?.card?.storage?._ny_zhuanShu_polu2)
-						.then(() => {
-							player.removeMark("_ny_noneFangYuFushi", Infinity);
-							player.unmarkSkill("_ny_noneFangYuFushi");
-							player.updateMarks();
-						});
+					lib.skill._ny_noneFangYuFushi.init(trigger.target, "useCardAfter", (evt) => evt?.card?.storage?._ny_zhuanShu_polu2);
 				}
 			},
 			ai: {
@@ -4726,14 +4668,7 @@ export async function precontent(config, originalPack) {
 				for (let i of trigger.targets) {
 					trigger.card.storage._ny_zhuanShu_Firstgudingdao ??= 0;
 					trigger.card.storage._ny_zhuanShu_Firstgudingdao++;
-					i.addMark("_ny_noneFangYuFushi");
-					i.when({global: "useCardAfter"})
-						.filter(evt => evt?.card?.storage?._ny_zhuanShu_Firstgudingdao)
-						.then(() => {
-							player.removeMark("_ny_noneFangYuFushi", Infinity);
-							player.unmarkSkill("_ny_noneFangYuFushi");
-							player.updateMarks();
-						});
+					lib.skill._ny_noneFangYuFushi.init(i, "useCardAfter", (evt) => evt?.card?.storage?._ny_zhuanShu_Firstgudingdao);
 				}
 				await trigger.directHit.addArray(game.players);
 			},
@@ -4784,14 +4719,7 @@ export async function precontent(config, originalPack) {
 				for (let i of trigger.targets) {
 					trigger.card.storage._ny_zhuanShu_gudingdao ??= 0;
 					trigger.card.storage._ny_zhuanShu_gudingdao++;
-					i.addMark("_ny_noneFangYuFushi");
-					i.when({global: "useCardAfter"})
-						.filter(evt => evt?.card?.storage?._ny_zhuanShu_gudingdao)
-						.then(() => {
-							player.removeMark("_ny_noneFangYuFushi", Infinity);
-							player.unmarkSkill("_ny_noneFangYuFushi");
-							player.updateMarks();
-						});
+					lib.skill._ny_noneFangYuFushi.init(i, "useCardAfter", (evt) => evt?.card?.storage?._ny_zhuanShu_gudingdao);
 				}
 				await trigger.directHit.addArray(game.players);
 			},
@@ -5271,6 +5199,71 @@ export async function precontent(config, originalPack) {
 						},
 					},
 				},
+			},
+		}
+		lib.skill._ny_zhuanShu_yingzhi = {//鹰鸷
+			popup: false,
+			priority: 1145,
+			getSeat(player) {
+				let players = game.players.slice().sortBySeat(_status.roundStart).slice(0, 1).addArray(game.players.slice().sortBySeat(_status.roundStart));
+				players = players.filter(item => players.indexOf(player) > players.indexOf(item));
+				return players;
+			},
+			trigger: {
+				player: "turnOverBegin",
+			},
+			filter(event, player) {
+				let skill = "_ny_zhuanShu_yingzhi";
+				if (!player.storage._ny_zhuanShuFuShiId?.some(id => id == skill)) return false;
+				let id = player.storage._ny_zhuanShuFuShiId.find(id => id == skill);
+				id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+				if (player.storage._ny_fushiTime[4 + id] <= 0) return false;
+				return game.hasPlayer(current => (current.hp > player.hp) || (get.info(skill).getSeat(player).includes(current)));
+			},
+			async cost(event, trigger, player) {
+				const skill = event.name.slice(0, -5);
+				let result = await player.chooseTarget(false)
+					.set("prompt", get.prompt(skill))
+					.set("prompt2", get.prompt2(skill))
+					.set("filterTarget", (card, player, target) => {
+						return target.hp > player.hp || get.info("_ny_zhuanShu_yingzhi").getSeat(player).includes(target);
+					})
+					.set("ai", (target) => {
+						const { player } = get.event();
+						const att = get.attitude(player, target);
+						if (att > 0) return 114514;
+						else {
+							let storage1 = target.storage._ny_fushiId?.slice();
+							let storage2 = target.storage._ny_zhuanShuFuShiId?.slice();
+							if (!(storage1?.length > 0) && !(storage2?.length > 0) && !target.isTurnedOver()) return 114514 - game.players.slice().sortBySeat().indexOf(target);
+						}
+						return -114514;
+					})
+					.forResult();
+				event.result = {
+					bool: result.bool,
+					cost_data: result.targets[0] || {},
+				};
+			},
+			async content(event, trigger, player) {
+				const target = event.cost_data;
+				let storage1 = target.storage._ny_fushiId?.slice();
+				let storage2 = target.storage._ny_zhuanShuFuShiId?.slice();
+				if (!(storage1?.length > 0) && !(storage2?.length > 0)) {
+					await target.turnOver();
+					return;
+				}
+				let choiceList = ["你翻面", "你所有技能符石失效直至你回合结束"];
+				let choices = ["选项一", "选项二"];
+				let result = await target.chooseControl()
+					.set("controls", choices)
+					.set("choiceList", choiceList)
+					.set("ai", () => {
+						return _status.event.player.isTurnedOver() ? "选项一" : "选项二";
+					})
+					.forResultControl();
+				if (result == "选项一") await target.turnOver();
+				else lib.skill._ny_noneFuShi.init(target, { player: "phaseEnd" });
 			},
 		}
 	});
