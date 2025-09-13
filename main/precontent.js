@@ -36,13 +36,10 @@ export async function precontent(config, originalPack) {
 		},
 		forced: true,
 		marktext: get.translation("none"),
-		filter() {
-			console.log(this);
-			return true;
-		},
+		filter:(event) => event.respondTo?.length,
 		content() {
-			console.log(this);
-		}
+			console.log(trigger.respondTo[1]);
+		},
 	}*/
 	//game.me.tempBanSkill(game.me.getSkills(null, false, false), {global: "phaseEnd"}, false)
 	
@@ -5240,9 +5237,10 @@ export async function precontent(config, originalPack) {
 						return -114514;
 					})
 					.forResult();
+				if (!result.bool) event.result = { bool: false };
 				event.result = {
 					bool: result.bool,
-					cost_data: result.targets[0] || {},
+					cost_data: result.targets[0],
 				};
 			},
 			async content(event, trigger, player) {

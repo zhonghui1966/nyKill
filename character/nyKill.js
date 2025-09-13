@@ -472,6 +472,7 @@ export default {
 		    discard: false,
 		    lose: false,
 		    delay: false,
+			prepare: "give2",
 		    content: function(){
 		        player.give(cards,target);
 		        target.addTempSkill('nuyan_mingjianchaogang2',{player:'phaseEnd'});
@@ -3383,6 +3384,7 @@ export default {
 			nuyan_star: 1,
 			discard: false,
 			delay: false,
+			prepare: "give2",
 			filter: function(event, player) {
 				return player.hasCard({ suit: "heart" }, "h");
 			},
@@ -6175,6 +6177,7 @@ export default {
 						game.broadcastAll((name, info, card, skill, player) => {
 							lib.skill[name] = info;
 							lib.translate[name] = get.translation(card);
+							lib.translate[name + "_info"] = get.translation(card + "_info");
 							player.addAdditionalSkills(skill, name);
 						}, name, info, item[2], skill, player);
 					}
@@ -6581,9 +6584,10 @@ export default {
 					.set("prompt", get.prompt(event.name.slice(0, -5)))
 					.set("prompt2", get.prompt2(event.name.slice(0, -5)))
 					.forResult();
+				if (!result.bool) event.result = { bool: false };
 				event.result = {
 					bool: result.bool,
-					cost_data: result.cards[0] || {},
+					cost_data: result.cards[0],
 				};
 			},
 			async content(event, trigger, player) {
