@@ -6,28 +6,21 @@ export async function precontent(config, originalPack) {
 	//后续谋奕添加ai，（遥遥无期
 	/*lib.skill._test = {
 		trigger: {
-			player: "damage",
+			player: "useCard",
 		},
 		forced: true,
 		filter: function(event, player) {
 			return true;
 		},
 		async content(event, trigger, player) {
-			trigger.filterStop = () => {
-				console.log(trigger);
-				if (trigger.source && trigger.source.isDead()) {
-					delete trigger.source;
-				}
-				var num = trigger.original_num;
-				for (var i of trigger.change_history) {
-					num += i;
-				}
-				if (num < 2) num = 2;
-				if (num != trigger.num) {
-					trigger.change_history.push(trigger.num - num);
-				}
-				console.log(trigger);
+			console.log(player.getHistory(trigger.name, (evt) => evt.card == trigger.card));
+			let num = 0, bool = true;
+			while(bool) {
+				num ++;
+				bool = event.getParent(num) !== trigger;
 			}
+			console.log(num);
+			//3
 		},
 	}
 	lib.skill._test2 = {
@@ -1002,6 +995,7 @@ export async function precontent(config, originalPack) {
 				"nuyan_caochun": ["_ny_zhuanShu_hanshuang"],
 				"nuyan_caoying": ["_ny_zhuanShu_fengmingjian"],
 				"nuyan_mou_simayi": ["_ny_zhuanShu_yingzhi"],
+				"nuyan_Second_yuji": ["_ny_zhuanShu_taipingjin"],
 			},
 			filter: function (event, player) {
 				if (get.itemtype(player) != "player") return false;
@@ -1361,7 +1355,7 @@ export async function precontent(config, originalPack) {
 					},
 				    forced: true,
 				    popup: false,
-				    filter: function (event, player) {
+				    filter(event, player) {
 						var card = event.card;
 						if (!card.storage._useCardQianghua == true) return false;
 				        return get.type2(card, false) === "basic";
@@ -1376,15 +1370,14 @@ export async function precontent(config, originalPack) {
 					trigger:{
 						player: "useCard1",
 					},
-					filter: function (event, player) {
-						var card = event.card;
+					filter(event, player) {
+						let card = event.card;
 						if (!card.storage._useCardQianghua == true) return false;
 						return card.name === 'wuxie';
 					},
 					forced: true,
 					popup: false,
 					content: function () {
-						let card = trigger.card;
 						player.when({ global: 'eventNeutralized' })
 							.then(() => {
 								if (game.hasGlobalHistory('everything', evt => {
@@ -1393,8 +1386,7 @@ export async function precontent(config, originalPack) {
 									}
 									return false;
 								})) {
-									var cards = trigger.cards.filterInD('od');
-									if (cards) player.gain(cards, 'gain2');
+									player.gain(trigger.cards, 'gain2');
 								}
 							});
 					},
@@ -1404,46 +1396,26 @@ export async function precontent(config, originalPack) {
 					trigger:{
 						player: "useCard2",
 					},
-					filter: function (event, player) {
-						//if (!player.getStorage('_useCardQianghua').includes(card)) return false;
+					filter(event, player) {
 						if (!event.card.storage._useCardQianghua == true) return false;
 						if (event.card.name != "tiesuo") return false;
-						var info = get.info(event.card);
-						if (info.allowMultiple == false) return false;
-						if (event.targets && !info.multitarget) {
-							if (
-								game.hasPlayer(current => {
-									return !event.targets.includes(current) && lib.filter.targetEnabled2(event.card, player, current);
-								})
-							)
-								return true;
-						}
-						return false;
+						return game.hasPlayer(current => !event.targets.includes(current) && lib.filter.targetEnabled2(event.card, player, current));
 					},
-					forced: true,
-					popup: false,
-					content: function () {
-						"step 0";
-						player
-							.chooseTarget( "为" + get.translation(trigger.card) + "额外指定一个目标", (card, player, target) => {
-								return !_status.event.sourcex.includes(target) && lib.filter.targetEnabled2(_status.event.card, player, target);
-							})
+					async cost(event, trigger, player) {
+						event.result = await player.chooseTarget( "为" + get.translation(trigger.card) + "额外指定一个目标")
+							.set("filterTarget", (card, player, target) => !_status.event.sourcex.includes(target) && lib.filter.targetEnabled2(_status.event.card, player, target))
 							.set("sourcex", trigger.targets)
-							.set("ai", function (target) {
-								var player = _status.event.player;
+							.set("ai", (target) => {
+								var { player } = get.event();
 								return get.effect(target, _status.event.card, player, player);
 							})
-							.set("card", trigger.card);
-						"step 1";
-						if (result.bool) {
-							if (!event.isMine() && !event.isOnline()) game.delayex();
-						} else event.finish();
-						"step 2";
-						if (result.bool) {
-							var targets = result.targets;
-							trigger.targets.addArray(targets);
-							game.log(targets, "也成为了", trigger.card, "的目标");
-						}
+							.set("card", trigger.card)
+							.forResult();
+					},
+					async content(event, trigger, player) {
+						const { card, targets } = event;
+						trigger.targets.addArray(targets);
+						game.log(targets, "也成为了", trigger.card, "的目标");
 					},
 					sub: true,
 					sourceSkill: "_useCardQianghua",

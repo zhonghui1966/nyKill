@@ -92,7 +92,7 @@ if (lib.device || lib.node) {
 				let translate = pack.translate[name];
 				if (!(name + "_ab" in pack.translate)) {
 					if (name.includes("First") || lib.config["extension_怒焰武将_" + name] == "First") pack.translate[name + "_ab"] = "怒焰初版" + translate;
-					else if (lib.config["extension_怒焰武将_" + name] == "Second") pack.translate[name + "_ab"] = "怒焰二版" + translate;
+					else if (name.includes("Second") || lib.config["extension_怒焰武将_" + name] == "Second") pack.translate[name + "_ab"] = "怒焰二版" + translate;
 					else pack.translate[name + "_ab"] = "怒焰" + translate;
 				}
 				if (!(name + "_prefix" in pack.translate)) {
@@ -101,7 +101,7 @@ if (lib.device || lib.node) {
 					if (name.includes("First") || lib.config["extension_怒焰武将_" + name] == "First") {
 						pack.translate[name + "_prefix"] += "初版";
 					}
-					else if (lib.config["extension_怒焰武将_" + name] == "Second") pack.translate[name + "_prefix"] += "二版";
+					else if (name.includes("Second") || lib.config["extension_怒焰武将_" + name] == "Second") pack.translate[name + "_prefix"] += "二版";
 					if (prefix) {
 						pack.translate[name + "_prefix"] += prefix;
 					}
