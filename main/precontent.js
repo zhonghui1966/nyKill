@@ -948,7 +948,19 @@ export async function precontent(config, originalPack) {
 				player: ["enterGame", "changeCharacterAfter"],
 			},
 			forced: true,
-			popup:false,
+			popup: false,
+			filterStone(player, name) {
+				if (!player.storage._ny_zhuanShuFuShiId?.some(id => id == name)) return false;
+				let id = player.storage._ny_zhuanShuFuShiId.find(id => id == name);
+				id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+				return player.storage._ny_fushiTime?.[4+id] > 0;
+			},
+			logStone(player, name) {
+				let id = player.storage._ny_zhuanShuFuShiId.find(id => id == name);
+				id = player.storage._ny_zhuanShuFuShiId.indexOf(id);
+				if (id == -1) return;
+				player.storage._ny_fushiTime[4+id]--;
+			},
 			/*专属符石由于fushiTime的传递问题，设置了每个时机各有一个id
 			其实这是个💩山，我会改，但我意识到的时候已经十几个专属符石了，懒得改了，后续（
 			id汇总
@@ -996,6 +1008,7 @@ export async function precontent(config, originalPack) {
 				"nuyan_caoying": ["_ny_zhuanShu_fengmingjian"],
 				"nuyan_mou_simayi": ["_ny_zhuanShu_yingzhi"],
 				"nuyan_Second_yuji": ["_ny_zhuanShu_taipingjin"],
+				"nuyan_qi_yuanshao": ["_ny_zhuanShu_Firstsizhao", "_ny_zhuanShu_sizhao"]
 			},
 			filter: function (event, player) {
 				if (get.itemtype(player) != "player") return false;
@@ -5234,6 +5247,54 @@ export async function precontent(config, originalPack) {
 					.forResultControl();
 				if (result == "选项一") await target.turnOver();
 				else lib.skill._ny_noneFuShi.init(target, { player: "phaseEnd" });
+			},
+		}
+		lib.skill._ny_zhuanShu_Firstsizhao = {//起袁绍-初版思召
+			popup: false,
+			priority: 1145,
+			forced: true,
+			marktext: "思",
+			intro: {
+				name: "初版思召",
+				content(storage) {
+					return "已记录花色：" + get.translation(storage);
+				},
+			},
+			trigger: {
+				player: "useCardAfter",
+			},
+			filter(event, player) {
+				if (!lib.skill._ny_getZhuanShuFuShi.filterStone(player, "_ny_zhuanShu_Firstsizhao")) return false;
+				return event.card?.name == "sha" && !player.storage._ny_zhuanShu_Firstsizhao?.includes(get.suit(event.card)) && player.isPhaseUsing() && !["unsure", "none"].includes(get.suit(event.card));
+			},
+			content() {
+				player.markAuto(event.name, get.suit(trigger.card));
+				player.when({ player: "phaseEnd" })
+					.then(() => delete player.storage._ny_zhuanShu_Firstsizhao);
+			},
+		}
+		lib.skill._ny_zhuanShu_sizhao = {//起袁绍-思召
+			popup: false,
+			priority: 1145,
+			forced: true,
+			trigger: {
+				player: "useCardAfter",
+			},
+			marktext: "思",
+			intro: {
+				name: "思召",
+				content(storage) {
+					return "已记录花色：" + get.translation(storage);
+				},
+			},
+			filter(event, player) {
+				if (!lib.skill._ny_getZhuanShuFuShi.filterStone(player, "_ny_zhuanShu_sizhao")) return false;
+				return event.card?.name == "sha" && !player.storage._ny_zhuanShu_sizhao?.includes(get.suit(event.card)) && player.isPhaseUsing() && !["unsure", "none"].includes(get.suit(event.card));
+			},
+			content() {
+				player.markAuto(event.name, get.suit(trigger.card));
+				player.when({ player: "phaseEnd" })
+					.then(() => delete player.storage._ny_zhuanShu_sizhao);
 			},
 		}
 	});
