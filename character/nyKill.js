@@ -8,13 +8,13 @@ export default {
 		"nuyan_caorui": ["male","wei","7/7",["nuyan_huituo","nuyan_mingjianchaogang","nuyan_enweibingshi","nuyan_nuqidashi","nuyan_fushizongshi"], ["name:曹|叡"]],
 		"nuyan_xizhicai": ["male","wei","6/6",["nuyan_chouce","nuyan_yizhijuncai","nuyan_xianfuqiyue","nuyan_nuqidashi","nuyan_fushidashi"], ["name:戏|志才"]],
 		"nuyan_jie_ganning": ["male","wu","7/7",["nuyan_qixi","nuyan_linjiangshenjian","nuyan_yexidiying","nuyan_jingongdashi","nuyan_fushidashi"], ["name:甘|宁"]],
-		"nuyan_xusheng": ["male","wu","6/6",["nuyan_pojun","nuyan_yongliequedi","nuyan_wanfumokai","nuyan_jingongdashi","nuyan_fushidashi"], ["name:徐|盛"]],
+		"nuyan_First_xusheng": ["male","wu","6/6",["nuyan_pojun","nuyan_yongliequedi","nuyan_wanfumokai","nuyan_jingongdashi","nuyan_fushidashi"], ["name:徐|盛"]],
 		"nuyan_jie_sunjian": ["male","wu","6/6",["nuyan_yinghun","nuyan_hunyoujiangdong","nuyan_jianbukecui","nuyan_fangyudashi","nuyan_fushidashi"], ["name:孙|坚"]],
 		"nuyan_jie_weiyan": ["male","shu","6/6",["nuyan_kuanggu","nuyan_shuguogulang","nuyan_kuangnuzhuiji","nuyan_fangyudashi","nuyan_fushidashi"], ["name:魏|延"]],
-		"nuyan_lvlingqi": ["female","qun","7/7",["nuyan_guowu","nuyan_shenweizaixian","nuyan_wushuangxiaoji","nuyan_jingongdashi","nuyan_fushizongshi"], ["name:吕|玲绮"]],
-		"nuyan_jie_zhangchunhua": ["female","wei","6/6",["nuyan_shangshi","nuyan_xinyixiangtong","nuyan_jueqingzhuohua","nuyan_jingongdashi","nuyan_fushidashi"], ["name:张|春华"]],
+		"nuyan_First_lvlingqi": ["female","qun","7/7",["nuyan_guowu","nuyan_shenweizaixian","nuyan_wushuangxiaoji","nuyan_jingongdashi","nuyan_fushizongshi"], ["name:吕|玲绮"]],
+		"nuyan_jieFirst_zhangchunhua": ["female","wei","6/6",["nuyan_shangshi","nuyan_xinyixiangtong","nuyan_jueqingzhuohua","nuyan_jingongdashi","nuyan_fushidashi"], ["name:张|春华"]],
 		"nuyan_jushou": ["male","qun","6/6",["nuyan_jianying","nuyan_jianzhongbuqu","nuyan_honghuzhizai","nuyan_mopaidashi","nuyan_fushidashi"], ["name:沮|授"]],
-		"nuyan_jie_diaochan": ["male","qun","6/6",["nuyan_lihun","nuyan_miaojilianhuan","nuyan_qiaoxianlianhuan","nuyan_nuqidashi","nuyan_fushidashi"], ["name:貂|蝉"]],
+		"nuyan_jieFirst_diaochan": ["male","qun","6/6",["nuyan_lihun","nuyan_miaojilianhuan","nuyan_qiaoxianlianhuan","nuyan_nuqidashi","nuyan_fushidashi"], ["name:貂|蝉"]],
 		"nuyan_zhaoxiang": ["female","shu","7/7",["nuyan_fanghun","nuyan_jinghongmeiying","nuyan_zhongxinfuhan","nuyan_jingongdashi","nuyan_fushidashi"], ["name:赵|襄"]],
 		"nuyan_liuqi": ["male","qun","6/6",["nuyan_wenji","nuyan_bizoujiangnan","nuyan_choutiqiuce","nuyan_jingongdashi","nuyan_fushidashi"], ["name:刘|琦"]],
 		"nuyan_First_luotong": ["male","wu","7/7",["nuyan_qinzheng","nuyan_renzhengaimin","nuyan_lingchurujian","nuyan_mopaidashi","nuyan_fushidashi"], ["name:骆|统"]],
@@ -30,7 +30,7 @@ export default {
 		"nuyan_wei_wenyang": ["male","wei","7/7",["nuyan_chuifeng","nuyan_nvliguoren","nuyan_henxiaochoujue","nuyan_jingongdashi","nuyan_fushizongshi"], ["name:文|鸯"]],
 		"nuyan_zhuran": ["male","wu","7/7",["nuyan_danshou","nuyan_yifudangguan","nuyan_bajianlungong", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:朱|然"]],
 		"nuyan_shenFirst_sunjian": ["male","shen","1/8",["nuyan_hulie","nuyan_shenweiqianjun","nuyan_qinwangpolu", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:孙|坚"]],
-		"nuyan_jie_caojie": ["female", "qun", "6/6", ["nuyan_shouxi", "nuyan_nvzhongjinguo", "nuyan_huiminjishi", "nuyan_Legend_diewufeihua", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|节"]],
+		"nuyan_jieFirst_caojie": ["female", "qun", "6/6", ["nuyan_shouxi", "nuyan_nvzhongjinguo", "nuyan_huiminjishi", "nuyan_Legend_diewufeihua", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|节"]],
 		"nuyan_liru": ["male", "qun", "7/7", ["nuyan_fencheng", "nuyan_fenchengmieji", "nuyan_jueshizhice", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:李|儒"]],
 		"nuyan_caomao": ["male", "wei", "6/6", ["nuyan_qianlong", "nuyan_qingzaofensi", "nuyan_juejintaoni", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|髦"]],
 		"nuyan_jieFirst_machao": ["male", "shu", "7/7", ["nuyan_tieji", "nuyan_weizhenliangzhou", "nuyan_yijidangqian", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:马|超"]],
@@ -39,7 +39,7 @@ export default {
 		"nuyan_First_wangyuanji": ["female", "wei", "6/6", ["nuyan_shiren", "nuyan_shangjianyihua", "nuyan_qianchongdunmu", "nuyan_mopaidashi", "nuyan_fushidashi"], ["name:王|元姬"]],
 		"nuyan_zuoci": ["male", "qun", "7/7", ["nuyan_huashen", "nuyan_shaoyoushendao", "nuyan_yiguishishen", "nuyan_mopaidashi", "nuyan_fushizongshi"], ["name:左|慈"]],
 		"nuyan_caizhenji": ["female", "wei", "6/6", ["nuyan_tianyin", "nuyan_dihunlvxin", "nuyan_zhongyueheming", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:蔡|贞姬"]],
-		"nuyan_xunyou": ["male", "wei", "6/6", ["nuyan_qice", "nuyan_miaojibaichu", "nuyan_shierqice", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:荀|攸"]],
+		"nuyan_jie_xunyou": ["male", "wei", "6/6", ["nuyan_qice", "nuyan_miaojibaichu", "nuyan_shierqice", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:荀|攸"]],
 		"nuyan_huan_caiwenji": ["female", "wei", "6/6", ["nuyan_yayue", "nuyan_lvxindihun", "nuyan_xingyunliushui", "nuyan_mopaidashi", "nuyan_fushizongshi"], ["name:蔡|文姬"]],
 		"nuyan_caochun": ["male", "wei", "7/7", ["nuyan_shanjia", "nuyan_pijianzhirui", "nuyan_duyuxiaoji", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|纯"]],
 		"nuyan_jie_zhouyu": ["male", "wu", "6/6", ["nuyan_fanjian", "nuyan_botaoxiongyong", "nuyan_lieyanqinyin", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:周|瑜"]],
@@ -47,6 +47,7 @@ export default {
 		"nuyan_mou_simayi": ["male", "wei", "6/6", ["nuyan_yinren", "nuyan_MouSimayi_xuanmoumiaoji", "nuyan_taoguangyanghui", "nuyan_fangyudashi", "nuyan_fushizongshi"], ["name:司马|懿"]],
 		"nuyan_Second_yuji": ["male", "qun", "7/7", ["nuyan_guhuo", "nuyan_taipingdaoyi", "nuyan_huanhuozhongxin", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:于|吉"]],
 		"nuyan_qi_yuanshao": ["male", "qun", "6/6", ["nuyan_qi_luanji", "nuyan_bijianzixian", "nuyan_shiluxungui", "nuyan_mopaidashi", "nuyan_fushidashi"], ["name:袁|绍"]],
+		"nuyan_zhouchu": ["male", "wu", "6/6", ["nuyan_chuhai", "nuyan_nanshanshehu", "nuyan_xijiufujiao"], ["name:周|处"]],
 	},
 	skill:{
 		/*
@@ -233,10 +234,10 @@ export default {
 					},
 				},
 				"养精蓄锐": {
-					info: "你摸一张牌且下次造成的伤害+1",
+					info: "你摸两张牌且下次造成的伤害+1",
 					type: 1,
 					async content(player, target, skill, item) {
-						await player.draw();
+						await player.draw(2);
 						get.info(skill).addMark(player, item);
 						player.when({ source: "damageBegin1" })
 							.then(() => {
@@ -1393,22 +1394,22 @@ export default {
 			locked: true,
 			trigger: {
 				get global() {
-					if (lib.config.extension_怒焰武将_nuyan_lvlingqi == "First") return "phaseEnd";
+					if (lib.config.extension_怒焰武将_nuyan_First_lvlingqi == "First") return "phaseEnd";
 					else return;
 				},
 				get source() {
-					if (lib.config.extension_怒焰武将_nuyan_lvlingqi == "New") return "damageEnd";
+					if (lib.config.extension_怒焰武将_nuyan_First_lvlingqi == "New") return "damageEnd";
 					else return;
 				},
 			},
 			filter: function(event, player) {
-				if (lib.config.extension_怒焰武将_nuyan_lvlingqi == "First") {
+				if (lib.config.extension_怒焰武将_nuyan_First_lvlingqi == "First") {
 					let num = Number(lib.config.extension_怒焰武将_nuyan_star);
 					return (player.hp <= num) || (player.countCards("h") < num);
 				} else return event?.card?.name == "sha";
 			},
 			async content(event,trigger,player) {
-				if (lib.config.extension_怒焰武将_nuyan_lvlingqi == "First") {
+				if (lib.config.extension_怒焰武将_nuyan_First_lvlingqi == "First") {
 					await player.recover();
 					await player.draw();
 				} else {
@@ -4067,7 +4068,7 @@ export default {
 				return event.LOGSkill == "nuyan_nvzhongjinguo";
 			},
 			content: function() {
-				if (lib.config.extension_怒焰武将_nuyan_jie_caojie == "second") player.tempBanSkill("nuyan_nvzhongjinguo");
+				if (lib.config.extension_怒焰武将_nuyan_jieFirst_caojie == "second") player.tempBanSkill("nuyan_nvzhongjinguo");
 				else if (player.getRoundHistory("draw")?.filter(evt => evt.skill == event.skill)?.length >= lib.config.extension_怒焰武将_nuyan_star) player.tempBanSkill("nuyan_nvzhongjinguo", "roundEnd");
 			},
 		},
@@ -6944,6 +6945,259 @@ export default {
 				else trigger.num += player.countMark(event.name);
 			},
 		},
+		//怒焰周处
+		nuyan_chuhai: {//除害
+			audio: "chuhai",
+			dutySkill: true,
+			forced: true,
+			skillAnimation: true,
+			animationColor: "wood",
+			trigger: {
+				player: "changeSkillsAfter",
+				source: "dieAfter",
+			},
+			mod: {
+				cardname(card) {
+					if (get.type(card, null, false) == "equip") return "jiu";
+				},
+			},
+			derivation: ["nuyan_huhuan", "nuyan_jiaohai", "nuyan_gaili"],
+			init2(player) {
+				player.addSkills(this.derivation.slice(0, 2));
+			},
+			filter(event, player) {
+				if (event.name == "die") return true;
+				return !player.hasSkill("nuyan_huhuan") && !player.hasSkill("nuyan_jiaohai");
+			},
+			async content(event, trigger, player) {
+				await player.removeSkills(event.name);
+				if (trigger.name == "die") {
+					if (player.storage._ny_nuqi) {
+						const players = game.players.remove(player).sortBySeat(player);
+						for (let item of players) {
+							await item.damage(player, player.storage._ny_nuqi);
+						}
+					}
+				} else {
+					await player.loseHp();
+					await player.addSkills("nuyan_gaili");
+				}
+			},
+		},
+		nuyan_jiaohai: {//蛟害
+			sourceSkill: "nuyan_chuhai",
+			forced: true,
+			locked: true,
+			audio: "xianghai",
+			global: "nuyan_jiaohai_g",
+			subSkill: {
+				g: {
+					charlotte: true,
+					sub: true,
+					sourceSkill: "nuyan_jiaohai",
+					mod: {
+						maxHandcardBase(player, num) {
+							let n = game.countPlayer(current => current != player && current.hasSkill("nuyan_jiaohai")) * -3;
+							return Math.max(num + n, 0); 
+						},
+					},
+				},
+			},
+		},
+		nuyan_huhuan: {//虎患
+			sourceSkill: "nuyan_chuhai",
+			forced: true,
+			locked: true,
+			audio: "xianghai",
+			trigger: {
+				global: "phaseDrawBegin2",
+			},
+			filter: (event, player) => event.player != player && !event.numFixed,
+			content() {
+				trigger.num -= 3;
+				if (trigger.num < 0) trigger.num = 0;
+			},
+		},
+		nuyan_gaili: {//改励
+			sourceSkill: "nuyan_chuhai",
+			audio: "zhangming",
+			enable: "phaseUse",
+			selectCard: 1,
+			filter(event, player) {
+				return player.getCards("hes").some(c => get.type(c) == "equip");
+			},
+			position: "hes",
+			filterCard: (card) => get.type(card) == "equip",
+			async content(event, trigger, player) {
+				let card = get.cardPile2((card) => get.type(card, "trick") == "trick" && !get.tag(card, "damage"), "random");
+				if (card) {
+					await player.gain(card, "gain2");
+					player.addGaintag(card, event.name);
+					player.addTempSkill(event.name + "_keep");
+				} else {
+					player.chat("没牌力，悲（");
+				}
+			},
+			subSkill: {
+				keep: {
+					charlotte: true,
+					mod: {
+					    ignoredHandcard(card, player) {
+					        if (card.hasGaintag("nuyan_gaili"))  return true;
+					    },
+					    cardDiscardable(card, player, name) {
+					        if (name == "phaseDiscard" && card.hasGaintag("nuyan_gaili")) return false;
+					    },
+					},
+					onremove(player) {
+					    player.removeGaintag("nuyan_gaili");
+					},
+					sub: true,
+					sourceSkill: "nuyan_gaili",
+				},
+			},
+		},
+		nuyan_nanshanshehu: {//南山射虎
+			nuyan_star: 1,
+			enable: "phaseUse",
+			usable: 2,
+			marktext: "虎",
+			intro: {
+				name: "南山射虎",
+				content: (storage) => `你本阶段对${get.translation(storage)}造成伤害时，你将牌堆中的一张装备牌置于你的一个空置装备栏内`,
+				markcount: (storage) => storage?.length,
+			},
+			selectTarget: 1,
+			filterTarget(card, player, target) {
+				return player.canCompare(target) && player != target;
+			},
+			async content(event, trigger, player) {
+				const { target } = event;
+				let result = await player.chooseToCompare(target).forResult();
+				if (result.bool) {
+					if (player.hasSkill("nuyan_huhuan")) await player.removeSkills("nuyan_huhuan");
+					else await player.draw(3);
+					player.markAuto(event.name, target);
+					player.when({ global: "phaseEnd" })
+						.then(() => {
+							delete player.storage.nuyan_nanshanshehu;
+							player.unmarkSkill("nuyan_nanshanshehu");
+						});
+				}
+			},
+			ai: {
+				order: 114,
+				target(player, target) {
+					let att = get.attitude(player, target);
+					if (att < 0) return 5 - target.getCards("h");
+					else if (player.hasSkill("nuyan_huhuan") && player.getCards("h").some(c => get.number(c) < 8)) return 3 - target.getCards("h");
+					return -114;
+				},
+			},
+			group: "nuyan_nanshanshehu_effect",
+			subSkill: {
+				effect: {
+					sub: true,
+					sourceSkill: "nuyan_nanshanshehu",
+					charlotte: true,
+					popup: false,
+					forced: true,
+					trigger: {
+						source: "damageEnd",
+					},
+					filter(event, player) {
+						if (!player.storage.nuyan_nanshanshehu?.includes(event.player)) return false;
+						for (var i = 1; i < 6; i++) {
+						    if (!player.getEquips(i).length) {
+								return true;
+							}
+						}
+					},
+					getIndex: (event, player) => player.storage.nuyan_nanshanshehu?.filter(c => c == event.player).length,
+					async content(event, trigger, player) {
+						let list = [1, 2, 3, 4, 5];
+						list.randomSort();
+						for (let i of list) {
+							if (player.hasEmptySlot(i)) {
+							    var sub = "equip" + i,
+							        card = get.cardPile(function (card) {
+							            return get.subtype(card, false) == sub && !get.cardtag(card, "gifts") && player.canEquip(card);
+							        });
+							    if (card) {
+							        player.$gain2(card);
+							        game.delayx();
+							        await player.equip(card);
+							        break;
+							    }
+							}
+						}
+					},
+				},
+			},
+		},
+		nuyan_xijiufujiao: {//西氿缚蛟
+			nuyan_star: 3,
+			enable: "phaseUse",
+			usable: 2,
+			marktext: "蛟",
+			intro: {
+				name: "西氿缚蛟",
+				content: (storage) => `你本阶段失去装备区的牌后，对${get.translation(storage)}造成2点伤害`,
+				markcount: (storage) => storage?.length,
+			},
+			selectTarget: 1,
+			filterTarget(card, player, target) {
+				return player.canCompare(target) && player != target;
+			},
+			async content(event, trigger, player) {
+				const { target } = event;
+				let result = await player.chooseToCompare(target).forResult();
+				if (result.bool) {
+					if (player.hasSkill("nuyan_jiaohai")) await player.removeSkills("nuyan_jiaohai");
+					else await player.draw(3);
+					player.markAuto(event.name, target);
+					player.when({ global: "phaseEnd" })
+						.then(() => {
+							delete player.storage.nuyan_xijiufujiao;
+							player.unmarkSkill("nuyan_xijiufujiao");
+						});
+				}
+			},
+			ai: {
+				order: 114,
+				target(player, target) {
+					let att = get.attitude(player, target);
+					if (att < 0) return 6 - target.getCards("h");
+					return -114;
+				},
+			},
+			group: "nuyan_xijiufujiao_effect",
+			subSkill: {
+				effect: {
+					sub: true,
+					sourceSkill: "nuyan_xijiufujiao",
+					charlotte: true,
+					forced: true,
+					trigger: {
+					    player: "loseAfter",
+					    global: ["equipAfter","addJudgeAfter","gainAfter","loseAsyncAfter","addToExpansionAfter"],
+					},
+					filter: (event, player) => player.storage.nuyan_xijiufujiao?.length,
+					getIndex(event, player) {
+					    const evt = event.getl(player);
+					    if (evt && evt.player === player && evt.es) {
+					        return evt.es.length;
+					    }
+					    return false;
+					},
+					async content(event, trigger, player) {
+						for (let target of player.storage.nuyan_xijiufujiao) {
+							await target.damage(2, player);
+						}
+					},
+				},
+			},
+		},
 	},
 	characterTitle: {//武将称号
 	},
@@ -7224,20 +7478,21 @@ export default {
 		"_ny_zhuanShu_Firstsizhao_info": "锁定技，你于出牌阶段使用【杀】结算后，令你本回合使用与此牌花色相同的手牌发动〖乱击〗时，所需牌数改为1。",
 		"_ny_zhuanShu_sizhao":"思召",
 		"_ny_zhuanShu_sizhao_info":"锁定技，你于出牌阶段使用【杀】结算后，令你本回合使用与此牌花色相同的手牌发动〖乱击〗时，摸1张牌。",
+		"_ny_zhuanShu_longlin": "龙鳞",
+		"_ny_zhuanShu_longlin_info": "锁定技，你与已受伤角色拼点时，摸1张牌并令其拼点牌的点数X（X为其已损失体力值）",
 		
 		//武将
 		nuyan_caorui: "曹叡",
 		nuyan_xizhicai: "戏志才",
 		nuyan_jie_ganning: "界甘宁",
-		nuyan_xusheng: "徐盛",
+		nuyan_First_xusheng: "徐盛",
 		nuyan_jie_sunjian: "界孙坚",
 		nuyan_jie_weiyan: "界魏延",
-		nuyan_lvlingqi: "吕玲绮",
-		nuyan_jie_zhangchunhua: "界张春华",
+		nuyan_First_lvlingqi: "吕玲绮",
+		nuyan_jieFirst_zhangchunhua: "界张春华",
 		nuyan_jushou: "沮授",
-		nuyan_jie_diaochan: "界貂蝉",
+		nuyan_jieFirst_diaochan: "界貂蝉",
 		nuyan_zhaoxiang: "赵襄",
-		nuyan_xunsheng: "徐盛",
 		nuyan_liuqi: "刘琦",
 		nuyan_First_luotong: "骆统",
 		nuyan_First_mifuren: "糜夫人",
@@ -7256,7 +7511,7 @@ export default {
 		nuyan_wei_wenyang: "魏文鸯",
 		nuyan_zhuran: "朱然",
 		nuyan_shenFirst_sunjian:"神孙坚",
-		nuyan_jie_caojie:"界曹节",
+		nuyan_jieFirst_caojie:"界曹节",
 		nuyan_liru: "李儒",
 		nuyan_caomao: "曹髦",
 		nuyan_jieFirst_machao: "界马超",
@@ -7265,7 +7520,7 @@ export default {
 		nuyan_First_wangyuanji: "王元姬",
 		nuyan_zuoci: "左慈",
 		nuyan_caizhenji: "蔡贞姬",
-		nuyan_xunyou:"荀攸",
+		nuyan_jie_xunyou:"界荀攸",
 		nuyan_huan_caiwenji: "幻蔡文姬",
 		nuyan_caochun: "曹纯",
 		nuyan_jie_zhouyu:"界周瑜",
@@ -7273,6 +7528,7 @@ export default {
 		nuyan_mou_simayi: "谋司马懿",
 		nuyan_Second_yuji: "于吉",
 		nuyan_qi_yuanshao: "起袁绍",
+		nuyan_zhouchu: "周处",
 		
 		//通用技能
 		nuyan_fushizongshi:"符石宗师",
@@ -7553,6 +7809,18 @@ export default {
 		nuyan_bijianzixian_info:"锁定技，出牌阶段开始时，你将手牌摸至3X张；你于出牌阶段获得其他角色的牌后，摧毁之（X为你拥有的“勋”标记数)。",
 		nuyan_shiluxungui:"世禄勋贵",
 		nuyan_shiluxungui_info:"锁定技，你首次登场时，获得4个“勋”标记；你的摸牌阶段摸牌数+X；你使用【杀】的次数+X；你的手牌上限+X；结束阶段，若你于本回合失去过体力，你失去1个“勋”标记（X为你的“勋”标记数）。",
+		nuyan_chuhai: "除害",
+		nuyan_chuhai_info: "使命技，你首次登场时，获得〖虎患〗和〖蛟害〗；你手牌区的装备牌只能当做【酒】使用；<br><b>成功</b>：你失去〖虎患〗和〖蛟害〗时，失去1点体力，然后获得〖改励〗；<br><b>失败</b>：你杀死一名其他角色后，你对场上所有其他存活角色造成等同于你当前怒气值的伤害。",
+		nuyan_huhuan: "虎患",
+		nuyan_huhuan_info: "锁定技，场上所有其他角色摸牌阶段摸牌数-3。",
+		nuyan_jiaohai: "蛟害",
+		nuyan_jiaohai_info: "锁定技，场上所有其他角色弃牌阶段的手牌上限-3。",
+		nuyan_gaili: "改励",
+		nuyan_gaili_info: "出牌阶段，你可以弃置一张装备牌，然后从牌堆中随机获得一张非伤害锦囊牌；你以此法获得的牌不计入本回合手牌上限。",
+		nuyan_nanshanshehu: "南山射虎",
+		nuyan_nanshanshehu_info: "出牌阶段限两次，你可以与一名其他角色拼点；若你赢，你失去〖虎患〗（若你没有〖虎患〗，改为摸三张牌）且当你于此阶段对其造成伤害后，随机将牌堆中的一张你空置装备栏对应类型的装备牌置入你的装备区。",
+		nuyan_xijiufujiao: "西氿缚蛟",
+		nuyan_xijiufujiao_info: "出牌阶段限两次，你可以与一名其他角色拼点；若你赢，你失去〖蛟害〗（若你没有〖蛟害〗，改为摸三张牌）且当你于此阶段失去一张装备区的牌后，你对其造成2点伤害。",
 	},
 	dynamicTranslate: {//动态翻译
 		nuyan_yuqi: function(player) {
@@ -7560,11 +7828,11 @@ export default {
 		    else return "每回合限三次，当1名角色受到伤害后，你可以观看牌堆顶两张牌，并将至多一张交给其，然后你获得剩余的牌；当你登场时或准备阶段，你令此技能中的全部中文数字+2(单项不大于10)";
 		},
 		nuyan_nvzhongjinguo: function() {
-			if (lib.config.extension_怒焰武将_nuyan_jie_caojie == "First") return "锁定技，每轮限X次（X为你的武将星级），当你发动〖守玺〗时，你获得1点怒气并摸一张牌。";
+			if (lib.config.extension_怒焰武将_nuyan_jieFirst_caojie == "First") return "锁定技，每轮限X次（X为你的武将星级），当你发动〖守玺〗时，你获得1点怒气并摸一张牌。";
 			else return "锁定技，每回合限一次，当你发动〖守玺〗时，你获得1点怒气并摸一张牌。";
 		},
 		nuyan_shenweizaixian: function() {
-			if (lib.config.extension_怒焰武将_nuyan_lvlingqi == "First") return "锁定技，每回合结束时，若你的体力值或手牌数不大于你的星级，你回复1点体力并摸一张牌。";
+			if (lib.config.extension_怒焰武将_nuyan_First_lvlingqi == "First") return "锁定技，每回合结束时，若你的体力值或手牌数不大于你的星级，你回复1点体力并摸一张牌。";
 			else return "锁定技，你使用【杀】造成伤害后，你摸一张牌并获得1点怒气。";
 		},
 	},

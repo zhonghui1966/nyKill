@@ -78,7 +78,7 @@ const fushiSet = {
 			global: "全局",
 			onlyMe: "仅自己可用",
 		},
-		intro: "开启后，怒焰三国杀武将开局将会拥有符石和专属符石，详情见帮助内容，联机模式仅自己可用=关闭",
+		intro: "开启后，怒焰三国杀武将开局将会拥有符石，详情见帮助内容，联机模式仅自己可用=关闭",
 	},
 	nuyan_rule2: {
 		name: "怒焰怒气机制开关",
@@ -109,6 +109,16 @@ const fushiSet = {
 			onlyMe: "仅自己可用",
 		},
 		intro: "开启后，拥有怒气的角色使用可强化的牌时可以选择消耗1点怒气强化之，不影响技能的强化效果，详情见帮助内容，联机模式仅自己可用=关闭",
+	},
+	nuyan_rule5: {
+		name: "怒焰专属符石开关",
+		init: "false",
+		item: {
+			false: "关闭",
+			global: "全局",
+			onlyMe: "仅自己可用",
+		},
+		intro: "开启后，怒焰三国杀武将开局将会拥有专属符石，详情见帮助内容，联机模式仅自己可用=关闭",
 	},
 	jibanLose: {
 		name: "羁绊技能开关",
@@ -155,7 +165,7 @@ const fushiSet = {
 	},
 }
 const characterSet = {
-	nuyan_jie_caojie: {
+	nuyan_jieFirst_caojie: {
 		init: "First",
 		name: "界曹节版本",
 		intro: "怒焰界曹节版本设置",
@@ -175,7 +185,7 @@ const characterSet = {
 		},
 		changeSkills: ["nuyan_shenweizaixian"],
 	},
-	legendSkin_nuyan_jie_caojie: {
+	legendSkin_nuyan_jieFirst_caojie: {
 		init: false,
 		name: "曹节传说皮肤",
 		intro: "怒焰界曹节传说皮肤设置",

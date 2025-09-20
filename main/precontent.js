@@ -1008,14 +1008,20 @@ export async function precontent(config, originalPack) {
 				"nuyan_caoying": ["_ny_zhuanShu_fengmingjian"],
 				"nuyan_mou_simayi": ["_ny_zhuanShu_yingzhi"],
 				"nuyan_Second_yuji": ["_ny_zhuanShu_taipingjin"],
-				"nuyan_qi_yuanshao": ["_ny_zhuanShu_Firstsizhao", "_ny_zhuanShu_sizhao"]
+				"nuyan_qi_yuanshao": ["_ny_zhuanShu_Firstsizhao", "_ny_zhuanShu_sizhao"],
+				"nuyan_zhouchu": ["_ny_zhuanShu_longlin"],
 			},
-			filter: function (event, player) {
+			filter(event, player) {
 				if (get.itemtype(player) != "player") return false;
-				if (!player.storage._ny_fushiId) return false;
+				if (lib.config.extension_怒焰武将_nuyan_rule5 == "false") return false;
+				else if (lib.config.extension_怒焰武将_nuyan_rule5 == "onlyMe" && game.me != player) return false;
+				//推销一下自己扩展
+				if (lib.config.extension_钟会包_loseBuffLimit) return true;
 				return get.nameList(player).some(name => (name in get.info("_ny_getZhuanShuFuShi").obj) && !(name in player.getStorage("_hasNuyanZhuanshuFushiChoosed")));
 			},
 			async content(event,trigger,player) {
+				player.storage._ny_fushiId ??= [0, 0, 0, 0, 0];
+				player.storage._ny_fushiTime ??= [6,6,6,6];
 				for (let name of get.nameList(player)) {
 					if (name in player.getStorage("_hasNuyanZhuanshuFushiChoosed")) continue;
 					let list = lib.skill._ny_getZhuanShuFuShi.obj[name],
@@ -5268,6 +5274,7 @@ export async function precontent(config, originalPack) {
 				return event.card?.name == "sha" && !player.storage._ny_zhuanShu_Firstsizhao?.includes(get.suit(event.card)) && player.isPhaseUsing() && !["unsure", "none"].includes(get.suit(event.card));
 			},
 			content() {
+				lib.skill._ny_getZhuanShuFuShi.logStone(player, "_ny_zhuanShu_Firstsizhao");
 				player.markAuto(event.name, get.suit(trigger.card));
 				player.when({ player: "phaseEnd" })
 					.then(() => delete player.storage._ny_zhuanShu_Firstsizhao);
@@ -5292,9 +5299,33 @@ export async function precontent(config, originalPack) {
 				return event.card?.name == "sha" && !player.storage._ny_zhuanShu_sizhao?.includes(get.suit(event.card)) && player.isPhaseUsing() && !["unsure", "none"].includes(get.suit(event.card));
 			},
 			content() {
+				lib.skill._ny_getZhuanShuFuShi.logStone(player, "_ny_zhuanShu_sizhao");
 				player.markAuto(event.name, get.suit(trigger.card));
 				player.when({ player: "phaseEnd" })
 					.then(() => delete player.storage._ny_zhuanShu_sizhao);
+			},
+		}
+		lib.skill._ny_zhuanShu_longlin = {//周处 龙鳞
+			popup: false,
+			priority: 1145,
+			forced: true,
+			trigger: {
+				player: "compare",
+				target: "compare",
+			},
+			filter(event, player) {
+				if (!lib.skill._ny_getZhuanShuFuShi.filterStone(player, "_ny_zhuanShu_longlin")) return false;
+				if (event.player == player) return !event.iwhile && event.target?.isDamaged();
+				else return event.player?.isDamaged();
+			},
+			async content(event, trigger, player) {
+				lib.skill._ny_getZhuanShuFuShi.logStone(player, "_ny_zhuanShu_longlin");
+				await player.draw();
+				const target = trigger.player == player ? trigger.target : trigger.player;
+				const num = target.maxHp - target.hp;
+				game.log(target, "拼点牌点数减", num);
+				if (trigger.target == player) trigger.num1 -= num;
+				else trigger.num2 -= num;
 			},
 		}
 	});
