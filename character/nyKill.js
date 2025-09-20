@@ -217,7 +217,7 @@ export default {
 			//谋司马懿 调整后续（
 			nuyan_mou_simayi: {
 				info1: "怒焰谋司马懿【谋奕】：请选择一项执行，目标可以选择抵御第一和二项或第三和四项",
-				info2: "怒焰谋司马懿【谋奕】：可能执行以下效果之一，请选择抵御第一和二项或第三和四项",
+				info2: "怒焰谋司马懿【谋奕】：可能执行以下效果之一，请选择抵御一项",
 				"以逸待劳": {
 					info: "你回复1点体力并摸一张牌",
 					type: 0,
@@ -228,14 +228,14 @@ export default {
 				},
 				"离间计": {
 					info: "目标失去2点体力",
-					type: 0,
+					type: 1,
 					async content(player, target) {
 						await target.loseHp(2);
 					},
 				},
 				"养精蓄锐": {
 					info: "你摸两张牌且下次造成的伤害+1",
-					type: 1,
+					type: 2,
 					async content(player, target, skill, item) {
 						await player.draw(2);
 						get.info(skill).addMark(player, item);
@@ -248,7 +248,7 @@ export default {
 				},
 				"缓兵计": {
 					info: "目标怒气上限-1直至其回合结束",
-					type: 1,
+					type: 3,
 					async content(player, target, skill, item) {
 						get.info(skill).addMark(target, item, 1);
 						await lib.skill._ny_getNuqi.loseNuQiMax(target);
@@ -7198,6 +7198,7 @@ export default {
 				},
 			},
 		},
+		//怒焰谋诸葛亮
 	},
 	characterTitle: {//武将称号
 	},
