@@ -798,6 +798,7 @@ export async function precontent(config, originalPack) {
 					//受伤不获得怒气的标记写在此处
 					if (player.hasMark('_ny_jinGong_tianfa')) return;
 					if (player.hasMark("_ny_zhanFa_longzhenghudou")) return;
+					if (player.hasMark("_ny_zhuanShu_bazhen_天覆阵")) return;
 					await lib.skill._ny_getNuqi.addNuQi(player, trigger.num);
 				} else {
 					await lib.skill._ny_getNuqi.initNuQi(player);
@@ -1010,6 +1011,7 @@ export async function precontent(config, originalPack) {
 				"nuyan_Second_yuji": ["_ny_zhuanShu_taipingjin"],
 				"nuyan_qi_yuanshao": ["_ny_zhuanShu_Firstsizhao", "_ny_zhuanShu_sizhao"],
 				"nuyan_zhouchu": ["_ny_zhuanShu_longlin"],
+				"nuyan_mou_zhugeliang": ["_ny_zhuanShu_bazhen"],
 			},
 			filter(event, player) {
 				if (get.itemtype(player) != "player") return false;
@@ -5326,6 +5328,297 @@ export async function precontent(config, originalPack) {
 				game.log(target, "拼点牌点数减", num);
 				if (trigger.target == player) trigger.num1 -= num;
 				else trigger.num2 -= num;
+			},
+		}
+		lib.skill._ny_zhuanShu_bazhen = {//谋诸葛亮--八阵
+			popup: false,
+			priority: 1145,
+			trigger: {
+				global: "phaseBegin",
+			},
+			filter(event, player) {
+				return lib.skill._ny_getZhuanShuFuShi.filterStone(player, "_ny_zhuanShu_bazhen");
+			},
+			async cost(event, trigger, player) {
+				let result = await player.chooseTarget(false)
+					.set("prompt", get.prompt(event.name.slice(0, -5)))
+					.set("prompt2", "令一名角色获得一项“阵法”效果直至本回合结束")
+					.set("ai", () => Math.random() * 114514)
+					.forResult();
+				if (result.bool) {
+					event.result = {
+						bool: true,
+						cost_data: result.targets[0],
+					};
+				} else event.result = { bool: false };
+			},
+			async content(event, trigger, player) {
+				const target = event.cost_data;
+				let obj = lib.skill._ny_zhuanShu_bazhen.subSkill;
+				let choices = Object.keys(obj);
+				choices.add("cancel2");
+				let choiceList = choices.map(item => "【" + item +"】：<div>" + obj[item]?.info + "</div>").slice(0, -1);
+				let result = await player.chooseControl(false)
+					.set("controls", choices)
+					.set("goods", choices.filter(i => i.good))
+					.set("choiceList", choiceList)
+					.set("target", target)
+					.set("ai", () => {
+						const { controls, goods, target, player } = get.event();
+						let bads = controls.slice().removeArray(goods);
+						if (get.attitude(player, target) > 0) return goods[Math.floor(Math.random() * goods.length)];
+						return bads[Math.floor(Math.random() * bads.length)];
+					})
+					.forResultControl();
+				if (result == "cancel2") return;
+				lib.skill._ny_getZhuanShuFuShi.logStone(player, "_ny_zhuanShu_bazhen");
+				//后续适配多人拥有八阵的情况
+				game.broadcastAll((del) => delete lib.skill._ny_zhuanShu_bazhen.subSkill[del], result);
+				target.addTempSkill(event.name + "_" + result);
+			},
+			subSkill: {
+				"天覆阵": {
+					sub: true,
+					sourceSkill: "_ny_zhuanShu_bazhen",
+					charlotte: true,
+					forced: true,
+					priority: 1145,
+					info: "令其怒气上限-1，然后其本回合受到伤害后无法获得怒气",
+					marktext: "覆",
+					intro: {
+						nocount: true,
+						name: "天覆阵",
+						content: "你本回合受到伤害后无法获得怒气",
+					},
+					init2(player, skill) {
+						player.addMark(skill);
+						let next = game.createEvent(skill + "_init");
+						next.player = player;
+						next.setContent("emptyEvent");
+					},
+					onremove: true,
+					filter(event, player) {
+						return player.hasMark(this.sourceSkill + "_" + this.intro.name);
+					},
+					trigger: {
+						player: "_ny_zhuanShu_bazhen_天覆阵_init",
+					},
+					async content(event, trigger, player) {
+						await lib.skill._ny_getNuqi.loseNuQiMax(player);
+					},
+				},
+				"地载阵": {
+					sub: true,
+					sourceSkill: "_ny_zhuanShu_bazhen",
+					charlotte: true,
+					forced: true,
+					priority: 1145,
+					info: "令其体力上限+1，然后其本回合受到伤害时，数值-1",
+					good: true,
+					marktext: "载",
+					intro: {
+						nocount: true,
+						name: "地载阵",
+						content: "你本回合受到伤害时数值-1",
+					},
+					init2(player, skill) {
+						player.addMark(skill);
+						player.gainMaxHp();
+					},
+					onremove: true,
+					filter(event, player) {
+						return player.hasMark(this.sourceSkill + "_" + this.intro.name);
+					},
+					trigger: {
+						player: "damageBegin3",
+					},
+					async content(event, trigger, player) {
+						trigger.num--;
+					},
+				},
+				"风扬阵": {
+					sub: true,
+					sourceSkill: "_ny_zhuanShu_bazhen",
+					charlotte: true,
+					forced: true,
+					priority: 1145,
+					info: "令其失去2点怒气，然后其本回合怒气变化后，随机摧毁1张手牌(后续暂时无效果)",
+					marktext: "扬",
+					intro: {
+						nocount: true,
+						name: "风扬阵",
+						content: "你本回合怒气变化后，随机摧毁一张手牌",
+					},
+					init2(player, skill) {
+						player.addMark(skill);
+						let next = game.createEvent(skill + "_init");
+						next.player = player;
+						next.setContent("emptyEvent");
+					},
+					onremove: true,
+					filter(event, player) {
+						return player.hasMark(this.sourceSkill + "_" + this.intro.name);
+					},
+					trigger: {
+						player: "_ny_zhuanShu_bazhen_风扬阵_init",
+					},
+					async content(event, trigger, player) {
+						await lib.skill._ny_getNuqi.loseNuQi(player, 2);
+					},
+				},
+				"云垂阵": {
+					sub: true,
+					sourceSkill: "_ny_zhuanShu_bazhen",
+					charlotte: true,
+					forced: true,
+					priority: 1145,
+					info: "令其回复1点体力，然后其本回合体力变化后，摸1张牌",
+					good: true,
+					marktext: "载",
+					intro: {
+						nocount: true,
+						name: "云垂阵",
+						content: "你本回合体力变化后，摸1张牌",
+					},
+					init2(player, skill) {
+						player.addMark(skill);
+						player.recover();
+					},
+					onremove: true,
+					filter(event, player) {
+						return player.hasMark(this.sourceSkill + "_" + this.intro.name);
+					},
+					trigger: {
+						player: "changeHp",
+					},
+					async content(event, trigger, player) {
+						await player.draw();
+					},
+				},
+				"龙飞阵": {
+					sub: true,
+					sourceSkill: "_ny_zhuanShu_bazhen",
+					charlotte: true,
+					forced: true,
+					priority: 1145,
+					info: "令其摸2张牌，然后其本回合使用强化【杀】不计入限制次数",
+					good: true,
+					marktext: "龙",
+					intro: {
+						nocount: true,
+						name: "龙飞阵",
+						content: "你本回合使用强化【杀】不计入限制次数",
+					},
+					init2(player, skill) {
+						player.addMark(skill);
+						player.draw(2);
+					},
+					trigger: {
+						player: "useCard1",
+					},
+					onremove: true,
+					filter(event, player) {
+						if (!event.card.name == "sha") return false;
+						if (!event.card.storage?._useCardQianghua) return false;
+						return player.hasMark(this.sourceSkill + "_" + this.intro.name);
+					},
+					async content(event, trigger, player) {
+						trigger.addCount = false;
+						if (player.stat[player.stat.length - 1].card.sha > 0) {
+						    player.stat[player.stat.length - 1].card.sha--;
+						}
+						game.log(event.card, '不计入次数限制');
+					},
+				},
+				"虎翼阵": {
+					sub: true,
+					sourceSkill: "_ny_zhuanShu_bazhen",
+					charlotte: true,
+					forced: true,
+					priority: 1145,
+					info: "令其摸2张牌，然后其本回合使用伤害牌造成伤害时，数值+1",
+					good: true,
+					marktext: "虎",
+					intro: {
+						nocount: true,
+						name: "虎翼阵",
+						content: "你本回合使用伤害牌造成伤害时，数值+1",
+					},
+					init2(player, skill) {
+						player.addMark(skill);
+						player.draw(2);
+					},
+					trigger: {
+						source: "damageBegin1",
+					},
+					onremove: true,
+					filter(event, player) {
+						if (!event.card) return false;
+						if (!get.tag(event.card, "damage")) return false;
+						return player.hasMark(this.sourceSkill + "_" + this.intro.name);
+					},
+					async content(event, trigger, player) {
+						trigger.num ++;
+					},
+				},
+				"鸟翔阵": {
+					sub: true,
+					sourceSkill: "_ny_zhuanShu_bazhen",
+					charlotte: true,
+					forced: true,
+					priority: 1145,
+					info: "对其造成1点伤害，然后其本回合受到大于2点的伤害时，数值+1",
+					marktext: "鸟",
+					intro: {
+						nocount: true,
+						name: "鸟翔阵",
+						content: "你本回合受到大于2点的伤害时，数值+1",
+					},
+					init2(player, skill) {
+						player.addMark(skill);
+						const source = _status.event.getParent()?.player;
+						if (source) player.damage(source);
+					},
+					trigger: {
+						player: "damageBegin1",
+					},
+					onremove: true,
+					filter(event, player) {
+						if (!event.num > 2) return false;
+						return player.hasMark(this.sourceSkill + "_" + this.intro.name);
+					},
+					async content(event, trigger, player) {
+						trigger.num ++;
+					},
+				},
+				"蛇蟠阵": {
+					sub: true,
+					sourceSkill: "_ny_zhuanShu_bazhen",
+					charlotte: true,
+					forced: true,
+					priority: 1145,
+					info: "令其失去1点体力且其本回合失去体力时，数值+1",
+					marktext: "蛇",
+					intro: {
+						nocount: true,
+						name: "蛇蟠阵",
+						content: "你本回合失去体力时，数值+1",
+					},
+					init2(player, skill) {
+						player.addMark(skill);
+						player.loseHp();
+					},
+					onremove: true,
+					filter(event, player) {
+						return player.hasMark(this.sourceSkill + "_" + this.intro.name);
+					},
+					trigger: {
+						player: "loseHpBegin",
+					},
+					async content(event, trigger, player) {
+						trigger.num ++;
+					},
+				},
 			},
 		}
 	});
