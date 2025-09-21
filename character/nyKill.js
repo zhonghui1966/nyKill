@@ -49,6 +49,7 @@ export default {
 		"nuyan_qi_yuanshao": ["male", "qun", "6/6", ["nuyan_qi_luanji", "nuyan_bijianzixian", "nuyan_shiluxungui", "nuyan_mopaidashi", "nuyan_fushidashi"], ["name:袁|绍"]],
 		"nuyan_zhouchu": ["male", "wu", "6/6", ["nuyan_chuhai", "nuyan_nanshanshehu", "nuyan_xijiufujiao"], ["name:周|处"]],
 		"nuyan_mou_zhugeliang": ["male", "shu", "7/7", ["nuyan_guanxing", "nuyan_MouZhugeliang_xuanmoumiaoji", "nuyan_dongruoguanhuo"], ["name:诸葛|亮"]],
+		"nuyan_qi_zhaojiao": ["male", "qun", "6/6", ["nuyan_jinglei", "nuyan_taipingyaoshu", "nuyan_huangtiandangli"], ["name:张|角"]],
 	},
 	skill:{
 		/*
@@ -7495,6 +7496,87 @@ export default {
 				},
 			},
 		},
+		//怒焰起张角
+		nuyan_jinglei: {//惊雷
+			trigger: {
+				global: "damageEnd",
+			},
+			popup: false,
+			audio: "leiji",
+			filter(event, player) {
+				if (!event.source) return false;
+				return event.source.hp > event.player.hp || event.source.countCards("h") > event.player.countCards("h");
+			},
+			content() {
+				player.logSkill(event.name, trigger.source);
+				trigger.source.damage("nosource", "thunder");
+			},
+		},
+		nuyan_taipingyaoshu: {//太平要术
+			forced: true,
+			locked: true,
+			audio: "guidao",
+			nuyan_star: 1,
+			trigger: {
+				player: "damageBegin4",
+				global: ["equipAfter","addJudgeAfter","loseAfter","gainAfter","loseAsyncAfter","addToExpansionAfter"],
+			},
+			filter(event, player) {
+				if (event.name == "damage") return event.hasNature();
+				return event.getl(event.player)?.hs?.length && event.player.isMinHandcard() && event.player != _status.currentPhase;
+			},
+			getIndex(event, player) {
+				if (event.name == "damage") return 1;
+				else return event.getl(event.player)?.hs?.length;
+			},
+			async content(event, trigger, player) {
+				if (trigger.name == "damage") {
+					trigger.cancel();
+					return;
+				}
+				const limit = Number(lib.config.extension_怒焰武将_hujiaSet);
+				player.changeHujia(1, null ,limit);
+			},
+		},
+		nuyan_huangtiandangli: {//黄天当立
+			nuyan_star: 3,
+			audio: "tianjie",
+			init2(player, skill) {
+				const limit = Number(lib.config.extension_怒焰武将_hujiaSet);
+				player.changeHujia(36, null ,limit);
+			},
+			trigger: {
+				player: "changeHujiaAfter",
+				global: "damageBefore",
+			},
+			filter(event, player) {
+				if (event.name == "damage") return event.card?.storage?.nuyan_huangtiandangli;
+				return event.num < 0;
+			},
+			getIndex(event, player) {
+				if (event.name == "damage") return 1;
+				else return Math.abs(event.num);
+			},
+			forced: true,
+			async content(event, trigger, player) {
+				if (trigger.name == "damage") {
+					game.setNature(trigger, "thunder");
+					return;
+				}
+				await player.chooseUseTarget({
+					name: "sha",
+					storage: {
+						nuyan_huangtiandangli: true,
+						_useCardQianghua: true,
+					},
+				}, get.prompt2(event.name), "nodistance", false)
+					.set("oncard", () => {
+						get.event().customArgs.default.customSource = {
+							isDead: () => true,
+						};
+					});
+			},
+		},
 	},
 	characterTitle: {//武将称号
 	},
@@ -7779,6 +7861,8 @@ export default {
 		"_ny_zhuanShu_longlin_info": "锁定技，你与已受伤角色拼点时，摸1张牌并令其拼点牌的点数X（X为其已损失体力值）",
 		"_ny_zhuanShu_bazhen": "八阵",
 		"_ny_zhuanShu_bazhen_info": "每个回合开始时，你可以令一名角色获得1个阵法效果直至本回合结束（每种阵法每局限1次）<br>●天覆阵：令其怒气上限-1，然后其本回合受到伤害后无法获得怒气；<br>●地载阵：令其体力上限+1，然后其本回合受到伤害时，数值-1；<br>●风扬阵：令其失去2点怒气，然后其本回合怒气变化后，随机摧毁1张手牌；<br>●云垂阵：令其回复1点体力，然后其本回合体力变化后，摸1张牌；<br>●龙飞阵：令其摸2张牌，然后其本回合使用强化【杀】不计入限制次数；<br>●虎翼阵：令其摸2张牌，然后其本回合使用伤害牌造成伤害时，数值+1；<br>●鸟翔阵：对其造成1点伤害，然后其本回合受到大于2点的伤害时，数值+1；<br>●蛇蟠阵：令其流失1点体力，然后其本回合流失体力时，数值+1；",
+		"_ny_zhuanShu_huangjin": "黄巾",
+		"_ny_zhuanShu_huangjin_info": "一名角色受到致命伤害时，你可以弃置2张手牌，防止此伤害，若其不为你，则其摸2张牌。",
 		
 		//武将
 		nuyan_caorui: "曹叡",
@@ -7829,6 +7913,7 @@ export default {
 		nuyan_qi_yuanshao: "起袁绍",
 		nuyan_zhouchu: "周处",
 		nuyan_mou_zhugeliang: "谋诸葛亮",
+		nuyan_qi_zhaojiao: "起张角",
 		
 		//通用技能
 		nuyan_fushizongshi:"符石宗师",
@@ -8129,6 +8214,12 @@ export default {
 		nuyan_MouZhugeliang_xuanmoumiaoji_info: "出牌阶段，你可以移除1个“星”并摸1张牌，然后与一名其他角色进行一次“谋奕”，若你“谋奕”成功，则摸1张牌且令目标获得X个“彀”标记直至本轮结束（X为你的体力值）。",
 		nuyan_dongruoguanhuo: "洞若观火",
 		nuyan_dongruoguanhuo_info: "锁定技，每轮开始时，清除此技能记录的牌名，然后你选择并记录至多X个基本牌或锦囊牌的牌名；你使用与你记录牌名相同的非延时锦囊牌无距离限制且无法被【无懈可击】响应；当有“彀”标记的其他角色使用或打出与你记录牌名相同的牌时，令此牌无效，然后，若此牌为非基本牌，其移除1个“彀”标记（X为你的体力值+1）。",
+		nuyan_jinglei:"惊雷",
+		nuyan_jinglei_info:"一名角色受到伤害后，若伤害来源的体力值或手牌数大于其，你可以对来源造成1点无来源雷电伤害。",
+		nuyan_taipingyaoshu:"太平要术",
+		nuyan_taipingyaoshu_info: "锁定技，防止你受到的属性伤害；一名角色于其回合外失去手牌后，若其手牌数为全场最少，则你获得1点护甲。",
+		nuyan_huangtiandangli:"黄天当立",
+		nuyan_huangtiandangli_info:"你首次登场时，获得36点护甲；当你失去1点护甲后，可以视为对一名其他角色使用1张无距离与次数限制的强化【杀】且视为雷电伤害。",
 	},
 	dynamicTranslate: {//动态翻译
 		nuyan_yuqi: function(player) {

@@ -6,21 +6,15 @@ export async function precontent(config, originalPack) {
 	//后续谋奕添加ai，（遥遥无期
 	/*lib.skill._test = {
 		trigger: {
-			player: "useCard",
+			player: "discard",
 		},
 		forced: true,
 		filter: function(event, player) {
 			return true;
 		},
 		async content(event, trigger, player) {
-			console.log(player.getHistory(trigger.name, (evt) => evt.card == trigger.card));
-			let num = 0, bool = true;
-			while(bool) {
-				num ++;
-				bool = event.getParent(num) !== trigger;
-			}
-			console.log(num);
-			//3
+			console.log(trigger.getParent())
+			console.log(event);
 		},
 	}
 	lib.skill._test2 = {
@@ -1012,6 +1006,7 @@ export async function precontent(config, originalPack) {
 				"nuyan_qi_yuanshao": ["_ny_zhuanShu_Firstsizhao", "_ny_zhuanShu_sizhao"],
 				"nuyan_zhouchu": ["_ny_zhuanShu_longlin"],
 				"nuyan_mou_zhugeliang": ["_ny_zhuanShu_bazhen"],
+				"nuyan_qi_zhaojiao": ["_ny_zhuanShu_huangjin"],
 			},
 			filter(event, player) {
 				if (get.itemtype(player) != "player") return false;
@@ -2484,7 +2479,6 @@ export async function precontent(config, originalPack) {
 			filter: function(event, player) {
 				if (!player.storage._ny_fushiId) return false;
 				if (player.storage._ny_fushiId[2] !== 6 || player.storage._ny_fushiTime[2] <= 0) return false;
-				if (name == "gainBegin") return true;
 				var evt = event.getl(player);
 				if (!evt || !evt.hs || !evt.hs.length) return false;
 				return true;
@@ -5619,6 +5613,35 @@ export async function precontent(config, originalPack) {
 						trigger.num ++;
 					},
 				},
+			},
+		}
+		lib.skill._ny_zhuanShu_huangjin = {
+			popup: false,
+			priority: 1145,
+			audio: "huangtian",
+			trigger: {
+				global: "damageBegin4",
+			},
+			filter(event, player) {
+				if (!lib.skill._ny_getZhuanShuFuShi.filterStone(player, "_ny_zhuanShu_huangjin")) return false;
+				return event.num >= event.player.hp && player.countDiscardableCards("h") >= 2;
+			},
+			async cost(event, trigger, player) {
+				let result = await player.chooseToDiscard(false, 2, "h", "chooseonly")
+					.set("prompt", get.prompt(event.name.slice(0, -5)))
+					.set("prompt2", get.prompt2(event.name.slice(0, -5)))
+					.forResult();
+				event.result = {
+					bool: result.bool,
+					cost_data: result.cards?.slice(),
+				}
+			},
+			async content(event, trigger, player) {
+				const cards = event.cost_data;
+				await player.discard(cards);
+				lib.skill._ny_getZhuanShuFuShi.logStone(player, "_ny_zhuanShu_huangjin");
+				trigger.cancel();
+				if (player !== trigger.player) await trigger.player.draw(2);
 			},
 		}
 	});
