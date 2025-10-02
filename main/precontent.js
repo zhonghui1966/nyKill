@@ -2479,7 +2479,7 @@ export async function precontent(config, originalPack) {
 			"演奏调式": "",
 		}
 		let str = "";
-		for (let i of lib.skill._ny_yanzoudiaoshi.list) {
+		for (let i of ["gongdiao", "shangdiao", "jiaodiao", "zhidiao", "yudiao"]) {
 			str += `<br>〖${get.translation("nuyan" + i)}〗：${get.translation("nuyan" + i + "_info")}`;
 		}
 		str = str.slice(2);
