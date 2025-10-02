@@ -4250,11 +4250,11 @@ export default {
 			trigger: {
 				get global() {
 					if (lib.config.extension_怒焰武将_nuyan_First_lvlingqi == "First") return "phaseEnd";
-					else return;
+					else return "";
 				},
 				get source() {
 					if (lib.config.extension_怒焰武将_nuyan_First_lvlingqi == "New") return "damageEnd";
-					else return;
+					else return "";
 				},
 			},
 			filter: function(event, player) {

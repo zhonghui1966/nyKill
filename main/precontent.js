@@ -87,6 +87,10 @@ export async function precontent(config, originalPack) {
 			return copyPile;
 		},
 		helpStr(html) {
+			if (!lib.skill._useCardQianghua?.list) {
+				html.innerHTML = "请开启<b>怒焰武将</b>包后在做尝试";
+				return;
+			}
 			if (html.hth_more == undefined) {
 				let str = "",
 					listStr = "";
@@ -346,109 +350,13 @@ export async function precontent(config, originalPack) {
 		}
 	}
 	
-	//单向联机❌ 加入武将包√
+	//加入武将包
 	for (let packName in characters) {
 		const pack = characters[packName];
 		let name = pack.name;
 		await game.import("character", function () {
 			return pack;
 		});
-		lib.arenaReady.push(() => {
-			lib.connectCharacterPack.add(name);
-		});
-		if (!_status.postReconnect[`${name}_pack`]) {
-			_status.postReconnect[`${name}_pack`] = [
-				function (pack, name) {
-					lib.translate[`${name}_character_config`] = pack[name];
-					lib.characterPack[name] = pack;
-					lib.config[`extension_${name}_characters_enable`] = true;
-					lib.connectCharacterPack.add(name);
-					lib.config.characters.add(name);
-				},
-				lib.characterPack[name],
-				name,
-			];
-		}
-		if (!_status.postReconnect[`${name}_translate`]) {
-			_status.postReconnect[`${name}_translate`] = [
-				function (translates, name) {
-					lib.translate[`${name}_character_config`] = translates[name];
-					for (let key in translates) {
-						lib.translate[key] = translates[key];
-					}
-				},
-				pack.translate,
-				name,
-			];
-		}
-	}
-	if (!_status.postReconnect.nyKill_namePrefix) {
-		_status.postReconnect.nyKill_namePrefix = [
-			function () {
-				lib.namePrefix.set("魏", {
-				    getSpan: () => {
-						//AI跑的
-				        return `<span style="color:#1a75ff;display:inline-block;transform:translateY(-1px);text-shadow:0 0 2px rgba(26, 117, 255, 0.5);padding:0 2px;border-radius:2px;background:rgba(26, 117, 255, 0.1);">魏</span>`;
-				    },
-				});
-				lib.namePrefix.set("吴", {
-				    getSpan: () => {
-						//AI跑的
-				        return `<span style="color:#0a8f46;display:inline-block;transform:translateY(-1px);text-shadow:0 0 2px rgba(10, 143, 70, 0.5);padding:0 2px;border-radius:2px;background:rgba(10, 143, 70, 0.1);">吴</span>`;
-				    },
-				});
-				lib.namePrefix.set("怒焰", {
-				    getSpan: () => {
-						//AI跑的
-				        return `<span style="color:#f00;display:inline-block;transform:translateY(-1px);text-shadow:0 0 2px rgba(255,0,0,0.5);">怒</span>`;
-				    },
-				});
-				lib.namePrefix.set("神射", {
-					getSpan(prefix, name) {
-						return `<span style="color:#faecd1;display:inline-block;transform:translateY(-1px);text-shadow:0 0 2px #faecd1;padding:0 2px;border-radius:2px;background:rgba(10, 143, 70, 0.1);">神射</span>`;
-					},
-				});
-				lib.namePrefix.set("天刃", {
-					getSpan(prefix, name) {
-						return `<span style="color:#faecd1;display:inline-block;transform:translateY(-1px);text-shadow:0 0 2px #faecd1;padding:0 2px;border-radius:2px;background:rgba(10, 143, 70, 0.1);">天刃</span>`;
-					},
-				});
-				lib.namePrefix.set("怒焰神射", {
-					getSpan(prefix, name) {
-						return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("神射", name)}`;
-					},
-				});
-				lib.namePrefix.set("怒焰天刃", {
-					getSpan(prefix, name) {
-						return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("天刃", name)}`;
-					},
-				});
-				let old = ["初版", "二版"];
-				let prefix = ["界", "谋", "幻", "神", "起", "魏", "吴"];
-				for (let i of prefix) {
-					lib.namePrefix.set("怒焰" + i, {
-						getSpan(prefix, name) {
-							return `${get.prefixSpan("怒焰", name)}${get.prefixSpan(i, name)}`;
-						},
-					});
-				}
-				for (let i of old) {
-					lib.namePrefix.set("怒焰" + i, {
-						getSpan(prefix, name) {
-							return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("旧", name)}`;
-						},
-					});
-					for (let j of prefix) {
-						lib.namePrefix.set("怒焰" + i + j, {
-							getSpan(prefix, name) {
-								return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("旧", name)}${get.prefixSpan(j, name)}`;
-							},
-						});
-					}
-				}
-			},
-			[],
-		];
 	}
 	
 	//加入牌堆
@@ -456,33 +364,8 @@ export async function precontent(config, originalPack) {
 	await game.import("card", function () {
 		return nyCard;
 	});
-	lib.arenaReady.push(() => {
-		lib.connectCardPack.add(name);
-	});
-	if (!_status.postReconnect[`${name}_pack`]) {
-		_status.postReconnect[`${name}_pack`] = [
-			function (pack, name) {
-				lib.translate[`${name}_card_config`] = pack[name];
-				lib.cardPack[name] = pack;
-				lib.config[`extension_${name}_cards_enable`] = true;
-				lib.connectCardPack.add(name);
-				//lib.config.all.cards.add(name);
-				lib.config.cards.add(name);
-			},
-			lib.cardPack[name],
-		];
-	}
-	if (!_status.postReconnect[`${name}_translate`]) {
-		_status.postReconnect[`${name}_translate`] = [
-			function (translates, name) {
-				lib.translate[`${name}_card_config`] = translates[name];
-				for (let key in translates) lib.translate[key] = translates[key];
-			},
-			nyCard.translate,
-			name,
-		];
-	}
 	
+	//函数定义
 	//涉及到改本体一定一定要加扩展前缀！！！既是为了可读性也是为了防止扩展冲突
 	let players = lib.element.player,
 		contents = lib.element.content;
@@ -866,7 +749,6 @@ export async function precontent(config, originalPack) {
 			await event.trigger(event.name + "After");
 		}
 	}
-	//函数定义
 	lib.arenaReady.push(() => {
 		/*
 		if (player.ny_nuqi >= player.ny_nuqiMax) {
@@ -2478,12 +2360,14 @@ export async function precontent(config, originalPack) {
 			"摧毁": "被摧毁的牌无法被使用，打出或用于拼点直至进入弃牌堆",
 			"演奏调式": "",
 		}
-		let str = "";
-		for (let i of ["gongdiao", "shangdiao", "jiaodiao", "zhidiao", "yudiao"]) {
-			str += `<br>〖${get.translation("nuyan" + i)}〗：${get.translation("nuyan" + i + "_info")}`;
+		if (lib.skill._ny_yanzoudiaoshi?.list) {
+			let str = "";
+			for (let i of ["gongdiao", "shangdiao", "jiaodiao", "zhidiao", "yudiao"]) {
+				str += `<br>〖${get.translation("nuyan" + i)}〗：${get.translation("nuyan" + i + "_info")}`;
+			}
+			str = str.slice(2);
+			zhonghuiFunction.tipMap[0]["演奏调式"] = str;
 		}
-		str = str.slice(2);
-		zhonghuiFunction.tipMap[0]["演奏调式"] = str;
 		if (lib.skill._useCardQianghua?.list) {
 			let list = lib.skill._useCardQianghua.list.map(i => get.translation(i)).join("、");
 			if (list.length) {
