@@ -20,6 +20,7 @@ const standardList = ["jinGong", "fangYu", "moPai", "nuQi", "zhanFa", "zhuanShu"
 		if (!object.noAutoFilter) {
 			object.filterCopy = object.filter || func2;
 			object.filter = function(event, player, ...args) {
+				if (get.itemtype(player) !== "player") return false;
 				let name = this.id || this.sourceSkill;
 				if (!player.ny_filterStone(name)) return false;
 				return this.filterCopy.call(this, event, player, ...args);
@@ -42,13 +43,13 @@ const standardList = ["jinGong", "fangYu", "moPai", "nuQi", "zhanFa", "zhuanShu"
 				}
 			}
 		}
-		if (!object.noAutoContent && !name?.includes("zhanFa") && object.content) {
-			object.contentCopy = object.content;
+		if (!object.noAutoContent && !name?.includes("zhanFa")) {
+			object.contentCopy = object.content || function () { };
 			object.content = async function(event, trigger, player, ...args) {
 				let name = event.name;
 				if (get.info(event.name).sourceSkill) name = get.info(event.name).sourceSkill;
 				await player.ny_logStone(name);
-				await get.info(event.name).contentCopy.call(this, event, trigger, player, ...args);
+				await get.info(event.name).contentCopy(event, trigger, player, ...args);
 			}
 		}
 		object.priority ??= 114;
@@ -57,7 +58,9 @@ const standardList = ["jinGong", "fangYu", "moPai", "nuQi", "zhanFa", "zhuanShu"
 			for (let item in object.mod) {
 				object.mod[item] = function() {
 					let name = this.id || this.sourceSkill,
-						num = this.modPlayerNum;
+						num = this.modPlayerNum,
+						bool = this.modNoTime || false;
+					if (arguments[num].ny_filterStone(name, "mod") && bool) return this.modx[item].call(this, ...arguments);
 					if (arguments[num].ny_filterStone(name)) return this.modx[item].call(this, ...arguments);
 				}.bind(object);
 			}
