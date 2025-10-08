@@ -35,10 +35,10 @@ const standardList = ["jinGong", "fangYu", "moPai", "nuQi", "zhanFa", "zhuanShu"
 				if (object.precontent && !object.noAutoPreContent && !name.includes("zhanFa")) {
 					object.precontentCopy = object.precontent;
 					object.precontent = async function(event, trigger, player, ...args) {
-						let name = event.name;
-						if (get.info(event.name).sourceSkill) name = get.info(event.name).sourceSkill;
+						let name = event.name.slice(4);
+						if (get.info(name).sourceSkill) name = get.info(name).sourceSkill;
 						await player.ny_logStone(name);
-						await get.info(event.name).precontentCopy.call(this, event, trigger, player, ...args);
+						await get.info(name).precontentCopy.call(this, event, trigger, player, ...args);
 					}
 				}
 			}
@@ -49,7 +49,7 @@ const standardList = ["jinGong", "fangYu", "moPai", "nuQi", "zhanFa", "zhuanShu"
 				let name = event.name;
 				if (get.info(event.name).sourceSkill) name = get.info(event.name).sourceSkill;
 				await player.ny_logStone(name);
-				await get.info(event.name).contentCopy(event, trigger, player, ...args);
+				await get.info(event.name).contentCopy.call(this, event, trigger, player, ...args);
 			}
 		}
 		object.priority ??= 114;

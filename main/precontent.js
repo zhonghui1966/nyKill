@@ -10,7 +10,7 @@ export async function precontent(config, originalPack) {
 			player: "recoverBefore",
 		},
 		filter() {
-			console.log(11);
+			console.log(this.trigger);
 		},
 	}
 	lib.skill._test2 = {
@@ -650,7 +650,6 @@ export async function precontent(config, originalPack) {
 		this.card[str] += num;
 		return this;
 	}
-	console.log(events);
 	//生成概念解释 纯💩山
 	//数字代表层数
 	lib.arenaReady.push(() => {
