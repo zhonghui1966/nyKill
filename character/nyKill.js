@@ -5,52 +5,55 @@ export default {
 	connect: true,
 	characterSort: {//武将分包详见index.js
 	},
+	//None Audio Auto (Character) List
+	NAAL: [],
 	character: {
+		//后续第五格name都自动化
 		"nuyan_caorui": ["male","wei","7/7",["nuyan_huituo","nuyan_mingjianchaogang","nuyan_enweibingshi","nuyan_nuqidashi","nuyan_fushizongshi"], ["name:曹|叡"]],
 		"nuyan_xizhicai": ["male","wei","6/6",["nuyan_chouce","nuyan_yizhijuncai","nuyan_xianfuqiyue","nuyan_nuqidashi","nuyan_fushidashi"], ["name:戏|志才"]],
-		"nuyan_jie_ganning": ["male","wu","7/7",["nuyan_qixi","nuyan_linjiangshenjian","nuyan_yexidiying","nuyan_jingongdashi","nuyan_fushidashi"], ["name:甘|宁"]],
+		"nuyan_Jie_ganning": ["male","wu","7/7",["nuyan_qixi","nuyan_linjiangshenjian","nuyan_yexidiying","nuyan_jingongdashi","nuyan_fushidashi"], ["name:甘|宁"]],
 		"nuyan_First_xusheng": ["male","wu","6/6",["nuyan_pojun","nuyan_yongliequedi","nuyan_wanfumokai","nuyan_jingongdashi","nuyan_fushidashi"], ["name:徐|盛"]],
-		"nuyan_jie_sunjian": ["male","wu","6/6",["nuyan_yinghun","nuyan_hunyoujiangdong","nuyan_jianbukecui","nuyan_fangyudashi","nuyan_fushidashi"], ["name:孙|坚"]],
-		"nuyan_jie_weiyan": ["male","shu","6/6",["nuyan_kuanggu","nuyan_shuguogulang","nuyan_kuangnuzhuiji","nuyan_fangyudashi","nuyan_fushidashi"], ["name:魏|延"]],
+		"nuyan_Jie_sunjian": ["male","wu","6/6",["nuyan_yinghun","nuyan_hunyoujiangdong","nuyan_jianbukecui","nuyan_fangyudashi","nuyan_fushidashi"], ["name:孙|坚"]],
+		"nuyan_Jie_weiyan": ["male","shu","6/6",["nuyan_kuanggu","nuyan_shuguogulang","nuyan_kuangnuzhuiji","nuyan_fangyudashi","nuyan_fushidashi"], ["name:魏|延"]],
 		"nuyan_First_lvlingqi": ["female","qun","7/7",["nuyan_guowu","nuyan_shenweizaixian","nuyan_wushuangxiaoji","nuyan_jingongdashi","nuyan_fushizongshi"], ["name:吕|玲绮"]],
-		"nuyan_jieFirst_zhangchunhua": ["female","wei","6/6",["nuyan_shangshi","nuyan_xinyixiangtong","nuyan_jueqingzhuohua","nuyan_jingongdashi","nuyan_fushidashi"], ["name:张|春华"]],
+		"nuyan_JieFirst_zhangchunhua": ["female","wei","6/6",["nuyan_shangshi","nuyan_xinyixiangtong","nuyan_jueqingzhuohua","nuyan_jingongdashi","nuyan_fushidashi"], ["name:张|春华"]],
 		"nuyan_jushou": ["male","qun","6/6",["nuyan_jianying","nuyan_jianzhongbuqu","nuyan_honghuzhizai","nuyan_mopaidashi","nuyan_fushidashi"], ["name:沮|授"]],
-		"nuyan_jieFirst_diaochan": ["male","qun","6/6",["nuyan_lihun","nuyan_miaojilianhuan","nuyan_qiaoxianlianhuan","nuyan_nuqidashi","nuyan_fushidashi"], ["name:貂|蝉"]],
+		"nuyan_JieFirst_diaochan": ["male","qun","6/6",["nuyan_lihun","nuyan_miaojilianhuan","nuyan_qiaoxianlianhuan","nuyan_nuqidashi","nuyan_fushidashi"], ["name:貂|蝉"]],
 		"nuyan_zhaoxiang": ["female","shu","7/7",["nuyan_fanghun","nuyan_jinghongmeiying","nuyan_zhongxinfuhan","nuyan_jingongdashi","nuyan_fushidashi"], ["name:赵|襄"]],
 		"nuyan_liuqi": ["male","qun","6/6",["nuyan_wenji","nuyan_bizoujiangnan","nuyan_choutiqiuce","nuyan_jingongdashi","nuyan_fushidashi"], ["name:刘|琦"]],
 		"nuyan_First_luotong": ["male","wu","7/7",["nuyan_qinzheng","nuyan_renzhengaimin","nuyan_lingchurujian","nuyan_mopaidashi","nuyan_fushidashi"], ["name:骆|统"]],
 		"nuyan_First_mifuren": ["female","shu","7/7",["nuyan_guixiu","nuyan_xuzhouwangzu","nuyan_sheshencunsi","nuyan_mopaidashi","nuyan_fushizongshi"], ["name:糜|夫人"]],
-		"nuyan_shenFirst_huangzhong": ["male","shen","6/6",["nuyan_yongyi","nuyan_yingxiongxiangxi","nuyan_dingjunzhanshen", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:黄|忠"]],
+		"nuyan_ShenFirst_huangzhong": ["male","shen","6/6",["nuyan_yongyi","nuyan_yingxiongxiangxi","nuyan_dingjunzhanshen", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:黄|忠"]],
 		"nuyan_shen_Shenshehuangzhong": ["male","shen","6/6",["nuyan_shenshe","nuyan_shenweiqianchong","nuyan_mojinshayu"], ["unseen", "forbidai", "name:黄|忠"]],
 		"nuyan_shen_Tianrenhuangzhong": ["male","shen","6/6",["nuyan_tianren","nuyan_shenweiqianchong","nuyan_cuifengdengnan"], ["unseen", "forbidai", "name:黄|忠"]],
-		"nuyan_jie_caojinyu": ["female","wei","6/6",["nuyan_yuqi","nuyan_shanshenzili","nuyan_xianjingduanzhuang","nuyan_fangyudashi","nuyan_fushidashi"], ["name:曹|金玉"]],
-		"nuyan_jie_lusu": ["male","wu","6/6",["nuyan_haoshi","nuyan_lianliukangcao","nuyan_dizaolianmeng","nuyan_mopaidashi","nuyan_fushidashi"], ["name:鲁|肃"]],
+		"nuyan_Jie_caojinyu": ["female","wei","6/6",["nuyan_yuqi","nuyan_shanshenzili","nuyan_xianjingduanzhuang","nuyan_fangyudashi","nuyan_fushidashi"], ["name:曹|金玉"]],
+		"nuyan_Jie_lusu": ["male","wu","6/6",["nuyan_haoshi","nuyan_lianliukangcao","nuyan_dizaolianmeng","nuyan_mopaidashi","nuyan_fushidashi"], ["name:鲁|肃"]],
 		"nuyan_wuxian": ["female","shu","7/7",["nuyan_yirong","nuyan_hechundaiyan","nuyan_jirenguixiang", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:吴|苋"]],
-		"nuyan_jie_xuhuang": ["male","wei","6/6",["nuyan_duanliang","nuyan_jiuyuanfancheng","nuyan_liangjinyuanjue", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:徐|晃"]],
-		"nuyan_jie_guojia": ["male","wei","6/6",["nuyan_yiji","nuyan_huishixinzhi","nuyan_zhiceqizuo", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:郭|嘉"]],
-		"nuyan_wei_wenyang": ["male","wei","7/7",["nuyan_chuifeng","nuyan_nvliguoren","nuyan_henxiaochoujue","nuyan_jingongdashi","nuyan_fushizongshi"], ["name:文|鸯"]],
+		"nuyan_Jie_xuhuang": ["male","wei","6/6",["nuyan_duanliang","nuyan_jiuyuanfancheng","nuyan_liangjinyuanjue", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:徐|晃"]],
+		"nuyan_Jie_guojia": ["male","wei","6/6",["nuyan_yiji","nuyan_huishixinzhi","nuyan_zhiceqizuo", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:郭|嘉"]],
+		"nuyan_Wei_wenyang": ["male","wei","7/7",["nuyan_chuifeng","nuyan_nvliguoren","nuyan_henxiaochoujue","nuyan_jingongdashi","nuyan_fushizongshi"], ["name:文|鸯"]],
 		"nuyan_zhuran": ["male","wu","7/7",["nuyan_danshou","nuyan_yifudangguan","nuyan_bajianlungong", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:朱|然"]],
-		"nuyan_shenFirst_sunjian": ["male","shen","1/8",["nuyan_hulie","nuyan_shenweiqianjun","nuyan_qinwangpolu", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:孙|坚"]],
-		"nuyan_jieFirst_caojie": ["female", "qun", "6/6", ["nuyan_shouxi", "nuyan_nvzhongjinguo", "nuyan_huiminjishi", "nuyan_Legend_diewufeihua", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|节"]],
+		"nuyan_ShenFirst_sunjian": ["male","shen","1/8",["nuyan_hulie","nuyan_shenweiqianjun","nuyan_qinwangpolu", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:孙|坚"]],
+		"nuyan_JieFirst_caojie": ["female", "qun", "6/6", ["nuyan_shouxi", "nuyan_nvzhongjinguo", "nuyan_huiminjishi", "nuyan_Legend_diewufeihua", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|节"]],
 		"nuyan_liru": ["male", "qun", "7/7", ["nuyan_fencheng", "nuyan_fenchengmieji", "nuyan_jueshizhice", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:李|儒"]],
 		"nuyan_caomao": ["male", "wei", "6/6", ["nuyan_qianlong", "nuyan_qingzaofensi", "nuyan_juejintaoni", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|髦"]],
-		"nuyan_jieFirst_machao": ["male", "shu", "7/7", ["nuyan_tieji", "nuyan_weizhenliangzhou", "nuyan_yijidangqian", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:马|超"]],
+		"nuyan_JieFirst_machao": ["male", "shu", "7/7", ["nuyan_tieji", "nuyan_weizhenliangzhou", "nuyan_yijidangqian", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:马|超"]],
 		"nuyan_First_yanghuiyu": ["female", "wei", "6/6", ["nuyan_hongyi", "nuyan_huirongrenxin", "nuyan_ciweibingji", "nuyan_nuqidashi", "nuyan_fushidashi"], ["name:羊|徽瑜"]],
 		"nuyan_zhugejin": ["male", "wu", "7/7", ["nuyan_hongyuan", "nuyan_zhifangganjian", "nuyan_moudingquanju", "nuyan_mopaidashi", "nuyan_fushidashi"], ["name:诸葛|瑾"]],
 		"nuyan_First_wangyuanji": ["female", "wei", "6/6", ["nuyan_shiren", "nuyan_shangjianyihua", "nuyan_qianchongdunmu", "nuyan_mopaidashi", "nuyan_fushidashi"], ["name:王|元姬"]],
 		"nuyan_zuoci": ["male", "qun", "7/7", ["nuyan_huashen", "nuyan_shaoyoushendao", "nuyan_yiguishishen", "nuyan_mopaidashi", "nuyan_fushizongshi"], ["name:左|慈"]],
 		"nuyan_caizhenji": ["female", "wei", "6/6", ["nuyan_tianyin", "nuyan_dihunlvxin", "nuyan_zhongyueheming", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:蔡|贞姬"]],
-		"nuyan_jie_xunyou": ["male", "wei", "6/6", ["nuyan_qice", "nuyan_miaojibaichu", "nuyan_shierqice", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:荀|攸"]],
-		"nuyan_huan_caiwenji": ["female", "wei", "6/6", ["nuyan_yayue", "nuyan_lvxindihun", "nuyan_xingyunliushui", "nuyan_mopaidashi", "nuyan_fushizongshi"], ["name:蔡|文姬"]],
+		"nuyan_Jie_xunyou": ["male", "wei", "6/6", ["nuyan_qice", "nuyan_miaojibaichu", "nuyan_shierqice", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:荀|攸"]],
+		"nuyan_Huan_caiwenji": ["female", "wei", "6/6", ["nuyan_yayue", "nuyan_lvxindihun", "nuyan_xingyunliushui", "nuyan_mopaidashi", "nuyan_fushizongshi"], ["name:蔡|文姬"]],
 		"nuyan_caochun": ["male", "wei", "7/7", ["nuyan_shanjia", "nuyan_pijianzhirui", "nuyan_duyuxiaoji", "nuyan_fangyudashi", "nuyan_fushidashi"], ["name:曹|纯"]],
-		"nuyan_jie_zhouyu": ["male", "wu", "6/6", ["nuyan_fanjian", "nuyan_botaoxiongyong", "nuyan_lieyanqinyin", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:周|瑜"]],
+		"nuyan_Jie_zhouyu": ["male", "wu", "6/6", ["nuyan_fanjian", "nuyan_botaoxiongyong", "nuyan_lieyanqinyin", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:周|瑜"]],
 		"nuyan_caoying": ["female", "wei", "6/6", ["nuyan_lingren", "nuyan_shuiqingzhuoying", "nuyan_longchengfengming", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:曹|婴"]],
-		"nuyan_mou_simayi": ["male", "wei", "6/6", ["nuyan_yinren", "nuyan_MouSimayi_xuanmoumiaoji", "nuyan_taoguangyanghui", "nuyan_fangyudashi", "nuyan_fushizongshi"], ["name:司马|懿"]],
+		"nuyan_Mou_simayi": ["male", "wei", "6/6", ["nuyan_yinren", "nuyan_MouSimayi_xuanmoumiaoji", "nuyan_taoguangyanghui", "nuyan_fangyudashi", "nuyan_fushizongshi"], ["name:司马|懿"]],
 		"nuyan_Second_yuji": ["male", "qun", "7/7", ["nuyan_guhuo", "nuyan_taipingdaoyi", "nuyan_huanhuozhongxin", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:于|吉"]],
-		"nuyan_qi_yuanshao": ["male", "qun", "6/6", ["nuyan_qi_luanji", "nuyan_bijianzixian", "nuyan_shiluxungui", "nuyan_mopaidashi", "nuyan_fushidashi"], ["name:袁|绍"]],
+		"nuyan_Qi_yuanshao": ["male", "qun", "6/6", ["nuyan_qi_luanji", "nuyan_bijianzixian", "nuyan_shiluxungui", "nuyan_mopaidashi", "nuyan_fushidashi"], ["name:袁|绍"]],
 		"nuyan_zhouchu": ["male", "wu", "6/6", ["nuyan_chuhai", "nuyan_nanshanshehu", "nuyan_xijiufujiao", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:周|处"]],
-		"nuyan_mou_zhugeliang": ["male", "shu", "7/7", ["nuyan_guanxing", "nuyan_MouZhugeliang_xuanmoumiaoji", "nuyan_dongruoguanhuo", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:诸葛|亮"]],
-		"nuyan_qi_zhaojiao": ["male", "qun", "6/6", ["nuyan_jinglei", "nuyan_taipingyaoshu", "nuyan_huangtiandangli", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:张|角"]],
+		"nuyan_Mou_zhugeliang": ["male", "shu", "7/7", ["nuyan_guanxing", "nuyan_MouZhugeliang_xuanmoumiaoji", "nuyan_dongruoguanhuo", "nuyan_jingongdashi", "nuyan_fushizongshi"], ["name:诸葛|亮"]],
+		"nuyan_Qi_zhaojiao": ["male", "qun", "6/6", ["nuyan_jinglei", "nuyan_taipingyaoshu", "nuyan_huangtiandangli", "nuyan_jingongdashi", "nuyan_fushidashi"], ["name:张|角"]],
 	},
 	skill:{
 		//全局技能
@@ -119,7 +122,7 @@ export default {
 							star = lib.config.extension_怒焰武将_nuyan_star - 1;
 						if (link.startsWith("clear")) return -1;
 						if (link.startsWith("tianyan")) return 9 + link.slice(-1);
-						if (get.nameList(player)?.some(n => n == "nuyan_jie_caojie")) {
+						if (get.nameList(player)?.some(n => n == "nuyan_Jie_caojie")) {
 							if (link.startsWith("tiannu")) return link.slice(-1);
 							return -1;
 						}
@@ -2753,7 +2756,6 @@ export default {
 		//专属符石
 		_ny_zhuanShu_Firstqinglongshi: {//曹叡-初版青龙石
 			name: "nuyan_caorui",
-			audio: "xingshuai",
 			trigger: {
 				global: "dying",
 			},
@@ -2770,7 +2772,6 @@ export default {
 		},
 		_ny_zhuanShu_qinglongshi: {//曹叡-青龙石
 			name: "nuyan_caorui",
-			audio: "xingshuai",
 			trigger: {
 				global: "dying",
 			},
@@ -2784,7 +2785,6 @@ export default {
 			trigger: {
 				global: "judge",
 			},
-			audio: "xianfu2",
 			name: "nuyan_xizhicai",
 			filter(event, player) {
 				if (!player.countCards("h")) return false;
@@ -2857,7 +2857,6 @@ export default {
 			trigger: {
 				player:"phaseDrawBegin",
 			},
-			audio: "llqshenwei",
 			name: "nuyan_First_lvlingqi",
 			async content(event, trigger, player) {
 				trigger.num += 2;
@@ -2868,7 +2867,6 @@ export default {
 				player: "loseAfter",
 				global: ["equipAfter","addJudgeAfter","gainAfter","loseAsyncAfter","addToExpansionAfter"],
 			},
-			audio: "fanghun",
 			name: "nuyan_zhaoxiang",
 			filter(event, player) {
 				if (player == _status.currentPhase) return false;
@@ -2892,7 +2890,6 @@ export default {
 					if (card.name == "sha" && player.storage._ny_zhuanShu_wanminshu) return num + player.storage._ny_zhuanShu_wanminshu;
 				},
 			},
-			audio: "qingzheng",
 			noAutoMod: true,
 			marktext: "万",
 			intro:{
@@ -2902,7 +2899,6 @@ export default {
 		},
 		_ny_zhuanShu_Firstfenghuashan: {//初版糜夫人-初版风华扇
 			name: "nuyan_First_mifuren",
-			audio: "qingyu",
 			trigger: {
 				player: "damageEnd",
 			},
@@ -2923,7 +2919,6 @@ export default {
 		},
 		_ny_zhuanShu_fenghuashan: {//初版糜夫人-风华扇
 			name: "nuyan_First_mifuren",
-			audio: "qingyu",
 			trigger: {
 				player: "changeHp",
 			},
@@ -2956,8 +2951,7 @@ export default {
 			},
 		},
 		_ny_zhuanShu_liaoyuan: {//神黄忠-燎原•神
-			name: "nuyan_shenFirst_huangzhong",
-			audio: "spqishe",
+			name: "nuyan_ShenFirst_huangzhong",
 			mod: {
 				attackRange(player, num) {
 					num += 3;
@@ -2980,8 +2974,7 @@ export default {
 			},
 		},
 		_ny_zhuanShu_Firstchixue: {//神黄忠-初版赤血•神
-			name: "nuyan_shenFirst_huangzhong",
-			audio: "dczhanjue",
+			name: "nuyan_ShenFirst_huangzhong",
 			mod: {
 				attackRange(player, num) {
 					num += 1;
@@ -3018,8 +3011,7 @@ export default {
 			},
 		},
 		_ny_zhuanShu_chixue: {//神黄忠-赤血•神
-			name: "nuyan_shenFirst_huangzhong",
-			audio: "dczhanjue",
+			name: "nuyan_ShenFirst_huangzhong",
 			mod: {
 				attackRange(player, num) {
 					num += 1;
@@ -3062,7 +3054,6 @@ export default {
 		},
 		_ny_zhuanShu_yongan: {//吴苋-永安
 			name: "nuyan_wuxian",
-			audio: "fumian",
 			trigger: {
 				global: "phaseChange",
 			},
@@ -3086,8 +3077,7 @@ export default {
 			},
 		},
 		_ny_zhuanShu_polu: {//魏文鸯-破虏
-			name: "nuyan_wei_wenyang",
-			audio: "chongjian",
+			name: "nuyan_Wei_wenyang",
 			trigger: {
 				player: "useCardToPlayered",
 			},
@@ -3132,7 +3122,6 @@ export default {
 		},
 		_ny_zhuanShu_jianbi: {//朱然-坚壁
 			name: "nuyan_zhuran",
-			audio: "mobiledanshou",
 			trigger: {
 				global: "phaseEnd",
 			},
@@ -3168,8 +3157,7 @@ export default {
 			},
 		},
 		_ny_zhuanShu_Firstgudingdao: {//初版神孙坚-初版古锭刀•神
-			name: "nuyan_shenFirst_sunjian",
-			audio: "starruijun",
+			name: "nuyan_ShenFirst_sunjian",
 			mod: {
 				attackRange(player, num) {
 					num += 4;
@@ -3211,8 +3199,7 @@ export default {
 			},
 		},
 		_ny_zhuanShu_gudingdao: {//初版神孙坚-古锭刀•神
-			audio: "starruijun",
-			name: "nuyan_shenFirst_sunjian",
+			name: "nuyan_ShenFirst_sunjian",
 			mod: {
 				attackRange(player, num) {
 					num += 4;
@@ -3254,18 +3241,15 @@ export default {
 			},
 		},
 		_ny_zhuanShu_dujiu: {//李儒-毒鸠
-			audio: "mieji",
 			name: "nuyan_liru",
 			//后续还是写在技能里好点
 		},
 		_ny_zhuanShu_longyuan: {//曹髦-龙渊
-			audio: "qianlong",
 			name: "nuyan_caomao",
 			//后续还是写在技能里好点
 		},
 		_ny_zhuanShu_zhuisi: {//初版羊徽瑜-追思
 			name: "nuyan_First_yanghuiyu",
-			audio: "requanfeng",
 			trigger: {
 				global: "phaseBegin",
 			},
@@ -3459,13 +3443,11 @@ export default {
 		},
 		_ny_zhuanShu_kongqueling: {//诸葛瑾-孔雀翎
 			name: "nuyan_zhugejin",
-			audio: "dcsbhoude",
 			//后续还是写在技能里好点
 		},
 		_ny_zhuanShu_luoying: {//初版王元姬-落英
 			name: "nuyan_First_wangyuanji",
 			position: "he",
-			audio: "xinfu_shangjian",
 			enable: "chooseToUse",
 			filter(event, player) {
 				return player.isDying();
@@ -3516,12 +3498,10 @@ export default {
 		},
 		_ny_zhuanShu_shendaoling: {//左慈-神道铃
 			name: "nuyan_zuoci",
-			audio: "xinsheng",
 			//后续还是写在技能里好点
 		},
 		_ny_zhuanShu_fengqiqin: {//蔡贞姬-凤栖琴
 			forced: false,
-			audio: "tianyin",
 			name: "nuyan_caizhenji",
 			trigger: {
 				player: "changeHp",
@@ -3546,8 +3526,7 @@ export default {
 			},
 		},
 		_ny_zhuanShu_keqingdi: {//幻蔡文姬-柯琴笛
-			name: "nuyan_huan_caiwenji",
-			audio: "dcbeifen",
+			name: "nuyan_Huan_caiwenji",
 			trigger: {
 				global: ["gameStart", "loseHpBegin"],
 				player: ["enterGame", "changeCharacterAfter", "phaseZhunbeiBegin"],
@@ -3603,13 +3582,11 @@ export default {
 			},
 		},
 		_ny_zhuanShu_fengmingjian: {//凤鸣剑
-			audio: "fujian",
 			name: "nuyan_caoying",
 			//后续还是写在技能里好点
 		},
 		_ny_zhuanShu_hanshuang: {//曹纯-寒霜
 			name: "nuyan_caochun",
-			audio: "shanjia",
 			trigger: {
 				global: "phaseUseBegin",
 			},
@@ -3668,8 +3645,7 @@ export default {
 		},
 		_ny_zhuanShu_yingzhi: {//谋司马懿-鹰鸷
 			forced: false,
-			name: "nuyan_mou_simayi",
-			audio: "smyyingshi",
+			name: "nuyan_Mou_simayi",
 			getSeat(player) {
 				let players = game.players.slice().sortBySeat(_status.roundStart).slice(0, 1).addArray(game.players.slice().sortBySeat(_status.roundStart));
 				players = players.filter(item => players.indexOf(player) > players.indexOf(item));
@@ -3730,11 +3706,9 @@ export default {
 		_ny_zhuanShu_taipingjin: {//二版于吉-太平巾
 			//后续还是写在技能里好点
 			name: "nuyan_Second_yuji",
-			audio: "guhuo_guess",
 		},
 		_ny_zhuanShu_Firstsizhao: {//起袁绍-初版思召
 			marktext: "思",
-			audio: "olsbyufeng",
 			intro: {
 				name: "初版思召",
 				content(storage) {
@@ -3754,8 +3728,7 @@ export default {
 			},
 		},
 		_ny_zhuanShu_sizhao: {//起袁绍-思召
-			name: "nuyan_qi_yuanshao",
-			audio: "olsbyufeng",
+			name: "nuyan_Qi_yuanshao",
 			trigger: {
 				player: "useCardAfter",
 			},
@@ -3777,7 +3750,6 @@ export default {
 		},
 		_ny_zhuanShu_longlin: {//周处 龙鳞
 			name: "nuyan_zhouchu",
-			audio: "shanduan",
 			trigger: {
 				player: "compare",
 				target: "compare",
@@ -3796,8 +3768,7 @@ export default {
 			},
 		},
 		_ny_zhuanShu_bazhen: {//谋诸葛亮--八阵
-			name: "nuyan_mou_zhugeliang",
-			audio: "bazhen",
+			name: "nuyan_Mou_zhugeliang",
 			trigger: {
 				global: "phaseBegin",
 			},
@@ -4074,8 +4045,7 @@ export default {
 			},
 		},
 		_ny_zhuanShu_huangjin: {//起张角-黄巾
-			name: "nuyan_qi_zhaojiao",
-			audio: "huangtian",
+			name: "nuyan_Qi_zhaojiao",
 			trigger: {
 				global: "damageBegin4",
 			},
@@ -4197,7 +4167,7 @@ export default {
 				if (Object.keys(storage) == 0) player.unmarkSkill("nuyan_mouYi");
 			},
 			//谋司马懿
-			nuyan_mou_simayi: {
+			nuyan_Mou_simayi: {
 				info1: "怒焰谋司马懿【谋奕】：请选择一项执行，目标可以选择抵御一项",
 				info2: "怒焰谋司马懿【谋奕】：可能执行以下效果之一，请选择抵御一项",
 				"以逸待劳": {
@@ -4243,7 +4213,7 @@ export default {
 				},
 			},
 			//怒焰谋诸葛亮
-			nuyan_mou_zhugeliang: {
+			nuyan_Mou_zhugeliang: {
 				info1: "怒焰谋诸葛亮【谋奕】：请选择一项执行，目标可以选择抵御一项",
 				info2: "怒焰谋诸葛亮【谋奕】：可能执行以下效果之一，请选择抵御一项",
 				"草船借箭": {
@@ -4428,7 +4398,6 @@ export default {
 		},
 		//怒焰曹叡
 		nuyan_huituo: {//恢拓
-			audio: "huituo",
 			trigger: {
 				player: "damageEnd",
 			},
@@ -4460,9 +4429,7 @@ export default {
 			},
 		},
 		nuyan_mingjianchaogang: {//明鉴朝纲
-			nuyan_star: 1,
 			enable: "phaseUse",
-			audio: "mingjian",
 			usable: 1,
 			filterTarget(card, player, target) {
 				return player != target;
@@ -4538,8 +4505,6 @@ export default {
 			},
 		},
 		nuyan_enweibingshi: {//恩威并施
-			audio: "remingjian",
-			nuyan_star: 3,
 			trigger: {
 				global: "phaseEnd",
 			},
@@ -4566,7 +4531,6 @@ export default {
 		},
 		//怒焰戏志才
 		nuyan_xianfuqiyue: {//先辅契约
-			nuyan_star: 3,
 			init2(player, skill) {
 				let next = game.createEvent(skill + "_init");
 				next.player = player;
@@ -4579,7 +4543,6 @@ export default {
 		    filter(event,player){
 		        return game.hasPlayer(current => current != player) && (event.name!='phase'||game.phaseNumber==0);
 		    },
-			audio: "xianfu",
 		    async content(event,trigger,player){
 		        let result = await player.chooseTarget('请选择〖先辅契约〗的目标',lib.translate.nuyan_xianfuqiyue_info,true,function(card,player,target){
 		            return target!=player&&(!player.storage.nuyan_xianfuqiyue2||!player.storage.nuyan_xianfuqiyue2.includes(target));
@@ -4614,11 +4577,9 @@ export default {
 		    priority: 0,
 		},
 		nuyan_xianfuqiyue2: {
-		    audio: "nuyan_xianfuqiyue",
 			group:['nuyan_xianfuqiyue3'],
 			sourceSkill: "nuyan_xianfuqiyue",
 		    charlotte: true,
-			audio: "xianfu",
 		    trigger: {
 		        global: ["damageEnd","recoverEnd"],
 		    },
@@ -4693,9 +4654,6 @@ export default {
 		    priority: 1,
 		},
 		nuyan_yizhijuncai: {//逸志俊才
-			nuyan_star:1,
-		    //audio: "ext:怒焰武将:2",
-		    audioname: ["re_guojia","xizhicai","gz_nagisa"],
 		    trigger: {
 		        player: "judgeEnd",
 		    },
@@ -4791,9 +4749,6 @@ export default {
 		},
 		//怒焰界甘宁
 		nuyan_qixi: {//奇袭
-			audio: 2,
-			audioname: ["re_ganning"],
-			audioname2: { re_heqi: "duanbing_heqi" },
 			group:['nuyan_qixi_discard'],
 			enable: "phaseUse",
 			filterCard(card) {
@@ -4838,7 +4793,6 @@ export default {
 		},
 		nuyan_linjiangshenjian: {//临江神箭
 			frequent:true,
-			nuyan_star:1,
 			trigger: {
 			    global: ["loseAfter","loseAsyncAfter"],
 				player: "nuyan_qixi_discardAfter",
@@ -4863,8 +4817,6 @@ export default {
 			priority: 0,
 		},
 		nuyan_yexidiying: {//夜袭敌营
-		    audio: "ext:怒焰武将:2",
-			nuyan_star:3,
 		    trigger: {
 		        global: "phaseZhunbeiBegin",
 		    },
@@ -4935,12 +4887,6 @@ export default {
 		},
 		//怒焰界孙坚
 		nuyan_yinghun: {//英魂
-			audio: 2,
-		    audioname: ["re_sunjian","sunce","re_sunben","re_sunce","ol_sunjian"],
-		    "audioname2": {
-		        "re_sunyi": "gzyinghun_re_sunyi",
-		        "boss_sunce": "yinghun_sunce",
-			},
 		    trigger: {
 		        player: ["changeHp","phaseZhunbeiBegin"],
 		    },
@@ -5018,8 +4964,6 @@ export default {
 		    priority: 0,
 		},
 		nuyan_hunyoujiangdong:{//魂佑江东
-			//audio: 1,
-			nuyan_star:1,
 			trigger: {
 				source: "dieAfter",
 				player: "die",
@@ -5044,8 +4988,6 @@ export default {
 			trigger: {
 			    player: "phaseJieshuBegin",
 			},
-			//audio: 2,
-			nuyan_star:3,
 			group:["nuyan_jianbukecui_effect"],
 			frequent:true,
 			popup:false,
@@ -5161,7 +5103,6 @@ export default {
 			priority: 0,
 		},
 		nuyan_yongliequedi: {//勇烈却敌
-			nuyan_star:1,
 		    priority: 0,
 		},
 		nuyan_wanfumokai: {//万夫莫开
@@ -5169,7 +5110,6 @@ export default {
 		        source: "damageBegin1",
 		    },
 		    locked:true,
-			nuyan_star:3,
 			forced:true,
 		    logTarget: "player",
 		    filter: function(event,player){
@@ -5186,7 +5126,6 @@ export default {
 		},
 		//怒焰界魏延
 		nuyan_kuanggu: {//狂骨
-			audio: "kuanggu",
 		    trigger: {
 		        source: "damageEnd",
 		    },
@@ -5217,8 +5156,6 @@ export default {
 		    priority: 1,
 		},
 		nuyan_shuguogulang:{//蜀国孤狼
-			//audio: 2,
-			nuyan_star:1,
 			trigger: {
 			    source: "damageEnd",
 			},
@@ -5255,7 +5192,6 @@ export default {
 			priority: 0,
 		},
 		nuyan_kuangnuzhuiji:{//狂怒追击
-			nuyan_star:3,
 			trigger: {
 			    player: "damageEnd",
 			},
@@ -5293,7 +5229,6 @@ export default {
 		},
 		//怒焰吕玲绮
 		nuyan_guowu: {//帼武
-			audio: "guowu",
 			trigger: {
 			    player: "phaseUseBegin",
 			},
@@ -5403,7 +5338,6 @@ export default {
 			},
 		},
 		nuyan_shenweizaixian: {//神威再现
-			nuyan_star:1,
 			forced: true,
 			locked: true,
 			trigger: {
@@ -5433,7 +5367,6 @@ export default {
 			},
 		},
 		nuyan_wushuangxiaoji: {//无双虓姬
-			nuyan_star:3,
 			forced:true,
 			locked:true,
 			trigger:{
@@ -5448,7 +5381,6 @@ export default {
 		},
 		//怒焰界张春华
 		nuyan_shangshi: {//伤逝
-			audio: "shangshi",
 			trigger: {
 			    player: "loseAfter",
 			    global: ["equipAfter","addJudgeAfter","gainAfter","loseAsyncAfter","addToExpansionAfter"],
@@ -5471,7 +5403,6 @@ export default {
 		nuyan_xinyixiangtong: {//心意相通
 			enable: "phaseUse",
 			usable: 1,
-			nuyan_star: 1,
 			filter(event,player) {
 				return player.countCards("h") > 0 && player.ny_nuqi && player.ny_nuqi < player.ny_nuqiMax;
 			},
@@ -5490,7 +5421,6 @@ export default {
 		},
 		nuyan_jueqingzhuohua: {//绝情灼华
 			enable:"phaseUse",
-			nuyan_star:3,
 			filter(event,player) {
 				return player.ny_nuqi && player.ny_nuqi >= 2;
 			},
@@ -5530,7 +5460,6 @@ export default {
 		},
 		//怒焰沮授
 		nuyan_jianying: {//渐营
-			audio: "jianying",
 			locked: true,
 			mod: {
 			    aiOrder: function(player, card, num) {
@@ -5656,7 +5585,6 @@ export default {
 		nuyan_jianzhongbuqu: {//坚忠不屈
 			locked:true,
 			forced:true,
-			nuyan_star:1,
 			trigger:{
 				player:"damageEnd",
 			},
@@ -5677,7 +5605,6 @@ export default {
 			},
 		},
 		nuyan_honghuzhizai: {//鸿鹄志哉
-			nuyan_star:3,
 			frequent:true,
 			trigger:{
 				player:"phaseJieshuBegin",
@@ -5719,7 +5646,6 @@ export default {
 			enable:"phaseUse",
 			group:"nuyan_lihun_giveBack",
 			usable:1,
-			audio:"lihun",
 			filter: function(event,player) {
 				return game.hasPlayer((p) => p != player && p.countCards("h"));
 			},
@@ -5790,8 +5716,6 @@ export default {
 			},
 		},
 		nuyan_miaojilianhuan: {//妙计连环
-			audio:"lijian",
-			nuyan_star:1,
 			enable: "phaseUse",
 			usable: 1,
 			filter: function(event, player) {
@@ -5834,12 +5758,10 @@ export default {
 			priority: 0,
 		},
 		nuyan_qiaoxianlianhuan: {//巧献连环
-			nuyan_star:3,
 			priority: 0,
 		},
 		//怒焰赵襄
 		nuyan_fanghun: {//芳魂
-			audio: "fanghun",
 			trigger: {
 				player: "useCardToPlayered",
 				target: "useCardToPlayered",
@@ -5854,20 +5776,10 @@ export default {
 			},
 		},
 		nuyan_jinghongmeiying: {//惊鸿魅影
-			audio: "longdan_sha",
-			audioname: ["re_zhaoyun"],
-			nuyan_star:1,
-			"audioname2": {
-			    "old_zhaoyun": "longdan_sha_re_zhaoyun",
-			},
 			group: ["nuyan_jinghongmeiying_sha","nuyan_jinghongmeiying_shan"],
 			subSkill: {
 			    sha: {
-			        audio: 2,
-			        audioname: ["re_zhaoyun"],
-			        "audioname2": {
-			            "old_zhaoyun": "longdan_sha_re_zhaoyun",
-			        },
+			        audio: "fanghun",
 			        enable: ["chooseToUse","chooseToRespond"],
 			        filterCard: {
 			            name: "shan",
@@ -6097,11 +6009,7 @@ export default {
 			        priority: 0,
 			    },
 			    shan: {
-			        audio: "longdan_sha",
-			        audioname: ["re_zhaoyun"],
-			        "audioname2": {
-			            "old_zhaoyun": "longdan_sha_re_zhaoyun",
-			        },
+			        audio: "fanghun",
 			        enable: ["chooseToRespond","chooseToUse"],
 			        filterCard: {
 			            name: "sha",
@@ -6163,11 +6071,9 @@ export default {
 			priority: 0,
 		},
 		nuyan_zhongxinfuhan: {//忠心扶汉
-			audio: "fuhan",
 			trigger: {
 			    player: "phaseZhunbeiBegin",
 			},
-			nuyan_star: 1,
 			limited: true,
 			skillAnimation: true,
 			unique: true,
@@ -6370,7 +6276,6 @@ export default {
 		},
 		//怒焰刘琦
 		nuyan_wenji: {//问计
-			audio:"wenji",
 			enable:"phaseUse",
 			selectTarget:1,
 			mod:{
@@ -6433,7 +6338,6 @@ export default {
 			},
 			forced: true,
 			locked: true,
-			nuyan_star: 1,
 			filter: function(event, player) {
 				return !player.getHistory("useCard")?.some(evt => evt.targets?.some(t => t != player));
 			},
@@ -6442,7 +6346,6 @@ export default {
 			},
 		},
 		nuyan_choutiqiuce: {//抽梯求策
-			nuyan_star: 3,
 			forced: true,
 			locked: true,
 			trigger:{
@@ -6458,7 +6361,6 @@ export default {
 		},
 		//怒焰初版骆统
 		nuyan_qinzheng: {//勤政
-			audio: "qinzheng",
 			trigger: {
 			    player: ["useCard","respond"],
 			},
@@ -6534,7 +6436,6 @@ export default {
 			priority: 0,
 		},
 		nuyan_renzhengaimin: {//仁政爱民
-			nuyan_star: 1,
 			trigger: {
 			    source: "damageBegin1",
 			},
@@ -6549,8 +6450,6 @@ export default {
 			},
 		},
 		nuyan_lingchurujian:{//令出如箭
-			nuyan_star:3,
-			audio: "qinzheng",
 			trigger: {
 			    player: ["useCard","respond"],
 			},
@@ -6624,7 +6523,6 @@ export default {
 			trigger:{
 				global: "drawAfter",
 			},
-			nuyan_star: 1,
 			forced: true,
 			locked: true,
 			filter: function(event, player) {
@@ -6641,7 +6539,6 @@ export default {
 			trigger:{
 				global:"damageBegin",
 			},
-			nuyan_star: 3,
 			derivation: ["nuyan_yongjue"],
 			filter: function(event, player) {
 				return !player.storage.nuyan_sheshencunsi?.includes(event.player) && player.countCards("h") >= event.num;
@@ -6732,7 +6629,6 @@ export default {
 			},
 		},
 		nuyan_yingxiongxiangxi: {//英雄相惜
-			nuyan_star: 1,
 			locked: true,
 			derivation:["nuyan_yishi"],
 			forced: true,
@@ -6772,7 +6668,6 @@ export default {
 			locked: true,
 			forced: true,
 			onremove: true,
-			nuyan_star: 3,
 			init(player) {
 				player.storage.nuyan_dingjunzhanshen = [0, false, false, false];
 			},
@@ -6986,7 +6881,6 @@ export default {
 			},
 		},
 		nuyan_shenweiqianchong: {//神威千重
-			nuyan_star: 1,
 			locked: true,
 			forced: true,
 			init2(player) {
@@ -7007,7 +6901,6 @@ export default {
 			},
 		},
 		nuyan_mojinshayu: {//没金铩羽
-			nuyan_star: 3,
 			locked: true,
 			forced: true,
 			trigger: {
@@ -7070,7 +6963,6 @@ export default {
 		nuyan_cuifengdengnan: {//摧锋登难
 			locked: true,
 			forced: true,
-			nuyan_star: 3,
 			trigger: {
 				player: ["useCard", "respond", "useCardToPlayer"],
 			},
@@ -7187,7 +7079,6 @@ export default {
 				global: "changeHp",
 			},
 			locked: true,
-			nuyan_star: 1,
 			forced: true,
 			filter(event, player) {
 				return !player.getHistory("sourceDamage", evt => evt.player == event.player)?.length && event.num < 0;
@@ -7198,7 +7089,6 @@ export default {
 			},
 		},
 		nuyan_xianjingduanzhuang: {//娴静端庄
-			nuyan_star: 3,
 			priority: 0,
 		},
 		//怒焰界鲁肃
@@ -7250,7 +7140,6 @@ export default {
 				global: "roundStart",
 			},
 			frequent: true,
-			nuyan_star: 1,
 			filter: function(event, player) {
 				return player.ny_nuqiMax && player.ny_nuqiMax > 1 && player.maxHp > 1 && game.hasPlayer(current => current != player && current.countCards("h") <= player.countCards("h"));
 			},
@@ -7293,7 +7182,6 @@ export default {
 			trigger: {
 				global: "phaseUseBegin",
 			},
-			nuyan_star: 3,
 			check(event, player) {
 				//后续/蹲个人来写ai，懒得写了
 				return -114;
@@ -7402,7 +7290,6 @@ export default {
 			},
 			usable: 1,
 			lose: false,
-			nuyan_star: 1,
 			discard: false,
 			delay: false,
 			prepare: "give2",
@@ -7437,7 +7324,6 @@ export default {
 				player: "phaseChange",
 			},
 			frequent: true,
-			nuyan_star: 3,
 			"prompt2": function(event, player) {
 				const phaseName = event.phaseList[event.num].replace(/\|.+/, '');
 				return "将你的" + get.translation(phaseName) + "改为出牌阶段";
@@ -7508,7 +7394,6 @@ export default {
 		},
 		nuyan_jiuyuanfancheng: {//救援樊城
 			enable: "phaseUse",
-			nuyan_star: 1,
 			filter(event,player) {
 				return player.ny_nuqi && player.ny_nuqi >= 1 && game.hasPlayer(current => current != player && current.countCards("j"));
 			},
@@ -7530,7 +7415,6 @@ export default {
 			},
 		},
 		nuyan_liangjinyuanjue: {//粮尽援绝
-			nuyan_star: 3,
 			forced: true,
 			locked: true,
 			marktext: "绝",
@@ -7598,8 +7482,6 @@ export default {
 			},
 		},
 		nuyan_huishixinzhi:{//慧识心志
-			nuyan_star:1,
-			audioname: ["re_guojia","xizhicai","gz_nagisa"],
 			trigger: {
 			    player: "judgeEnd",
 			},
@@ -7619,7 +7501,6 @@ export default {
 		nuyan_zhiceqizuo: {//智策奇佐
 			enable: "phaseUse",
 			usable: 1,
-			nuyan_star: 3,
 			derivation: "nuyan_qizuo",
 			check(player) {
 				return player.hp > 1;
@@ -7759,7 +7640,6 @@ export default {
 			},
 		},
 		nuyan_nvliguoren: {//膂力过人
-			nuyan_star: 1,
 			usable: 1,
 			trigger: {
 				player: "damageEnd",
@@ -7775,7 +7655,6 @@ export default {
 			},
 		},
 		nuyan_henxiaochoujue: {//恨销仇决
-			nuyan_star: 3,
 			enable: "phaseUse",
 			check(player) {
 				if (player.getHistory("useSkill")?.length) {
@@ -7843,7 +7722,6 @@ export default {
 			    target: "useCardToTarget",
 			},
 			forced: true,
-			nuyan_star: 1,
 			filter: function (event, player, triggername) {
 				return event.player != player;
 			},
@@ -7854,7 +7732,6 @@ export default {
 		nuyan_bajianlungong: {//拔剑论功
 			forced: true,
 			locked: false,
-			nuyan_star: 3,
 			trigger: {
 			    global: "phaseBegin",
 			},
@@ -7939,7 +7816,6 @@ export default {
 		nuyan_shenweiqianjun: {//神威千钧
 			forced: true,
 			locked: true,
-			nuyan_star: 1,
 			init2(player, skill) {
 				let next = game.createEvent(skill + "_init");
 				next.player = player;
@@ -7969,7 +7845,6 @@ export default {
 			},
 		},
 		nuyan_qinwangpolu: {//勤王破虏
-			nuyan_star: 3,
 			sunbenSkill: true,
 			skillAnimation: true,
 			animationColor: "wood",
@@ -8082,13 +7957,12 @@ export default {
 			},
 		},
 		nuyan_nvzhongjinguo: {//女中巾帼
-			nuyan_star: 1,
 			trigger: {
 				player: "nuyan_nvzhongjinguo",
 			},
 			frequent: true,
 			usable() {
-				if (lib.config.extension_怒焰武将_nuyan_jieFirst_caojie == "Second") return 1;
+				if (lib.config.extension_怒焰武将_nuyan_JieFirst_caojie == "Second") return 1;
 				return Infinity;
 			},
 			marktext: "巾",
@@ -8102,7 +7976,7 @@ export default {
 			async content(event, trigger, player) {
 				await player.ny_addNuQi();
 				await player.draw();
-				if (lib.config.extension_怒焰武将_nuyan_jieFirst_caojie == "First") {
+				if (lib.config.extension_怒焰武将_nuyan_JieFirst_caojie == "First") {
 					const num = Number(lib.config.extension_怒焰武将_nuyan_star);
 					player.markSkill(event.name);
 					player.addMark(event.name);
@@ -8129,7 +8003,6 @@ export default {
 			},
 		},
 		nuyan_huiminjishi: {//惠民济世
-			nuyan_star: 3,
 			frequent: true,
 			trigger: {
 				player: "phaseJieshuBegin",
@@ -8217,13 +8090,10 @@ export default {
 			},
 		},
 		nuyan_fenchengmieji: {//焚城灭迹
-			nuyan_star: 1,
 			inherit: "xinmieji",
-			audio: "xinmieji",
 			//有时间可以给本体李儒异步化
 		},
 		nuyan_jueshizhice: {//绝世之策
-			nuyan_star: 3,
 			trigger: {
 				player: "phaseJieshuBegin",
 			},
@@ -8322,7 +8192,6 @@ export default {
 			},
 		},
 		nuyan_qingzaofensi: {//轻躁忿肆
-			nuyan_star: 1,
 			forced: true,
 			locked: true,
 			trigger: {
@@ -8357,8 +8226,6 @@ export default {
 			},
 		},
 		nuyan_juejintaoni: {//决进讨逆
-			audio: "mbjuejin",
-			nuyan_star: 3,
 			derivation: "nuyan_juetao",
 			limited: true,
 			skillAnimation: true,
@@ -8449,7 +8316,6 @@ export default {
 		nuyan_tieji: {//铁骑
 			forced: true,
 			locked: true,
-			audio: "retieji",
 			trigger: {
 				player: "useCardToPlayered",
 			},
@@ -8516,7 +8382,6 @@ export default {
 			},
 		},
 		nuyan_weizhenliangzhou: {//威震凉州
-			nuyan_star: 1,
 			trigger: {
 				player: "shaMiss",
 			},
@@ -8543,7 +8408,6 @@ export default {
 			},
 		},
 		nuyan_yijidangqian: {//一骑当千
-			nuyan_star: 3,
 			mod: {
 				cardUsable:function (card, player, num) {
 					if (card.name == "sha" && player.countMark("nuyan_yijidangqian")) return num += player.countMark("nuyan_yijidangqian");
@@ -8611,7 +8475,6 @@ export default {
 			init2(player) {
 				get.info("_ny_yinni").init(player);
 			},
-			nuyan_star: 1,
 			forced: true,
 			trigger: {
 				player: "recoverEnd",
@@ -8623,7 +8486,6 @@ export default {
 			},
 		},
 		nuyan_ciweibingji: {//慈威并济
-			nuyan_star: 3,
 			trigger: {
 				global: "useCard0",
 			},
@@ -8675,7 +8537,6 @@ export default {
 		},
 		//怒焰诸葛瑾
 		nuyan_hongyuan: {//弘援
-			audio: "hongyuan",
 			trigger: {
 				player: "gainAfter",
 				global: "loseAsyncAfter",
@@ -8737,16 +8598,12 @@ export default {
 			},
 		},
 		nuyan_zhifangganjian: {//直方敢谏
-			nuyan_star: 1,
-			audio: "huanshi",
 			forced: true,
 			locked: true,
 		},
 		nuyan_moudingquanju: {//谋定全局
-			nuyan_star: 3,
 			forced: true,
 			locked: true,
-			audio: "mingzhe",
 			trigger: {
 				player: ["useCard","respond","loseAfter"],
 				global: "loseAsyncAfter",
@@ -8774,7 +8631,6 @@ export default {
 		},
 		//怒焰王元姬
 		nuyan_shiren: {//识人
-			audio: "shiren",
 			trigger: {
 				global: ["gainEnd", "loseAsyncAfter"],
 			},
@@ -8845,10 +8701,8 @@ export default {
 		},
 		nuyan_shangjianyihua: {//尚俭抑华
 			derivation: "_ny_yinni",
-			nuyan_star: 1,
 			forced: true,
 			locked: true,
-			audio: "xinfu_shangjian",
 			init2(player) {
 				get.info("_ny_yinni").init(player);
 				if (player.countCards("h") < player.maxHp) player.drawTo(player.maxHp);
@@ -8866,8 +8720,6 @@ export default {
 			},
 		},
 		nuyan_qianchongdunmu: {//谦冲敦睦
-			audio: "xinfu_qianchong",
-			nuyan_star: 3,
 			derivation: ["nuyan_hongyuan", "nuyan_hongyi"],
 			forced: true,
 			locked: true,
@@ -8883,7 +8735,6 @@ export default {
 		},
 		nuyan_huashen: {//化身
 			unique: true,
-			audio: "rehuashen",
 			trigger: {
 				player: ["phaseBegin", "phaseEnd", "nuyan_huashen_init"],
 			},
@@ -9346,7 +9197,6 @@ export default {
 			},
 		},
 		nuyan_shaoyoushendao: {//少有神道
-			nuyan_star: 1,
 			trigger: {
 				player: "damageBegin4",
 			},
@@ -9402,8 +9252,6 @@ export default {
 			},
 		},
 		nuyan_yiguishishen: {//役鬼使神
-			audio: "rexinsheng",
-			nuyan_star: 3,
 			unique: true,
 			trigger: { player: "damageEnd" },
 			locked: true,
@@ -9537,7 +9385,6 @@ export default {
 			},
 		},
 		nuyan_dihunlvxin: {//涤魂滤心
-			nuyan_star: 1,
 			trigger: {
 				global: "dying",
 			},
@@ -9647,7 +9494,6 @@ export default {
 		},
 		//怒焰界荀攸 调整后续
 		nuyan_qice: {//奇策
-			audio: "qice",
 			inherit: "qice",
 			hiddenCard(player, name) {
 				if (!player.isPhaseUsing()) return false;
@@ -9677,7 +9523,7 @@ export default {
 			    },
 			    backup(links, player) {
 			        return {
-			            audio: 'qice',
+			            audio: "qice",
 			            filterCard: true,
 			            selectCard: [1, Infinity],
 			            check(card) {
@@ -9755,7 +9601,6 @@ export default {
 			},
 		},
 		nuyan_miaojibaichu: {//妙计百出
-			nuyan_star: 1,
 			forced: true,
 			locked: true,
 			trigger: {
@@ -9770,9 +9615,7 @@ export default {
 			},
 		},
 		nuyan_shierqice: {//十二奇策
-			nuyan_star: 3,
 			locked: true,
-			audio: "zhiyu",
 			trigger: {
 				player: "damageEnd",
 			},
@@ -9873,7 +9716,6 @@ export default {
 			},
 		},
 		nuyan_lvxindihun: {//滤心涤魂
-			nuyan_star: 1,
 			trigger: {
 				global: "damageBefore",
 			},
@@ -9891,7 +9733,6 @@ export default {
 			},
 		},
 		nuyan_xingyunliushui: {//行云流水
-			nuyan_star: 3,
 			unique: true,
 			juexingji: true,
 			forced: true,
@@ -10051,7 +9892,6 @@ export default {
 				player: "phaseUseBegin",
 			},
 			marktext: "缮",
-			audio: "shanjia",
 			onremove: true,
 			frequent: true,
 			intro: {
@@ -10159,7 +9999,6 @@ export default {
 				next.player = player;
 				next.setContent("emptyEvent");
 			},
-			nuyan_star: 1,
 			trigger: {
 				player: ["phaseZhunbeiBegin", "nuyan_pijianzhirui_init"],
 			},
@@ -10230,7 +10069,9 @@ export default {
 					for (let sk of skills) {
 						let info = get.copy(lib.skill[sk]);
 						info.subtypeNum = Number(get.subtype(item[2]).slice(-1));
-						if (info.audio) info.audio = sk;
+						if (typeof info.audio == "number" || (typeof info.audio == "string" && info.audio.startsWith("ext:"))) {
+							info.audio = sk;
+						}
 						const func = () => true;
 						if (info.filter) {
 							info.filterCopy = info.filter || func;
@@ -10309,7 +10150,6 @@ export default {
 			},
 		},
 		nuyan_duyuxiaoji: {//督御骁骑
-			nuyan_star: 3,
 			trigger: {
 				global: "phaseBegin",
 			},
@@ -10470,7 +10310,6 @@ export default {
 		nuyan_botaoxiongyong: {//波涛汹涌
 			locked: true,
 			forced: true,
-			nuyan_star: 1,
 			judgeDraw(player) {
 				return [!player.isMinHandcard(true), !player.isMinHp(true), !player.ny_isMinNuQi(true)];
 			},
@@ -10487,7 +10326,6 @@ export default {
 			},
 		},
 		nuyan_lieyanqinyin: {//烈焰琴音
-			nuyan_star: 3,
 			trigger: {
 				player: "useCardAfter",
 			},
@@ -10582,7 +10420,6 @@ export default {
 		nuyan_lingren: {//凌人
 			enable: "phaseUse",
 			usable: 1,
-			audio: "xinfu_lingren",
 			filterTarget: (card, player, target) => player != target,
 			selectTarget() {
 				let player = _status.event.player,
@@ -10660,10 +10497,8 @@ export default {
 			},
 		},
 		nuyan_shuiqingzhuoying: {//水清濯缨
-			nuyan_star: 1,
 		},
 		nuyan_longchengfengming: {//龙城凤鸣
-			nuyan_star: 3,
 			trigger: {
 				player: "damageBegin3",
 			},
@@ -10735,7 +10570,6 @@ export default {
 		nuyan_guicai: {//鬼才
 			group: "guicai",
 			sourceSkill: "nuyan_yinren",
-			audio: "guicai",
 			trigger: {
 				player: "dying",
 			},
@@ -10757,18 +10591,16 @@ export default {
 		},
 		nuyan_MouSimayi_xuanmoumiaoji: {//谋司马懿--玄谋妙计
 			enable: "phaseUse",
-			audio: "lianpo",
 			filter: (event, player) => player.countMark("nuyan_yinren"),
 			selectTarget: 1,
 			filterTarget: (card, player, target) => player != target,
-			nuyan_star: 1,
 			async content(event, trigger, player) {
 				const { target } = event,
 					skill = "nuyan_yinren";
 				player.removeMark(skill, 1);
 				get.info(skill).update(player);
 				await player.draw();
-				let result = await lib.skill.nuyan_mouYi.content(player, target, "nuyan_mou_simayi");
+				let result = await lib.skill.nuyan_mouYi.content(player, target, "nuyan_Mou_simayi");
 				if (result) {
 					await target.damage(player);
 					if (!target.isIn()) return;
@@ -10789,8 +10621,6 @@ export default {
 			},
 		},
 		nuyan_taoguangyanghui: {//韬光养晦
-			nuyan_star: 3,
-			audio: "jsrgtuigu",
 			trigger: {
 			    global: "roundEnd",
 			},
@@ -10827,7 +10657,6 @@ export default {
 		nuyan_guhuo: {//蛊惑
 			forced: true,
 			locked: true,
-			audio: "guhu",
 			trigger: {
 				global: ["useCard", "respond"],
 			},
@@ -10852,7 +10681,6 @@ export default {
 		nuyan_taipingdaoyi: {//太平道义
 			forced: true,
 			locked: true,
-			nuyan_star: 1,
 			getPlayers(event) {
 				if (!event.card || !event.targets) return [];
 				let list = event.targets;
@@ -10879,7 +10707,6 @@ export default {
 		nuyan_huanhuozhongxin: {//幻惑众心
 			forced: true,
 			locked: true,
-			nuyan_star: 3,
 			trigger: {
 				player: ["useCard", "respond"],
 			},
@@ -10918,7 +10745,6 @@ export default {
 		},
 		//怒焰起袁绍
 		nuyan_qi_luanji: {//乱击
-			audio: "luanji",
 			inherit: "luanji",
 			viewAs: {
 				name: "wanjian",
@@ -10968,8 +10794,6 @@ export default {
 		nuyan_bijianzixian: {//愎谏自贤
 			forced: true,
 			locked: true,
-			nuyan_star: 1,
-			audio: "olxueyi",
 			trigger: {
 				player: ["phaseUseBegin", "gainEnd"],
 			},
@@ -10985,7 +10809,6 @@ export default {
 		nuyan_shiluxungui: {//世禄勋贵
 			forced: true,
 			locked: true,
-			audio: "xueyi",
 			mod: {
 				cardUsable: function (card, player, num) {
 				    if (card.name == "sha") return num + player.countMark("nuyan_shiluxungui");
@@ -10994,7 +10817,6 @@ export default {
 				    return num + player.countMark("nuyan_shiluxungui");
 				},
 			},
-			nuyan_star: 3,
 			init2(player, skill) {
 				player.addMark(skill, 4);
 			},
@@ -11020,7 +10842,6 @@ export default {
 		},
 		//怒焰周处
 		nuyan_chuhai: {//除害
-			audio: "chuhai",
 			dutySkill: true,
 			forced: true,
 			skillAnimation: true,
@@ -11061,7 +10882,6 @@ export default {
 			sourceSkill: "nuyan_chuhai",
 			forced: true,
 			locked: true,
-			audio: "xianghai",
 			global: "nuyan_jiaohai_g",
 			subSkill: {
 				g: {
@@ -11081,7 +10901,6 @@ export default {
 			sourceSkill: "nuyan_chuhai",
 			forced: true,
 			locked: true,
-			audio: "xianghai",
 			trigger: {
 				global: "phaseDrawBegin2",
 			},
@@ -11093,7 +10912,6 @@ export default {
 		},
 		nuyan_gaili: {//改励
 			sourceSkill: "nuyan_chuhai",
-			audio: "zhangming",
 			enable: "phaseUse",
 			selectCard: 1,
 			filter(event, player) {
@@ -11131,7 +10949,6 @@ export default {
 			},
 		},
 		nuyan_nanshanshehu: {//南山射虎
-			nuyan_star: 1,
 			enable: "phaseUse",
 			usable: 2,
 			marktext: "虎",
@@ -11209,7 +11026,6 @@ export default {
 			},
 		},
 		nuyan_xijiufujiao: {//西氿缚蛟
-			nuyan_star: 3,
 			enable: "phaseUse",
 			usable: 2,
 			marktext: "蛟",
@@ -11361,9 +11177,7 @@ export default {
 		},
 		nuyan_MouZhugeliang_xuanmoumiaoji: {//谋诸葛亮--玄谋妙计
 			enable: "phaseUse",
-			audio: "huoji",
 			filter: (event, player) => player.getExpansions("nuyan_guanxing").length,
-			nuyan_star: 1,
 			popup: false,
 			chooseButton: {
 			    dialog(event, player) {
@@ -11371,7 +11185,7 @@ export default {
 			    },
 			    backup(links, player) {
 			        return {
-			            audio: "rehuoji",
+						audio: "rehuoji",
 						log: false,
 			            filterTarget: (card, player, target) => player != target,
 						selectTarget: 1,
@@ -11395,7 +11209,7 @@ export default {
 					skill = "nuyan_yinren";
 				get.info(skill).update(player);
 				await player.draw();
-				let result = await lib.skill.nuyan_mouYi.content(player, target, "nuyan_mou_zhugeliang");
+				let result = await lib.skill.nuyan_mouYi.content(player, target, "nuyan_Mou_zhugeliang");
 				if (result) {
 					await player.draw();
 					if (!target.isIn()) return;
@@ -11417,7 +11231,6 @@ export default {
 		nuyan_dongruoguanhuo: {//洞若观火
 			forced: true,
 			locked: true,
-			nuyan_star: 3,
 			trigger: {
 				global: "roundStart",
 			},
@@ -11502,7 +11315,6 @@ export default {
 				global: "damageEnd",
 			},
 			popup: false,
-			audio: "leiji",
 			filter(event, player) {
 				if (!event.source) return false;
 				return event.source.hp > event.player.hp || event.source.countCards("h") > event.player.countCards("h");
@@ -11515,8 +11327,6 @@ export default {
 		nuyan_taipingyaoshu: {//太平要术
 			forced: true,
 			locked: true,
-			audio: "guidao",
-			nuyan_star: 1,
 			trigger: {
 				player: "damageBegin4",
 				global: ["equipAfter","addJudgeAfter","loseAfter","gainAfter","loseAsyncAfter","addToExpansionAfter"],
@@ -11539,8 +11349,6 @@ export default {
 			},
 		},
 		nuyan_huangtiandangli: {//黄天当立
-			nuyan_star: 3,
-			audio: "tianjie",
 			init2(player, skill) {
 				const limit = Number(lib.config.extension_怒焰武将_hujiaSet);
 				player.changeHujia(36, null ,limit);
@@ -11867,53 +11675,53 @@ export default {
 		//武将
 		nuyan_caorui: "曹叡",
 		nuyan_xizhicai: "戏志才",
-		nuyan_jie_ganning: "界甘宁",
+		nuyan_Jie_ganning: "甘宁",
 		nuyan_First_xusheng: "徐盛",
-		nuyan_jie_sunjian: "界孙坚",
-		nuyan_jie_weiyan: "界魏延",
+		nuyan_Jie_sunjian: "孙坚",
+		nuyan_Jie_weiyan: "魏延",
 		nuyan_First_lvlingqi: "吕玲绮",
-		nuyan_jieFirst_zhangchunhua: "界张春华",
+		nuyan_JieFirst_zhangchunhua: "张春华",
 		nuyan_jushou: "沮授",
-		nuyan_jieFirst_diaochan: "界貂蝉",
+		nuyan_JieFirst_diaochan: "貂蝉",
 		nuyan_zhaoxiang: "赵襄",
 		nuyan_liuqi: "刘琦",
 		nuyan_First_luotong: "骆统",
 		nuyan_First_mifuren: "糜夫人",
-		nuyan_shenFirst_huangzhong: "神黄忠",
-		nuyan_shen_Shenshehuangzhong: "神黄忠",
+		nuyan_ShenFirst_huangzhong: "黄忠",
+		nuyan_shen_Shenshehuangzhong: "黄忠",
 		nuyan_shen_Shenshehuangzhong_ab: "怒焰神射黄忠",
-		nuyan_shen_Shenshehuangzhong_prefix: "怒焰神射",
-		nuyan_shen_Tianrenhuangzhong: "神黄忠",
+		nuyan_shen_Shenshehuangzhong_prefix: "怒焰|神射",
+		nuyan_shen_Tianrenhuangzhong: "黄忠",
 		nuyan_shen_Tianrenhuangzhong_ab: "怒焰天刃黄忠",
-		nuyan_shen_Tianrenhuangzhong_prefix: "怒焰天刃",
-		nuyan_jie_caojinyu: "界曹金玉",
-		nuyan_jie_lusu: "界鲁肃",
+		nuyan_shen_Tianrenhuangzhong_prefix: "怒焰|天刃",
+		nuyan_Jie_caojinyu: "曹金玉",
+		nuyan_Jie_lusu: "鲁肃",
 		nuyan_wuxian: "吴苋",
-		nuyan_jie_xuhuang: "界徐晃",
-		nuyan_jie_guojia: "界郭嘉",
-		nuyan_wei_wenyang: "魏文鸯",
+		nuyan_Jie_xuhuang: "徐晃",
+		nuyan_Jie_guojia: "郭嘉",
+		nuyan_Wei_wenyang: "文鸯",
 		nuyan_zhuran: "朱然",
-		nuyan_shenFirst_sunjian:"神孙坚",
-		nuyan_jieFirst_caojie:"界曹节",
+		nuyan_ShenFirst_sunjian:"孙坚",
+		nuyan_JieFirst_caojie:"曹节",
 		nuyan_liru: "李儒",
 		nuyan_caomao: "曹髦",
-		nuyan_jieFirst_machao: "界马超",
+		nuyan_JieFirst_machao: "马超",
 		nuyan_First_yanghuiyu: "羊徽瑜",
 		nuyan_zhugejin: "诸葛瑾",
 		nuyan_First_wangyuanji: "王元姬",
 		nuyan_zuoci: "左慈",
 		nuyan_caizhenji: "蔡贞姬",
-		nuyan_jie_xunyou:"界荀攸",
-		nuyan_huan_caiwenji: "幻蔡文姬",
+		nuyan_Jie_xunyou:"荀攸",
+		nuyan_Huan_caiwenji: "蔡文姬",
 		nuyan_caochun: "曹纯",
-		nuyan_jie_zhouyu:"界周瑜",
+		nuyan_Jie_zhouyu:"周瑜",
 		nuyan_caoying: "曹婴",
-		nuyan_mou_simayi: "谋司马懿",
+		nuyan_Mou_simayi: "司马懿",
 		nuyan_Second_yuji: "于吉",
-		nuyan_qi_yuanshao: "起袁绍",
+		nuyan_Qi_yuanshao: "袁绍",
 		nuyan_zhouchu: "周处",
-		nuyan_mou_zhugeliang: "谋诸葛亮",
-		nuyan_qi_zhaojiao: "起张角",
+		nuyan_Mou_zhugeliang: "诸葛亮",
+		nuyan_Qi_zhaojiao: "张角",
 		
 		//通用技能
 		nuyan_fushizongshi:"符石宗师",
@@ -12227,7 +12035,7 @@ export default {
 		    else return "每回合限三次，当1名角色受到伤害后，你可以观看牌堆顶两张牌，并将至多一张交给其，然后你获得剩余的牌；当你登场时或准备阶段，你令此技能中的全部中文数字+2(单项不大于10)";
 		},
 		nuyan_nvzhongjinguo: function() {
-			if (lib.config.extension_怒焰武将_nuyan_jieFirst_caojie == "First") return "锁定技，每轮限X次（X为你的武将星级），当你发动〖守玺〗时，你获得1点怒气并摸一张牌。";
+			if (lib.config.extension_怒焰武将_nuyan_JieFirst_caojie == "First") return "锁定技，每轮限X次（X为你的武将星级），当你发动〖守玺〗时，你获得1点怒气并摸一张牌。";
 			else return "锁定技，每回合限一次，当你发动〖守玺〗时，你获得1点怒气并摸一张牌。";
 		},
 		nuyan_shenweizaixian: function() {

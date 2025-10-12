@@ -197,6 +197,45 @@ const zhonghuiFunction = {
 			return `<b style="${style}">${name}</b>：${explain}`;
 		}
 	},
+	//Has Audio (Character) List, 填translation
+	HAL: [],
+	isGetter(obj, prop) {//AI跑的
+		const descriptor = Object.getOwnPropertyDescriptor(obj, prop);
+		// 描述符存在，且 get 是函数，同时排除数据属性（value 不存在）
+		return descriptor && typeof descriptor.get === 'function' && descriptor.value === undefined;
+	},
+	_audioMap: null,
+	get audioMap() {
+		if (this._audioMap) return this._audioMap;
+		if (!lib.character.caocao) return;
+		if (this.HAL.length == 0) return;
+		const object = {};
+		for (let item in lib.character) {
+			const keys = this.HAL.filter(char => get.translation(item).includes(char));
+			if (keys.length == 0) continue;
+			for (let key of keys) {
+				object[key] ??= [];
+				if (!lib.character[item].skills) continue;
+				if (lib.character[item].skills.length == 0) continue;
+				for (let sk of lib.character[item].skills) {
+					//防止嵌套
+					if (this.isGetter(lib.skill[sk], "audio")) continue;
+					if (!lib.skill[sk].audio) continue;
+					let audio = lib.skill[sk].audio;
+					if (Array.isArray(audio)) {
+						if (audio.length == 0) continue;
+						object[key].addArray(audio);
+					} else if (typeof audio == "number" || audio.startsWith("ext")) {
+						object[key].add(sk);
+					} else {
+						object[key].add(audio);
+					}
+				}
+			}
+		}
+		this._audioMap = object;
+		return object;
+	},
 }
 
 export default zhonghuiFunction;

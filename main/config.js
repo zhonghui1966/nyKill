@@ -165,7 +165,7 @@ const fushiSet = {
 	},
 }
 const characterSet = {
-	nuyan_jieFirst_caojie: {
+	nuyan_JieFirst_caojie: {
 		init: "First",
 		name: "界曹节版本",
 		intro: "怒焰界曹节版本设置",
@@ -185,7 +185,7 @@ const characterSet = {
 		},
 		changeSkills: ["nuyan_shenweizaixian"],
 	},
-	legendSkin_nuyan_jieFirst_caojie: {
+	legendSkin_nuyan_JieFirst_caojie: {
 		init: false,
 		name: "曹节传说皮肤",
 		intro: "怒焰界曹节传说皮肤设置",

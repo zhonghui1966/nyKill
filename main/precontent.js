@@ -3,7 +3,6 @@ import { characters } from "../character/index.js";
 import { card as nyCard } from "../card/nyCard.js";
 import zhonghuiFunction from './zhonghuiFunction.js';
 export async function precontent(config, originalPack) {
-	//后续怒发冲冠ai优化
 	//后续谋奕添加ai，（遥遥无期
 	/*lib.skill._test = {
 		trigger: {
@@ -25,15 +24,14 @@ export async function precontent(config, originalPack) {
 		},
 	}*/
 	if (!config.enable) return;
-	//自定义函数
+	//自定义函数，见main/zhonghuiFunction.js
 	lib.zhonghuiFunction ??= {};
 	window.zhonghuiFunction ??= {};
 	for (let item in zhonghuiFunction) {
 		lib.zhonghuiFunction[item] = zhonghuiFunction[item];
 		window.zhonghuiFunction[item] = zhonghuiFunction[item];
 	}
-	//生成前缀的html 纯💩山
-	//懒得写xx|xx的生成逻辑了，直接暴力全部一起生成（
+	//生成前缀的html
 	lib.namePrefix.set("魏", {
 	    getSpan: () => {
 			//AI跑的
@@ -62,54 +60,36 @@ export async function precontent(config, originalPack) {
 			return `<span style="color:#faecd1;display:inline-block;transform:translateY(-1px);text-shadow:0 0 2px #faecd1;padding:0 2px;border-radius:2px;background:rgba(10, 143, 70, 0.1);">天刃</span>`;
 		},
 	});
-	lib.namePrefix.set("怒焰神射", {
+	lib.namePrefix.set("初版", {
 		getSpan(prefix, name) {
-			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("神射", name)}`;
+			return `${get.prefixSpan("旧", name)}`;
 		},
 	});
-	lib.namePrefix.set("怒焰天刃", {
+	lib.namePrefix.set("二版", {
 		getSpan(prefix, name) {
-			return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("天刃", name)}`;
+			return `${get.prefixSpan("旧", name)}`;
 		},
 	});
-	let old = ["初版", "二版"];
-	let prefix = ["界", "谋", "幻", "神", "起", "魏", "吴"];
-	for (let i of prefix) {
-		lib.namePrefix.set("怒焰" + i, {
-			getSpan(prefix, name) {
-				return `${get.prefixSpan("怒焰", name)}${get.prefixSpan(i, name)}`;
-			},
-		});
-	}
-	for (let i of old) {
-		lib.namePrefix.set("怒焰" + i, {
-			getSpan(prefix, name) {
-				return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("旧", name)}`;
-			},
-		});
-		for (let j of prefix) {
-			lib.namePrefix.set("怒焰" + i + j, {
-				getSpan(prefix, name) {
-					return `${get.prefixSpan("怒焰", name)}${get.prefixSpan("旧", name)}${get.prefixSpan(j, name)}`;
-				},
+	
+	//加入武将包和牌堆
+	const importCharacter = async () => {
+		for (let packName in characters) {
+			const pack = characters[packName];
+			await game.import("character", function () {
+				return pack;
 			});
 		}
-	}
-	
-	//加入武将包
-	for (let packName in characters) {
-		const pack = characters[packName];
-		let name = pack.name;
-		await game.import("character", function () {
-			return pack;
+	};
+	const importCard = async () => {
+		await game.import("card", function () {
+			return nyCard;
 		});
-	}
-	
-	//加入牌堆
-	let name = nyCard.name;
-	await game.import("card", function () {
-		return nyCard;
-	});
+	};
+	await Promise.all([importCharacter(), importCard()])
+		.catch(err => {
+			console.error("Failed to import extension 『怒焰武将』: ", err);
+			alert("Error:『怒焰武将』扩展导入失败");
+		});
 	
 	//函数定义
 	//涉及到改本体一定一定要加扩展前缀！！！既是为了可读性也是为了防止扩展冲突
