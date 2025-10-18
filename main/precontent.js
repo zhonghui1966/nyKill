@@ -336,7 +336,7 @@ export async function precontent(config, originalPack) {
 			if (!event.log) {
 				event.log = [];
 				if (event.source) event.log.push(event.source, "令");
-				event.log.push(player, "获得了" + get.cnNumber(event.logNum) + "点怒气");
+				event.log.push(player, "获得了" + get.cnNumber(event.num) + "点怒气上限");
 			}
 			if (Array.isArray(event.log)) game.log(...event.log);
 			else game.log(event.log);
@@ -393,7 +393,7 @@ export async function precontent(config, originalPack) {
 			if (!event.log) {
 				event.log = [];
 				if (event.source) event.log.push(event.source, "令");
-				event.log.push(player, "减少了" + get.cnNumber(event.logNum) + "点怒气上限");
+				event.log.push(player, "减少了" + get.cnNumber(event.num) + "点怒气上限");
 			}
 			if (Array.isArray(event.log)) game.log(...event.log);
 			else game.log(event.log);

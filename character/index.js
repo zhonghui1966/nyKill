@@ -115,9 +115,17 @@ for (let item in skills) {
 		}
 	}
 }
-//自动添加语音
+//自动添加语音 + 自动添加“你登场时”时机
+//subSkill后续
 for (let sk in nyKill.skill) {
 	sk = nyKill.skill[sk];
+	if (sk.init2 == true) {
+		sk.init2 = function(player, skill) {
+			const next = game.createEvent(skill + "_init");
+			next.player = player;
+			next.setContent("emptyEvent");
+		}
+	}
 	if (!sk.name) continue;
 	if (sk.audio) continue;
 	if (Array.isArray(sk.name) && sk.name.length == 0) continue;
@@ -185,10 +193,13 @@ if (lib.device || lib.node) {
 			//初始化第五格
 			pack.character[name][4] ??= [];
 			//原画
-			if (lib.config["extension_怒焰武将_legendSkin_" + name]) {
-				pack.character[name][4].push(`${lib.device || lib.node ? "ext:" : "db:extension-"}怒焰武将/image/character/legendSkin_${name}.jpg`);
-			} else {
-				pack.character[name][4].push(`${lib.device || lib.node ? "ext:" : "db:extension-"}怒焰武将/image/character/${name}.jpg`);
+			const imagePrefix = lib.device || lib.node ? "ext:" : "db:extension-";
+			if (!pack.character[name][4].some(item => item.startsWith(imagePrefix))) {
+				if (lib.config["extension_怒焰武将_legendSkin_" + name]) {
+					pack.character[name][4].push(`${imagePrefix}怒焰武将/image/character/legendSkin_${name}.jpg`);
+				} else {
+					pack.character[name][4].push(`${imagePrefix}怒焰武将/image/character/${name}.jpg`);
+				}
 			}
 			//阵亡语音
 			if (!pack.character[name][4].some(j => j.startsWith("die:"))) {
