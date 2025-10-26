@@ -6,11 +6,30 @@ export async function precontent(config, originalPack) {
 	//后续谋奕添加ai，（遥遥无期
 	/*lib.skill._test = {
 		trigger: {
-			player: "recoverBefore",
+			source: "damageBefore",
 		},
-		filter() {
-			console.log(this.trigger);
+		firstDo: true,
+		async content(event, trigger, player) {
+			trigger._ny_zhuanShu_yitian = {
+				player: trigger.player,
+				num: trigger.num,
+			};
+			trigger.cancel = () => {
+				return void 0;
+			};
+			const that = trigger;
+			trigger.filterStop = () => {
+				if (that.num !== that._ny_zhuanShu_yitian.num) {
+					that._ny_zhuanShu_yitian.num = Math.max(that.num, that._ny_zhuanShu_yitian.num);
+					that.num = that._ny_zhuanShu_yitian.num;
+				}
+				if (that.player !== that._ny_zhuanShu_yitian.player) {
+					that.player = that._ny_zhuanShu_yitian.player;
+				}
+				return false;
+			};
 		},
+		forced: true,
 	}
 	lib.skill._test2 = {
 		trigger: {
@@ -23,6 +42,7 @@ export async function precontent(config, originalPack) {
 			console.log(trigger.respondTo[1]);
 		},
 	}*/
+	lib.arenaReady.push(() => zhonghuiFunction.loading = true);
 	if (!config.enable) return;
 	//自定义函数，见main/zhonghuiFunction.js
 	lib.zhonghuiFunction ??= {};
@@ -96,6 +116,23 @@ export async function precontent(config, originalPack) {
 	let players = lib.element.player,
 		contents = lib.element.content,
 		events = lib.element.event;
+	//添加update时机
+	if (lib.config.extension_怒焰武将_updateTrigger) {
+		lib.ny_lib ??= {};
+		lib.ny_lib.update = players.update;
+		players.update = function() {
+			let next = game.createEvent("update");
+			next.player = this;
+			next.args = arguments;
+			next.setContent("update");
+		}
+		contents.update = async function(event, trigger, player) {
+			lib.ny_lib.update.call(player, event.args);
+			if (!event.notrigger) {
+				await event.trigger(event.name);
+			}
+		}
+	}
 	/**
 	 * 检测玩家怒气是否为全场最小
 	 * @param { boolean } [isOnly] - 是否为唯一最小
@@ -133,15 +170,13 @@ export async function precontent(config, originalPack) {
 	/**
 	 * 初始化玩家怒气
 	 * @param { number } [num] 初始怒气上限
-	 * @param { string } ["notrigger"] 不触发技能时机 
 	 * @returns { GameEventPromise }
 	 */
 	players.ny_initNuQi = function() {
 		const name = "ny_initNuQi";
 		let next = game.createEvent(name);
 		for (let item of arguments) {
-			if (item == "notrigger") next.notrigger = true;
-			else if (typeof item == "number") next.num = item;
+			if (typeof item == "number") next.num = item;
 		}
 		next.num ??= 0;
 		next.player = this;
@@ -149,10 +184,6 @@ export async function precontent(config, originalPack) {
 		return next;
 	}
 	contents.ny_initNuQi = async function(event, trigger, player) {
-		if (!event.notrigger) {
-			await event.trigger(event.name + "Before");
-			await event.trigger(event.name + "Begin");
-		}
 		player.ny_initNuQiNum ??= 0;
 		player.ny_initNuQiMax ??= 0;
 		player.ny_initNuQiMax += event.num;
@@ -161,19 +192,14 @@ export async function precontent(config, originalPack) {
 		const string = event.notrigger ? "notrigger" : "trigger";
 		if (player.ny_initNuQiMax > 0) await player.ny_gainNuQiMax(player.ny_initNuQiMax, "init", string);
 		if (player.ny_initNuQiNum > 0) await player.ny_addNuQi(player.ny_initNuQiNum, "init", string);
-		if (!event.notrigger) {
-			await event.trigger(event.name);
-			await event.trigger(event.name + "End");
-			await event.trigger(event.name + "After");
-		}
 	}
 	/**
 	 * 令玩家增加怒气
 	 * @param { number } [num = 1] 增加的怒气值
 	 * @param { string } [type = "skill"] 增加怒气类型，有skill, damage, init, card
 	 * @param { string|Array } [log] 游戏显示内容
+	 * @param { string } ["notrigger"] 不触发ny_changeNuQi时机
 	 * @param { Player } [source = this] 增加怒气来源玩家
-	 * @param { string } ["notrigger"] 不触发技能时机
 	 * @returns { GameEventPromise }
 	 */
 	players.ny_addNuQi = function() {
@@ -183,12 +209,11 @@ export async function precontent(config, originalPack) {
 		let next = game.createEvent(name);
 		for (let item of arguments) {
 			if (["damage", "skill", "init", "card"].includes(item)) next.type = item;
+			else if (item == "notrigger") next.notrigger = true;
 			else if (typeof item == "number") next.num = item;
 			else if (get.itemtype(item) == "player") next.source = item;
-			else if (item == "notrigger") next.notrigger = true;
 			else if (typeof item == "string" && !["trigger", "nosource"].includes(item)) next.log = item;
 			else if (Array.isArray(item)) next.log = item;
-			
 		}
 		next.num ??= 1;
 		next.type ??= "skill";
@@ -198,10 +223,6 @@ export async function precontent(config, originalPack) {
 		return next;
 	}
 	contents.ny_addNuQi = async function(event, trigger, player) {
-		if (!event.notrigger) {
-			await event.trigger(event.name + "Before");
-			await event.trigger(event.name + "Begin");
-		}
 		//受伤不获得怒气的标记列表
 		const noDamageList = ["_ny_jinGong_tianfa", "_ny_zhanFa_longzhenghudou", "_ny_zhuanShu_bazhen_天覆阵"];
 		if (event.type == "damage") {
@@ -215,7 +236,6 @@ export async function precontent(config, originalPack) {
 		player.ny_nuqi += event.num;
 		player.markSkill("_ny_getNuqi");
 		if (!event.notrigger) {
-			await event.trigger(event.name);
 			await event.trigger("ny_changeNuQi");
 		}
 		event.overNum = 0;
@@ -232,10 +252,6 @@ export async function precontent(config, originalPack) {
 			}
 			if (Array.isArray(event.log)) game.log(...event.log);
 			else game.log(event.log);
-		} 
-		if (!event.notrigger) {
-			await event.trigger(event.name + "End");
-			await event.trigger(event.name + "After");
 		}
 	}
 	/**
@@ -244,7 +260,7 @@ export async function precontent(config, originalPack) {
 	 * @param { string } [type = "skill"] 失去怒气类型，有skill, damage, init, card
 	 * @param { string|Array } [log] 游戏显示内容
 	 * @param { Player } [source = this] 失去怒气来源玩家
-	 * @param { string } ["notrigger"] 不触发技能时机
+	 * @param { string } ["notrigger"] 不触发ny_changeNuQi时机
 	 * @returns { GameEventPromise }
 	 */
 	players.ny_loseNuQi = function() {
@@ -268,13 +284,8 @@ export async function precontent(config, originalPack) {
 		return next;
 	}
 	contents.ny_loseNuQi = async function(event, trigger, player) {
-		if (!event.notrigger) {
-			await event.trigger(event.name + "Before");
-			await event.trigger(event.name + "Begin");
-		}
 		player.ny_nuqi -= event.num;
 		if (!event.notrigger) {
-			await event.trigger(event.name);
 			await event.trigger("ny_changeNuQi");
 		}
 		event.overNum = 0;
@@ -291,10 +302,6 @@ export async function precontent(config, originalPack) {
 			}
 			if (Array.isArray(event.log)) game.log(...event.log);
 			else game.log(event.log);
-		} 
-		if (!event.notrigger) {
-			await event.trigger(event.name + "End");
-			await event.trigger(event.name + "After");
 		}
 	}
 	/**
@@ -321,6 +328,8 @@ export async function precontent(config, originalPack) {
 		next.type ??= "skill";
 		next.source ??= this;
 		next.player = this;
+		//手动trigger：Before，Begin
+		next._triggered = 2;
 		next.setContent(name);
 		return next;
 	}
@@ -331,7 +340,10 @@ export async function precontent(config, originalPack) {
 		if (!event.notrigger) await event.trigger(event.name + "Begin");
 		player.ny_nuqiMax += event.num;
 		player.markSkill("_ny_getNuqi");
-		if (!event.notrigger) await event.trigger(event.name);
+		if (!event.notrigger) {
+			await event.trigger(event.name);
+			//Omitted就不trigger了
+		}
 		if (event.type !== "init") {
 			if (!event.log) {
 				event.log = [];
@@ -340,10 +352,6 @@ export async function precontent(config, originalPack) {
 			}
 			if (Array.isArray(event.log)) game.log(...event.log);
 			else game.log(event.log);
-		}
-		if (!event.notrigger) {
-			await event.trigger(event.name + "End");
-			await event.trigger(event.name + "After");
 		}
 	}
 	/**
@@ -376,10 +384,6 @@ export async function precontent(config, originalPack) {
 		return next;
 	}
 	contents.ny_loseNuQiMax = async function(event, trigger, player) {
-		if (!event.notrigger) {
-			await event.trigger(event.name + "Before");
-			await event.trigger(event.name + "Begin");
-		}
 		const string = event.notrigger ? "notrigger" : "trigger",
 			source = event.source || "nosource";
 		if (event.num > player.ny_nuqiMax) event.num = player.ny_nuqiMax;
@@ -397,10 +401,6 @@ export async function precontent(config, originalPack) {
 			}
 			if (Array.isArray(event.log)) game.log(...event.log);
 			else game.log(event.log);
-		}
-		if (!event.notrigger) {
-			await event.trigger(event.name + "End");
-			await event.trigger(event.name + "After");
 		}
 	}
 	/**
@@ -438,15 +438,13 @@ export async function precontent(config, originalPack) {
 	/**
 	 * 令玩家发动某个符石（扣除使用次数）
 	 * @param { string } [name] 符石ID
-	 * @param { string } ["notrigger"] 不触发技能时机
 	 * @returns { GameEventPromise }
 	 */
 	players.ny_logStone = function() {
 		const evtName = "ny_logStone";
 		let next = game.createEvent(evtName);
 		for (let item of arguments) {
-			if (item == "notrigger") next.notrigger = true;
-			else if (typeof item == "string" && item.startsWith("_ny_")) next.name = item;
+			if (typeof item == "string" && item.startsWith("_ny_")) next.name = item;
 		}
 		const standardList = ["jinGong", "fangYu", "moPai", "nuQi", "zhuanShu"];
 		for (let item of standardList) {
@@ -457,10 +455,6 @@ export async function precontent(config, originalPack) {
 		next.setContent(evtName);
 	}
 	contents.ny_logStone = async function(event, trigger, player) {
-		if (!event.notrigger) {
-			await event.trigger(event.name + "Before");
-			await event.trigger(event.name + "Begin");
-		}
 		if (event.type == "zhuanShu") {
 			let id = player.ny_zhuanShuFuShiId.find(id => id == event.name);
 			id = player.ny_zhuanShuFuShiId.indexOf(id);
@@ -471,11 +465,6 @@ export async function precontent(config, originalPack) {
 			let id = standardList.indexOf(event.type);
 			player.ny_fushiTime[id]--;
 		}
-		if (!event.notrigger) {
-			await event.trigger(event.name);
-			await event.trigger(event.name + "End");
-			await event.trigger(event.name + "After");
-		}
 	}
 	/**
 	 * 令玩家失效一个类型的符石
@@ -483,7 +472,6 @@ export async function precontent(config, originalPack) {
 	 * @param { object|string } [expire = { global: "phaseEnd" }] 失效的时机
 	 * @param { Player } [source] 失效来源
 	 * @param { Function } [filter] 取消失效时机时的判断
-	 * @param { string } ["notrigger"] 不触发技能时机
 	 * @returns { GameEventPromise }
 	 */
 	players.ny_disableStone = function() {
@@ -491,8 +479,7 @@ export async function precontent(config, originalPack) {
 		let next = game.createEvent(evtName);
 		const standardList = ["jinGong", "fangYu", "moPai", "nuQi", "zhanFa", "zhuanShu", "all"];
 		for (let item of arguments) {
-			if (item == "notrigger") next.notrigger = true;
-			else if (get.itemtype(item) == "player") next.source = item;
+			if (get.itemtype(item) == "player") next.source = item;
 			else if (typeof item == "string" && standardList.includes(item)) next.type = item;
 			else if (typeof item == "string") next.expire = { global: item };
 			else if (typeof item == "object") next.expire = item;
@@ -504,10 +491,6 @@ export async function precontent(config, originalPack) {
 		next.setContent(evtName);
 	}
 	contents.ny_disableStone = async function(event, trigger, player) {
-		if (!event.notrigger) {
-			await event.trigger(event.name + "Before");
-			await event.trigger(event.name + "Begin");
-		}
 		const standardList = ["jinGong", "fangYu", "moPai", "nuQi", "zhanFa", "zhuanShu"];
 		player.ny_disabledStones ??= [];
 		if (event.type == "all") player.ny_disabledStones = standardList;
@@ -527,16 +510,10 @@ export async function precontent(config, originalPack) {
 			}
 			game.addGlobalSkill("_ny_undisableStone");
 		}, event.expire);
-		if (!event.notrigger) {
-			await event.trigger(event.name);
-			await event.trigger(event.name + "End");
-			await event.trigger(event.name + "After");
-		}
 	}
 	/**
 	 * 令玩家摧毁一些手牌
 	 * @param { CCards } 要被摧毁的牌
-	 * @param { string } ["notrigger"] 不触发技能时机
 	 * @returns { GameEventPromise }
 	 */
 	players.ny_cuihuiCards = function() {
@@ -544,8 +521,7 @@ export async function precontent(config, originalPack) {
 		let notrigger = false,
 			cards = [];
 		for (let item of arguments) {
-			if (item == "notrigger") notrigger = true;
-			else if (get.itemtype(item) == "card") cards = [item];
+			if (get.itemtype(item) == "card") cards = [item];
 			else if (get.itemtype(item) == "cards") cards = item;
 		}
 		if (cards.length == 0) return;
@@ -553,12 +529,17 @@ export async function precontent(config, originalPack) {
 		next.notrigger = notrigger;
 		next.player = this;
 		next.cards = cards;
+		//手动trigger：Before，Begin
+		next._triggered = 2;
 		next.setContent(name);
 	}
 	contents.ny_cuihuiCards = async function(event, trigger, player) {
 		if (!event.notrigger) await event.trigger(event.name + "Before");
 		let func = [];
-		for (let i of player.getSkills(null, false, false)) {
+		//后续改为mod
+		const skills = player.getSkills(null, false, true).filter(id => !player.isTempBanned(id)).addArray(lib.skill.global);
+		game.expandSkills(skills);
+		for (let i of skills) {
 			if (lib.skill[i]?.unCuihuiAble) func.add(lib.skill[i].unCuihuiAble);
 		}
 		if (func.length) {
@@ -569,10 +550,89 @@ export async function precontent(config, originalPack) {
 		}
 		if (!event.notrigger) await event.trigger(event.name + "Begin");
 		if (event.cards.length) await player.addGaintag(event.cards, "_ny_cuihui");
-		if (!event.notrigger) {
-			await event.trigger(event.name);
-			await event.trigger(event.name + "End");
-			await event.trigger(event.name + "After");
+	}
+	/**
+	 * 令玩家进行谋奕
+	 * 事件属性（技能内的也会传入）：
+	 * allInfo,info1,info2,defendInfo
+	 * direct-是否不令目标选择直接发动
+	 * target-目标
+	 * ai1-玩家选择策略
+	 * ai2-目标选择策略
+	 * unType-不允许选择的一个类型
+	 * @param { object }
+	 * @returns { GameEventPromise }
+	 */
+	players.ny_mouYi = function(object) {
+		const next = game.createEvent("ny_mouYi");
+		next.player = this;
+		next.skill = object.skill;
+		if (!next.skill) return;
+		let info = lib.skill[next.skill]?.ny_mouYi;
+		if (!info) return;
+		for (let key in info) {
+			next[key] = info[key];
+		}
+		for (let key in object) {
+			next[key] = object[key];
+		}
+		delete next.skill;
+		next.setContent("ny_mouYi");
+		return next;
+	}
+	contents.ny_mouYi = async function(event, trigger, player) {
+		event.allInfo ??= "【谋奕】：";
+		event.info1 ??= "请选择一项执行，目标可以选择抵御一项";
+		event.info2 ??= "可能执行以下效果之一，请选择抵御一项";
+		event.defendInfo ??= event.direct ? "" : "（目标可选择并抵御一项）";
+		let defaultFunc = () => {
+			let { controls } = get.event();
+			return controls[Math.floor(Math.random() * controls.length)];
+		}
+		event.ai1 ??= defaultFunc;
+		event.ai2 ??= defaultFunc;
+		let controls1 = [],
+			controls2 = [],
+			choiceList = [];
+		for (let item in event.effect) {
+			let { type, info } = event.effect[item];
+			if (event.unType?.includes(type)) continue;
+			controls1.add(item);
+			choiceList.add(`【${item}】：${info}`);
+			if (!event.direct) {
+				controls2[type] ??= "";
+				controls2[type] += "【" + item + "】、";
+			}
+		}
+		controls2 = controls2.map(i => "抵御：" + i.slice(0, -1));
+		let prompt1 = event.allInfo + event.info1 + event.defendInfo,
+			prompt2 = event.allInfo + event.info2;
+		let result1 = await event.player.chooseControl(true)
+			.set("prompt", prompt1 + "<br>目标：" + get.translation(event.target))
+			.set("controls", controls1)
+			.set("choiceList", choiceList)
+			.set("ai", event.ai1)
+			.forResultControl();
+		event.result = {
+			type: event.effect[result1].type,
+			control: result1,
+		};
+		if (event.direct) {
+			await event.effect[result1].content(player, event.target, "nuyan_mouYi", result1);
+			event.result.bool = true;
+			event.result.direct = true;
+			return;
+		}
+		choiceList = choiceList.map(item => item.replaceAll("你", get.translation(event.player)).replaceAll("目标", "你"));
+		let result2 = await event.target.chooseControl(true)
+			.set("prompt", prompt2 + "<br>来源：" + get.translation(event.player))
+			.set("controls", controls2)
+			.set("choiceList", choiceList)
+			.set("ai", event.ai2)
+			.forResultControl();
+		if (!result2.includes(result1)) {
+			await event.effect[result1].content(player, event.target, "nuyan_mouYi", result1);
+			event.result.bool = true;
 		}
 	}
 	/**

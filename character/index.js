@@ -32,7 +32,7 @@ for (let char in nyKill.character) {
 //全局技能自动化
 let skills = nyKill.skill;
 const standardList = ["jinGong", "fangYu", "moPai", "nuQi", "zhanFa", "zhuanShu", "none"],
-	func = (object) => {
+	globalFunc = (object) => {
 		const func2 = () => true,
 			name = object.id || object.sourceSkill;
 		if (!object.noAutoFilter) {
@@ -99,7 +99,7 @@ for (let item in skills) {
 				skills[item].priority ??= 1145;
 			} else skills._ny_getFuShi.obj[type].add(item);
 			skills[item].id = item;
-			func(skills[item]);
+			globalFunc(skills[item]);
 			break;
 		}
 	}
@@ -107,7 +107,7 @@ for (let item in skills) {
 		for (let sub in skills[item].subSkill) {
 			sub = skills[item].subSkill[sub];
 			if (sub.noAuto) continue;
-			if (sub.Auto) func(sub);
+			if (sub.Auto) globalFunc(sub);
 			sub.popup ??= false;
 			if (!sub.viewAs && !sub.cost) sub.forced ??= true;
 			if (type == "zhuanShu") sub.priority ??= 1145;
@@ -115,9 +115,25 @@ for (let item in skills) {
 		}
 	}
 }
-//自动添加语音 + 自动添加“你登场时”时机
-//subSkill后续
+//自动添加语音 + 自动添加“你登场时”时机 + “谋奕”子技能自动化
+//subSkill+传说皮后续
+const mouyiFunc = (item, object) => {
+	object.charlotte ??= true;
+	skills[item].popup ??= false;
+	if (!skills[item].viewAs && !skills[item].cost) skills[item].forced ??= true;
+	object.priority ??= 11451419
+	object.init2 ??= function(player, skill) {
+		skill = "nuyan_mouYi";
+		lib.skill[skill].addMark(player, this.sourceSkill);
+	}
+	object.onremove ??= function(player, skill) {
+		skill = "nuyan_mouYi";
+		lib.skill[skill].clearMark(player, this.sourceSkill);
+	}
+	object.sourceSkill = item.slice(0, item.lastIndexOf("_"));
+}
 for (let sk in nyKill.skill) {
+	if (sk.ny_mouYiAuto == true) mouyiFunc(sk, nyKill.skill[sk]);
 	sk = nyKill.skill[sk];
 	if (sk.init2 == true) {
 		sk.init2 = function(player, skill) {
@@ -144,7 +160,7 @@ for (let sk in nyKill.skill) {
 			if (list.length) this._audio = list.randomGet();
 			this._audio ??= "";
 			return this._audio;
-		}
+		},
 	});
 }
 //清除羁绊技能和不够的星级技能

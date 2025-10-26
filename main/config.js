@@ -70,6 +70,11 @@ const fushiSet = {
 	    clear: true,
 	    name: "<li>设置（所有选项须重启生效）",
 	},
+	updateTrigger: {
+		init: false,
+		name: "优化功能(可能出现问题)",
+		intro: "为保证加减体力上限等能够触发怒焰谋将的技能，劫持本体函数update，为其添加事件",
+	},
 	nuyan_rule1: {
 		name: "怒焰符石机制开关",
 		init: "false",
@@ -189,6 +194,11 @@ const characterSet = {
 		init: false,
 		name: "曹节传说皮肤",
 		intro: "怒焰界曹节传说皮肤设置",
+	},
+	legendSkin_nuyan_Mou_caocao: {
+		init: false,
+		name: "谋曹操传说皮肤",
+		intro: "怒焰谋曹操传说皮肤设置",
 	},
 }
 for (let i in fushiSet) configInfo[i] = fushiSet[i];

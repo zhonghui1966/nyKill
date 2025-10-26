@@ -207,7 +207,7 @@ const zhonghuiFunction = {
 	_audioMap: null,
 	get audioMap() {
 		if (this._audioMap) return this._audioMap;
-		if (!lib.character.caocao) return;
+		if (!this.loading) return;
 		if (this.HAL.length == 0) return;
 		const object = {};
 		for (let item in lib.character) {
